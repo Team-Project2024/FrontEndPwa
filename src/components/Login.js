@@ -3,6 +3,9 @@ import useAuth from "../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import base64 from "base-64";
 import axios from "../api/axios";
+import Switch from '@mui/material/Switch';
+
+
 const LOGIN_URL = "/login";
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth();
@@ -112,31 +115,38 @@ useEffect(() => {
           required
         />
         <button>로그인</button>
-        <div className="persistCheck">
-                    <input
-                        type="checkbox"
-                        id="persist"
-                        onChange={togglePersist} // 체크시 로컬 스토리지에 로그인 유지를 위한 persist state값을 true로 설정
-                        checked={persist}
-                    />
-                    <label htmlFor="persist">로그인 유지하기</label>
-                </div>
+        <div>
+      <Switch
+        checked={persist}
+        onChange={togglePersist}
+        inputProps={{ 'aria-label': '로그인 유지' }} 
+        sx={{
+          '& .MuiSwitch-thumb': {
+            backgroundColor: '#4CAF50', 
+          },
+          '& .MuiSwitch-track': {
+            backgroundColor: '#A5D6A7', 
+          },
+        }}
+      />
+      <label htmlFor="persist">로그인 유지</label>
+    </div>
       </form>
-      <p>
-       
-        <br />
-        <span className="line">
-          <Link to="/findid">아이디찾기</Link>
-        </span>
-      </p>
-      <p>
-       
-        <br />
-        <span className="line">
-          <Link to="/findpassword">비밀번호찾기</Link>
-        </span>
+    
+
+        <div> 
+
+         <button>
+          <Link to="/findid" style={{ color: 'black', textDecoration: 'none' }}>학번/교번찾기</Link>
+        </button>
+     
+        
+       <button>
+        <Link to="/findpassword"style={{ color: 'black', textDecoration: 'none' }}>비밀번호찾기</Link>
+       </button>
+      </div>
       
-      </p>
+     
     </section>
   );
 };

@@ -42,6 +42,7 @@ const Home = () => {
             <div className="userInfo">
             <p>학번/교번</p>
             {auth.id}
+            
             <p>현재 역할</p>
             {auth.role}
 
@@ -70,3 +71,6 @@ const Home = () => {
 }
 
 export default Home
+
+
+//새로고침 또는 껐다가 다시킬시 auth state의 id가 비어있음 accesccToken과 role만 존재 

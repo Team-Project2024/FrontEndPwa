@@ -133,3 +133,27 @@ li {
   justify-content: flex-start;
   align-items: flex-end;
 }
+
+.message-container {
+  display: flex;
+  justify-content: space-between; /* 사용자 메시지와 챗봇 메시지를 양쪽에 정렬합니다. */
+  margin-bottom: 10px;
+}
+
+.user-message {
+  background-color: #a2e4e4; /* 사용자 메시지의 배경색 */
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-left: auto; /* 오른쪽 정렬을 위해 왼쪽 마진을 자동으로 설정합니다. */
+}
+
+.bot-message {
+  background-color: #f0f0f0; /* 챗봇 메시지의 배경색 */
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin-right: auto; /* 왼쪽 정렬을 위해 오른쪽 마진을 자동으로 설정합니다. */
+}
+
+.pStyle {
+  color: black;
+}

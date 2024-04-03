@@ -99,9 +99,9 @@ const FindId = () => {
            
             <p>
                <br />
-                <span className="line">
-                    <Link to="/">로그인창으로돌아가기</Link>
-                </span>
+               <button><Link to="/"style={{ color: 'black', textDecoration: 'none' }}>로그인창으로돌아가기</Link></button>
+                    
+               
             </p>
         </section>
     )

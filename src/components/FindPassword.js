@@ -171,9 +171,7 @@ function FindPassword() {
                     <button type="submit">이메일 코드 요청</button>
                     <p>
                <br />
-                <span className="line">
-                    <Link to="/">로그인창으로돌아가기</Link>
-                </span>
+               <button><Link to="/"style={{ color: 'black', textDecoration: 'none' }}>로그인창으로돌아가기</Link></button>
             </p>
                 </form>
             </div>
@@ -195,9 +193,7 @@ function FindPassword() {
             <button>코드 재전송</button>
             <p>
                <br />
-                <span className="line">
-                    <Link to="/">로그인창으로돌아가기</Link>
-                </span>
+               <button><Link to="/"style={{ color: 'black', textDecoration: 'none' }}>로그인창으로돌아가기</Link></button>
             </p>
         </div>
         )
@@ -227,9 +223,7 @@ function FindPassword() {
                <button type='submit' onClick={ChangePassword}>비밀번호 변경 </button>
                <p>
                <br />
-                <span className="line">
-                    <Link to="/">로그인창으로돌아가기</Link>
-                </span>
+               <button><Link to="/"style={{ color: 'black', textDecoration: 'none' }}>로그인창으로돌아가기</Link></button>
             </p>
             </div>
         )
@@ -242,9 +236,7 @@ function FindPassword() {
                 <h2>비밀변호 변경이 완료되었습니다!</h2>
                 <p>
                <br />
-                <span className="line">
-                    <Link to="/">로그인창으로돌아가기</Link>
-                </span>
+               <button><Link to="/"style={{ color: 'black', textDecoration: 'none' }}>로그인창으로돌아가기</Link></button>
             </p>
 
             </div>

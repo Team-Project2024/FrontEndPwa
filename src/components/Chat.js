@@ -32,6 +32,9 @@ const Chat =() => {
       
       getID();
     }, []);
+
+
+   
   
     const sendMessage = async () => {
         if (!inputText.trim()) return;
