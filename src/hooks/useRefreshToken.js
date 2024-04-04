@@ -25,9 +25,9 @@ const useRefreshToken = () => {
                const obj = JSON.parse(dec);
                console.log(obj)
                const roles = obj.role;
-               const Newid = obj.username;
+               const Refreshid = obj.username;
             return { ...prev,
-                 id:Newid,
+                 id:Refreshid,
                  role:roles,
                  accessToken: response.data.Access_Token } //auth state에 새로 발급받은 토큰,권한으로 덮어쓰기
         });

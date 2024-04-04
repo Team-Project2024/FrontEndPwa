@@ -144,6 +144,12 @@ useEffect(() => {
        <button>
         <Link to="/findpassword"style={{ color: 'black', textDecoration: 'none' }}>비밀번호찾기</Link>
        </button>
+
+       <button>
+        <Link to="/test"style={{ color: 'black', textDecoration: 'none' }}>UI테스트로 이동</Link>
+       </button>
+
+
       </div>
       
      

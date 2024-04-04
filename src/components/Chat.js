@@ -69,7 +69,7 @@ const Chat =() => {
   
       <input value={inputText} onChange={(e) => setInputText(e.target.value)} />
       <button onClick={sendMessage}>전송</button>
-      <Link to="/">홈페이지로 이동</Link>
+      <button><Link to="/home"style={{ color: 'black', textDecoration: 'none' }}>홈으로이동</Link></button>
     </div>
 
     )
