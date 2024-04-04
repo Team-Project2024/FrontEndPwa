@@ -12,29 +12,55 @@ const Test = () => {
     const isMobile = useMobile();
 
     return (
+        
+        
+
         <div>
+
+        <h3>UI구별 두가지 방법 테스트</h3>
+        <br/>
+
         {isMobile ? 
         
         <div>
             
-        <h2>모바일이면 뜨는거 </h2>
+        <h2>context Provider 상태관리를 통한 UI분할 :모바일이면 뜨는거 </h2>
+        <br/>
+
+       
+            <p style={{color:"skyblue"}}>안녕안녕 안녕 모바일 환경</p>
+
+            <br/>
+       
 
         </div>
 
-         
-        : <div> 
+        : <div>         
+            <h2> context Provider 상태관리를 통한 UI분할 : 데스크탑이면 뜨는거</h2>
+            <br/>
 
-        
-            <h2>데스크탑이면 뜨는거</h2>
+            <p style={{color:"skyblue"}}>안녕안녕 안녕 데스크탑 환경</p>
+
+            <br/>
 
         </div>
         
         
         }
 
-        <BrowserView><h2>데탑 브라우저면 뜸</h2></BrowserView> 
+        <BrowserView>
+
+        <h2>REACT-DEVICE-DETECT를 통한  UI분할 : 데탑 브라우저면 뜸</h2>
+        <p style={{color:"skyblue"}}>현재환경 : 데스크탑 환경</p>
+
+        </BrowserView> 
                 
-        <MobileView><h2>모바일이면 뜸</h2></MobileView>
+        <MobileView>
+
+        <h2>REACT-DEVICE-DETECT를 통한  UI분할 : 모바일이면 뜸</h2>
+        <p style={{color:"skyblue"}}>현재환경: 모바일 환경</p>
+
+        </MobileView>
 
         <button>
         <Link to="/"style={{ color: 'black', textDecoration: 'none' }}>뒤로</Link>

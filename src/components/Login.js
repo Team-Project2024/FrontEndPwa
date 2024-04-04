@@ -85,7 +85,7 @@ useEffect(() => {
 
 
 
-  return (
+  return (  //데스크탑 - 모바일 UI 구분필요
     <section>
       <p
         ref={errRef}
@@ -122,10 +122,10 @@ useEffect(() => {
         inputProps={{ 'aria-label': '로그인 유지' }} 
         sx={{
           '& .MuiSwitch-thumb': {
-            backgroundColor: '#4CAF50', 
+            backgroundColor: '#90CAF9', 
           },
           '& .MuiSwitch-track': {
-            backgroundColor: '#A5D6A7', 
+            backgroundColor: '#FFFFFF', 
           },
         }}
       />
