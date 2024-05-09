@@ -1,159 +1,23 @@
 @import url("https://fonts.googleapis.com/css2?family=Nunito&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  font-family: "Nunito", sans-serif;
-  font-size: 22px;
-  color: #fff;
+@font-face {
+  font-family: "gmarket";
+  src: url("./fonts/GmarketSansTTFMedium.ttf");
 }
 
 body {
-  min-height: 100vh;
-  background-color: black;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.App {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  padding: 1rem 0.5rem;
-}
-
-section {
-  width: 100%;
-  max-width: 420px;
-  min-height: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
-  flex-grow: 1;
-  padding-bottom: 1rem;
-}
-
-a,
-a:visited {
-  color: #fff;
-}
-
-input[type="text"],
-input[type="password"],
-button,
-textarea {
-  font-family: "Nunito", sans-serif;
-  font-size: 22px;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-}
-
-label,
-button {
-  margin-top: 1rem;
-}
-
-button {
-  padding: 0.5rem;
-}
-
-li {
-  list-style-type: none;
-}
-
-.instructions {
-  font-size: 0.75rem;
-  border-radius: 0.5rem;
-  background: #000;
-  color: #fff;
-  padding: 0.25rem;
-  position: relative;
-  bottom: -10px;
-}
-
-.instructions > svg {
-  margin-right: 0.25rem;
-}
-
-.offscreen {
-  position: absolute;
-  left: -9999px;
-}
-
-.hide {
-  display: none;
-}
-
-.userInfo {
-  border-radius: 1rem;
-  background: #019;
-  position: flex;
-  color: #fff;
-  padding: 0.25rem;
-  border-color: #fff;
-}
-
-.valid {
-  color: limegreen;
-  margin-left: 0.25rem;
-}
-
-.invalid {
-  color: red;
-  margin-left: 0.25rem;
-}
-
-.errmsg {
-  background-color: lightpink;
-  color: firebrick;
-  font-weight: bold;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.line {
-  display: inline-block;
-}
-
-.flexGrow {
-  flex-grow: 1;
-  display: flex;
-  justify-content: flex-start;
-  align-items: flex-end;
-}
-
-.message-container {
-  display: flex;
-  justify-content: space-between; /* 사용자 메시지와 챗봇 메시지를 양쪽에 정렬합니다. */
-  margin-bottom: 10px;
-}
-
-.user-message {
-  background-color: #a2e4e4; /* 사용자 메시지의 배경색 */
-  border-radius: 10px;
-  padding: 5px 10px;
-  margin-left: auto; /* 오른쪽 정렬을 위해 왼쪽 마진을 자동으로 설정합니다. */
-}
-
-.bot-message {
-  background-color: #f0f0f0; /* 챗봇 메시지의 배경색 */
-  border-radius: 10px;
-  padding: 5px 10px;
-  margin-right: auto; /* 왼쪽 정렬을 위해 오른쪽 마진을 자동으로 설정합니다. */
-}
-
-.pStyle {
-  color: black;
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
 }

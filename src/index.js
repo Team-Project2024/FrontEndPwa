@@ -14,9 +14,11 @@ ReactDOM.render(
     <BrowserRouter>
     <MobileProvider>
       <AuthProvider>
+     
         <Routes>
           <Route path="/*" element={<App />} />
         </Routes>
+        
       </AuthProvider>
       </MobileProvider>
     </BrowserRouter>

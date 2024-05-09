@@ -19,6 +19,8 @@ import { Routes, Route } from 'react-router-dom';
 
 
 
+
+
  
 function App() {
   const { auth } = useAuth(); // useAuth 훅을 사용하여 현재 사용자 정보 가져오기
@@ -32,6 +34,10 @@ function App() {
       <Route path="findpassword" element={<FindPassword/>} />
       <Route path="unauthorized" element={<Unauthorized />} />
       <Route path="test" element={<Test/>}/>
+      
+   
+      
+      
 
       {/* 로그인 완료, 권한이 있어야 접근가능 */}
       <Route element={<PersistLogin/>}>
@@ -43,11 +49,11 @@ function App() {
         <Route path="chat" element={<Chat/>} />
       </Route>
 
-      <Route element={<RequireAuth allowedRoles={['ROLE_STUDENT','ROLE_ADMIN']} auth={auth} />}>
+      <Route element={<RequireAuth allowedRoles={['ROLE_STUDENT']} auth={auth} />}>
         <Route path="student" element={<Student/>} />
       </Route>
 
-      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_ADMIN']} auth={auth}/>}>
+      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR']} auth={auth}/>}>
         <Route path='professor' element={<Professor/>}/>
       </Route>
 
