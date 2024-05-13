@@ -8,8 +8,9 @@ const Graduation = () => {
   const [years, setYears] = useState([]);
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedMajorId, setSelectedMajorId] = useState('');
+  const [major, setMajor] = useState([]);
+  const [graduationList, setGraduationList] = useState([]);
   const [graduationRequirements, setGraduationRequirements] = useState({
-    
     characterCulture: 1,
     basicLiberalArts: 1,
     generalLiberalArts: 1,
@@ -17,15 +18,23 @@ const Graduation = () => {
     majorAdvanced: 1,
     freeChoice: 1,
     graduationCredits: 6,
-    // volunteer: 2,
-    // chapel: 1,
     msc: 1,
     majorId: 1
   });
 
   useEffect(() => {
     fetchYears();
+    fetchMajors();
   }, []);
+
+  const fetchMajors = async () => {
+    try {
+      const response = await axiosPrivate.get("/admin/major");
+      setMajor(response.data);
+    } catch (error) {
+      console.error("Error fetching majors:", error);
+    }
+  };
 
   const fetchYears = () => {
     const currentYear = new Date().getFullYear();
@@ -50,19 +59,45 @@ const Graduation = () => {
     }));
   };
 
-  const addGraduationRequirements = async () => {
+  const addGraduationRequirement = () => {
+    if(selectedYear === "") {
+      window.alert('학번을 선택해주세요')
+      return;
+    }else if(graduationRequirements.majorId === "") {
+      window.alert('전공을 선택해주세요');
+      return;
+    }
+    
+    const newRequirement = { ...graduationRequirements };
+    setGraduationList([...graduationList, newRequirement]);
+    setGraduationRequirements({
+      characterCulture: 1,
+      basicLiberalArts: 1,
+      generalLiberalArts: 1,
+      majorCommon: 1,
+      majorAdvanced: 1,
+      freeChoice: 1,
+      graduationCredits: 6,
+      msc: 1,
+      majorId: 1
+    });
+  };
+
+  const removeGraduationRequirement = (index) => {
+    const updatedList = [...graduationList];
+    updatedList.splice(index, 1);
+    setGraduationList(updatedList);
+  };
+
+  const submitGraduationRequirements = async () => {
     try {
-      const newRequirement = {
-        ...graduationRequirements,
-      };
-      await axiosPrivate.post('/admin/graduation', { requestGRList: [newRequirement] });
+      await axiosPrivate.post('/admin/graduation', { requestGRList: graduationList });
       console.log('성공');
-      console.log(graduationRequirements);
-      console.log(graduationRequirements.year);
+      window.alert('성공');
     } catch (error) {
       console.error('Error adding graduation requirements:', error);
 
-      console.log(graduationRequirements);
+      console.log(graduationList);
     }
   };
 
@@ -78,13 +113,7 @@ const Graduation = () => {
   ))}
 </select>
       </div>
-      {/* <div>
-        <label htmlFor="major">전공:</label>
-        <select id="major" onChange={handleMajorChange}>
-          <option value="">전공선택</option>
-         
-        </select>
-      </div> */}
+    
       <div className="flex flex-col">
         
         <label>인성교양: 
@@ -145,11 +174,7 @@ const Graduation = () => {
             </select>
             </label>  
            
-        {/* <label>봉사:
-            <select name="volunteer" value={graduationRequirements.volunteer} onChange={handleChange}>
-              <option value={30}>30</option>
-            </select>
-            </label>   */}
+      
             <label>msc:
             <select name="msc" value={graduationRequirements.msc} onChange={handleChange}>
             {Array.from({ length: 100 }, (_, index) => (
@@ -158,21 +183,34 @@ const Graduation = () => {
             </select>
             </label>  
            
-        {/* <label>채플:
-            <select name="chapel" value={graduationRequirements.chapel} onChange={handleChange}>
-            <option value={4}>4</option>
-            </select>
-            </label> */}
-            <label>전공ID:
-            <select name="majorId" value={graduationRequirements.majorId} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
+       
+            <label>전공Id:
+              <select
+                  value={graduationRequirements.majorId}
+                  onChange={(e) =>
+                    setGraduationRequirements({ ...graduationRequirements, majorId: e.target.value })
+                  }
+                >
+                <option value="">전공선택</option>
+                {major.map((major) => (
+                  <option key={major.majorId} value={major.majorId}>
+                    {major.department}
+                  </option>
                 ))}
-            </select>
-            </label>    
+                </select>
+              </label>
+
+              {graduationList.map((requirement, index) => (
+          <div key={index}>
+            <label>추가된졸업요건: {index+1}번째</label>
+            {/* Add labels for other requirements */}
+            <button className="border-4 ml-3 bg-slate-300"onClick={() => removeGraduationRequirement(index)}>삭제</button>
+          </div>
+        ))}
         
         
-        <button onClick={addGraduationRequirements}>졸업요건 추가</button>
+        <button onClick={submitGraduationRequirements}>졸업요건 제출</button>
+        <button  className="border-4 border-spacing-3 bg-slate-400"onClick={addGraduationRequirement}>졸업요건 추가</button>
       </div>
     </div>
     
@@ -184,4 +222,4 @@ const Graduation = () => {
 }
 
 
-export default Graduation
+export default Graduation 

@@ -1,0 +1,311 @@
+[
+  {
+    "lecture_time": "OCU"
+  },
+  {
+    "lecture_time": "월7,8"
+  },
+  {
+    "lecture_time": "월1,2"
+  },
+  {
+    "lecture_time": "화4,5"
+  },
+  {
+    "lecture_time": "화3,4"
+  },
+  {
+    "lecture_time": "수3,4,5"
+  },
+  {
+    "lecture_time": "금2,3, 토10"
+  },
+  {
+    "lecture_time": "수6,7"
+  },
+  {
+    "lecture_time": "월5,6"
+  },
+  {
+    "lecture_time": "월3,4"
+  },
+  {
+    "lecture_time": "목3,4"
+  },
+  {
+    "lecture_time": "수3,4"
+  },
+  {
+    "lecture_time": "월9,10"
+  },
+  {
+    "lecture_time": "목6,7,8"
+  },
+  {
+    "lecture_time": "화8,9,10"
+  },
+  {
+    "lecture_time": "수7,8"
+  },
+  {
+    "lecture_time": "금7,8"
+  },
+  {
+    "lecture_time": "금5,6"
+  },
+  {
+    "lecture_time": "월2,3"
+  },
+  {
+    "lecture_time": "화2,3"
+  },
+  {
+    "lecture_time": "목1,2,3"
+  },
+  {
+    "lecture_time": "목5,6"
+  },
+  {
+    "lecture_time": "수2,3"
+  },
+  {
+    "lecture_time": "화5,6"
+  },
+  {
+    "lecture_time": "금6,7"
+  },
+  {
+    "lecture_time": "금1,2"
+  },
+  {
+    "lecture_time": "금3,4"
+  },
+  {
+    "lecture_time": "금9,10"
+  },
+  {
+    "lecture_time": "목9,10"
+  },
+  {
+    "lecture_time": "일1,2,3"
+  },
+  {
+    "lecture_time": "일5,6,7"
+  },
+  {
+    "lecture_time": "목1,2"
+  },
+  {
+    "lecture_time": "목7,8"
+  },
+  {
+    "lecture_time": "수1,2,3"
+  },
+  {
+    "lecture_time": "수13, 수5,6"
+  },
+  {
+    "lecture_time": "토11, 수7,8"
+  },
+  {
+    "lecture_time": "화5,6,7"
+  },
+  {
+    "lecture_time": "수4,5"
+  },
+  {
+    "lecture_time": "월4,5"
+  },
+  {
+    "lecture_time": "화1,2"
+  },
+  {
+    "lecture_time": "목4,5"
+  },
+  {
+    "lecture_time": "월5,6,7"
+  },
+  {
+    "lecture_time": "수2,3,4"
+  },
+  {
+    "lecture_time": "목2,3,4"
+  },
+  {
+    "lecture_time": "화9,10"
+  },
+  {
+    "lecture_time": "목5,6,7"
+  },
+  {
+    "lecture_time": "수5,6"
+  },
+  {
+    "lecture_time": "화7,8"
+  },
+  {
+    "lecture_time": "수5,6,7"
+  },
+  {
+    "lecture_time": "월2,3,4"
+  },
+  {
+    "lecture_time": "목2,3"
+  },
+  {
+    "lecture_time": "월6,7,8"
+  },
+  {
+    "lecture_time": "월15, 월6,7"
+  },
+  {
+    "lecture_time": "화6,7"
+  },
+  {
+    "lecture_time": "토11, 목9,10"
+  },
+  {
+    "lecture_time": "수9,10,11"
+  },
+  {
+    "lecture_time": "목6,7"
+  },
+  {
+    "lecture_time": "화1,2,3"
+  },
+  {
+    "lecture_time": "화7,8,9"
+  },
+  {
+    "lecture_time": "월7,8,9"
+  },
+  {
+    "lecture_time": "수9,10"
+  },
+  {
+    "lecture_time": "금1,2,3"
+  },
+  {
+    "lecture_time": "화8,9"
+  },
+  {
+    "lecture_time": "토12, 목2,3"
+  },
+  {
+    "lecture_time": "수1,2"
+  },
+  {
+    "lecture_time": "월0,1"
+  },
+  {
+    "lecture_time": "월9,10,11"
+  },
+  {
+    "lecture_time": "목11,12,13"
+  },
+  {
+    "lecture_time": "화3,4,5"
+  },
+  {
+    "lecture_time": "금2,3"
+  },
+  {
+    "lecture_time": "월6,7"
+  },
+  {
+    "lecture_time": "수7,8,9"
+  },
+  {
+    "lecture_time": "토9, 월2,3"
+  },
+  {
+    "lecture_time": "화13, 화2,3"
+  },
+  {
+    "lecture_time": "화3, 목7,8"
+  },
+  {
+    "lecture_time": "토14,15"
+  },
+  {
+    "lecture_time": "일3, 4, 5"
+  },
+  {
+    "lecture_time": "일13,14,15"
+  },
+  {
+    "lecture_time": "수4,5,6"
+  },
+  {
+    "lecture_time": "목3,4,5"
+  },
+  {
+    "lecture_time": "화2,3,4"
+  },
+  {
+    "lecture_time": "토11, 화7,8"
+  },
+  {
+    "lecture_time": "화14, 화5,6"
+  },
+  {
+    "lecture_time": "수14, 수2, 3"
+  },
+  {
+    "lecture_time": "화9, 금3,4"
+  },
+  {
+    "lecture_time": "화13, 화1,2"
+  },
+  {
+    "lecture_time": "목10,11,12"
+  },
+  {
+    "lecture_time": "화14, 화4,5"
+  },
+  {
+    "lecture_time": "수10,11,12"
+  },
+  {
+    "lecture_time": "금5,6,7"
+  },
+  {
+    "lecture_time": "토0, 월3,4"
+  },
+  {
+    "lecture_time": "금10,11,12"
+  },
+  {
+    "lecture_time": "금13,14,15"
+  },
+  {
+    "lecture_time": "목13,14,15"
+  },
+  {
+    "lecture_time": "화4,5,6"
+  },
+  {
+    "lecture_time": "화10, 금5,6"
+  },
+  {
+    "lecture_time": "목13, 목3,4"
+  },
+  {
+    "lecture_time": "수14, 수5,6"
+  },
+  {
+    "lecture_time": "금9,10,11"
+  },
+  {
+    "lecture_time": "화6,7,8"
+  },
+  {
+    "lecture_time": "월11,12,13"
+  },
+  {
+    "lecture_time": "일7,8,9"
+  },
+  {
+    "lecture_time": "수13, 수2,3"
+  }
+]

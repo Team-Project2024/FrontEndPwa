@@ -5,6 +5,7 @@ import { useNavigate, useLocation,Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
 import settingimg from "../image/setting.png"
+import TestJson from "../image/TestJson.json"
 
 
 const Chat =() => {
@@ -47,6 +48,7 @@ const Chat =() => {
         } catch (err) {
           console.error(err);
           console.log(auth)
+          console.log(TestJson)
         }
       };
       
@@ -129,13 +131,28 @@ const Chat =() => {
        {/* {채팅ui div} */}
         <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-end relative items-center">
         <div class="relative w-3/4 ml-40 mb-3">
+
+        {TestJson.Data.map((item) => (
+  <div key={item.lectureId || item.eventId}> {/* lectureId랑 eventId사용 */}
+    {item.lectureId && ( // lectureId가 있는 경우
+      <Link to={`/detail/${item.lectureId}`}>
+        <p>{item.lectureName}</p> 
+      </Link>
+    )}
+    {item.eventId && ( // eventId가 있는 경우
+      <Link to={`/detail/${item.eventId}`}>
+        <p>{item.eventName}</p> 
+      </Link>
+    )}
+  </div>
+))}
           
-        {userMessages.map((userMessage, index) => (
+        {/* {userMessages.map((userMessage, index) => (
           <div key={index} className="message-container">
             <div className="user-message">{userMessage}</div>
             <div className="bot-message">{botMessages[index]}</div>
           </div>
-        ))}
+        ))} */}
     
 <div className="flex flex-row h-10">
 <input  value={inputText} onChange={(e)=> setInputText(e.target.value)}type="text" id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-200 dark:border-gray-600 dark:placeholder-gray-400 dark:text-black dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="무엇이든 물어보세요" required />

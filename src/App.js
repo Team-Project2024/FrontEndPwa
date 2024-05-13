@@ -14,7 +14,9 @@ import Student from './components/Student';
 import Professor from './components/Professor';
 import PersistLogin from './components/PersistLogin';
 import Test from './components/UiTest';
+import DetailPage from './components/Detail';
 import { Routes, Route } from 'react-router-dom';
+
 
 
 
@@ -47,7 +49,16 @@ function App() {
 
       <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
         <Route path="chat" element={<Chat/>} />
+
       </Route>
+      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
+      <Route path='/detail/:lectureId' element={<DetailPage/>}/>
+      </Route>
+
+      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
+      <Route path='/detail/:eventId' element={<DetailPage/>}/>
+      </Route>
+      
 
       <Route element={<RequireAuth allowedRoles={['ROLE_STUDENT']} auth={auth} />}>
         <Route path="student" element={<Student/>} />
