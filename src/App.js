@@ -49,15 +49,11 @@ function App() {
 
       <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
         <Route path="chat" element={<Chat/>} />
-
-      </Route>
-      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
-      <Route path='/detail/:lectureId' element={<DetailPage/>}/>
+        <Route path='/detail/lecture/:lectureId' element={<DetailPage />} />
+        <Route path='/detail/event/:eventId' element={<DetailPage />}/>
       </Route>
 
-      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
-      <Route path='/detail/:eventId' element={<DetailPage/>}/>
-      </Route>
+    
       
 
       <Route element={<RequireAuth allowedRoles={['ROLE_STUDENT']} auth={auth} />}>

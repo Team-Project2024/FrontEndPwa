@@ -11,7 +11,7 @@ const Major = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showAddList,setShowAddList] = useState(false)
   const [currentPage, setCurrentPage] = useState(1);
-  const [majorsPerPage] = useState(5); // 페이지당 표시할 전공 수
+  const [majorsPerPage] = useState(100); // 페이지당 표시할 전공 수
 
   useEffect(() => {
     fetchMajors();
@@ -73,7 +73,7 @@ const Major = () => {
   };
 
   return (
-    <div className="container mx-auto flex flex-col justify-center items-center overflow-y-auto">
+    <div className="container mx-auto flex flex-col justify-center items-center overflow-auto">
       <h1 className="text-3xl font-bold mb-4">전공관리</h1>
       <div className="mb-4">
 
@@ -87,6 +87,13 @@ const Major = () => {
                 <div>
                   <h2 className=" mt-3 mb-3 font-gmarket">학과:{newMajors.department}</h2>
                   {newMajors.track && <h2 className="mb-3 font-gmarket ">트랙: {newMajors.track}</h2>}
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={(deleteMajor) }
+                  >
+                    삭제
+                  </button>
                 </div>
               </div>
             </li>
@@ -104,6 +111,10 @@ const Major = () => {
           >
             추가리스트 닫기
           </button>
+
+         
+
+
           </div>
         ) : (
           <button
@@ -150,9 +161,9 @@ const Major = () => {
           </button>
         )}
       </div>
-      <div>
-        <h2 className="text-xl font-bold mb-2">전공목록</h2>
-        <ul>
+      <div className="overflow-auto w-3/4">
+        <h2 className="text-xl font-bold mb-2 ml-10">전공목록</h2>
+        <ul className="ml-10">
           {currentMajors.map((major) => (
             <li key={major.majorId} className="mb-2">
               <div className="text-xl flex flex-col justify-center items-center rounded-xl bg-right-main shadow-2xl ">

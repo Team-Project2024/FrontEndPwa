@@ -1,44 +1,49 @@
 import React from "react";
-import TestJson from "../image/TestJson.json";
-import AuthContext from "../context/AuthProvider";
-import useAxiosPrivate from "../hooks/useAxiosPrivate";
-import { useState, useEffect, useContext } from "react";
-import { useNavigate, useLocation, Link, useParams } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import { useParams, useLocation } from "react-router-dom";
 
 const DetailPage = () => {
-  const { lectureId } = useParams(); // lectureId 가져오기
+  const params = useParams();
+  const location = useLocation();
+  const { state } = location;
 
-  const axiosPrivate = useAxiosPrivate();
-  const { auth } = useContext(AuthContext);
+  // 디버깅용 로그
+  console.log("Params itemType:", state.itemType); 
+  console.log("Params itemId:", state.itemId);
+  console.log("State:", state);
 
-  // 해당 lectureId를 가진 강의 정보 찾기
-  const lecture = TestJson.Data.find((item) => item.lectureId === parseInt(lectureId));
+ 
 
-  // 해당 eventId를 가진 이벤트 정보 찾기
-  const event = TestJson.Data.find((item) => item.eventId === parseInt(lectureId));
-
-  if (lecture) {
-    return (
-      <div>
-        <h2>{lecture.lectureName}</h2>
-        <p>강의실: {lecture.room}</p>
-        <p>학점: {lecture.credit}</p>
-        <p>시간: {lecture.lectureTime}</p>
-        {/* 나머지 강의 정보를 표시하세요 */}
-      </div>
-    );
-  } else if (event) {
-    return (
-      <div>
-        <h2>{event.eventName}</h2>
-        <p>장소: {event.room}</p>
-        {/* 나머지 이벤트 정보를 표시하세요 */}
-      </div>
-    );
-  } else {
-    return <div>해당 정보를 찾을 수 없습니다.</div>;
+  let detailInfo;
+  if (state && state.content) {
+    if (state.itemType === "lecture" && state.content.lecture) {
+      detailInfo = state.content.lecture.data.find(lecture => lecture.lectureId === parseInt(state.itemId));
+    } else if (state.itemType === "event" && state.content.event) {
+      detailInfo = state.content.event.data.find(event => event.eventId === parseInt(state.itemId));
+    }
   }
+
+  return (
+    <div>
+      {detailInfo ? (
+        <div>
+          <h2>{state.itemType === 'lecture' ? detailInfo.lectureName : detailInfo.eventName}</h2>
+          <p>{detailInfo.description}</p>
+          {state.itemType === 'lecture' ? (
+            <div>
+              <p>강의실: {detailInfo.room}</p>
+              <p>강의 시간: {detailInfo.lectureTime}</p>
+            </div>
+          ) : (
+            <div>
+              <p>장소: {detailInfo.room}</p>
+            </div>
+          )}
+        </div>
+      ) : (
+        <p>해당 항목을 찾을 수 없습니다.</p>
+      )}
+    </div>
+  );
 };
 
-export default DetailPage
+export default DetailPage;

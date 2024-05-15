@@ -14,6 +14,12 @@ const Class = () => {
     const [room,setRoom] = useState([]);
     const [time,setTime] = useState([]);
     const [newlectureList,setnewlectureList] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lecturePerPage] = useState(30); // 페이지당 강의 수를 5개로 설정
+    const [pageNumberLimit] = useState(10); // 페이지 번호를 10개씩 보여주도록 설정
+    const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(10);
+    const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
+   
    
 
     const { auth } = useContext(AuthContext);
@@ -48,6 +54,7 @@ const Class = () => {
         setRoom(RoomJson);
         setTime(timeJSON);
       }, []);
+      
 
       const addLectureList = () => {
 
@@ -172,16 +179,51 @@ const Class = () => {
           console.log(newLecture)
         }
       };
-    
+
+// 페이지 이동 함수
+const handlePageClick = (e) => {
+  setCurrentPage(Number(e.target.textContent));
+};
+
+const handleNextbtn = () => {
+  setCurrentPage(currentPage + 1);
+  if (currentPage + 1 > maxPageNumberLimit) {
+    setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
+    setMinPageNumberLimit(minPageNumberLimit + pageNumberLimit);
+  }
+};
+
+const handlePrevbtn = () => {
+  setCurrentPage(currentPage - 1);
+  if ((currentPage - 1) % pageNumberLimit === 0) {
+    setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
+    setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
+  }
+};
+
+
+  // 현재 페이지의 강의 계산
+  const indexOfLastLecture = currentPage * lecturePerPage;
+  const indexOfFirstLecture = indexOfLastLecture - lecturePerPage;
+  const currentLecture = lecture.slice(
+    indexOfFirstLecture,
+    indexOfLastLecture
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  // 페이지 번호 생성
+
+
 
     return(
-        <div>
-         {/* 강의 추가 버튼 */}
+        <div className="container  flex flex-col justify-center items-center overflow-auto ">
+        <h1 className="text-3xl font-bold mt-96">강의관리</h1>
       <button onClick={() => setShowForm(!showForm)}>강의 추가</button>
 
-            {/* 강의 추가 폼 */}
+           <div className="mb-4">
             {showForm && (
-              <div className="flex flex-col">
+              <div className="mt-4 p-4 border border-gray-300 rounded items-row justify-center">
                 <h2>강의 추가</h2>
                 <label>강의명:
                 <input
@@ -509,38 +551,159 @@ const Class = () => {
                 <button onClick={submitLectureList}>추가된 강의 제출</button>
               </div>
             )}
+
+        </div>
+
+
         <div>
-        <h2>강의</h2>
-        <ul>
-          {/* {lecture.map(lecture => (
-            <li key={lecture.lectureId}>
-              <span>{lecture.lectureName}</span>
-              <span>{lecture.classification}</span>
-              <span>{lecture.room}</span>
-              <span>{lecture.credit}</span>
-              <span>{lecture.division}</span>
-              <span>{lecture.grade}</span>
-              <span>{lecture.lectureTime}</span>
-              <span>{lecture.classMethod}</span>
-              <span>{lecture.testType}</span>
-              <span>{lecture.teamwork}</span>
-              <span>{lecture.entrepreneurship}</span>
-              <span>{lecture.creativeThinking}</span>
-              <span>{lecture.harnessingResource}</span>
-              <span>{lecture.teamPlay}</span>
-              <span>{lecture.gradeMethod}</span>
-              <span>{lecture.aiSw}</span>
-              <span>{lecture.course_evaluation}</span>
+        
+        
+        <div className="flex flex-col justify-center border p-4 overflow-auto ml-10  items-center mt-96 h-96  w-100">
+  {currentLecture.map(lecture => (
+    <div key={lecture.lectureId} className="flex flex-col border p-2 mr-4 mb-4 w-80">
+      <div className="mb-2">
+        <label className="text-gray-600">강의명: </label>
+        <span>{lecture.lectureName}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">분류: </label>
+        <span>{lecture.classification}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">강의실: </label>
+        <span>{lecture.room}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">학점: </label>
+        <span>{lecture.credit}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">분반: </label>
+        <span>{lecture.division}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">학년: </label>
+        <span>{lecture.grade}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">강의시간: </label>
+        <span>{lecture.lectureTime}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">수업방식: </label>
+        <span>{lecture.classMethod}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">시험방식: </label>
+        <span>{lecture.testType}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">팀워크: </label>
+        <span>{lecture.teamwork}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">enter: </label>
+        <span>{lecture.entrepreneurship}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">창의: </label>
+        <span>{lecture.creativeThinking}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">harnessingResource: </label>
+        <span>{lecture.harnessingResource}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">조별과제: </label>
+        <span>{lecture.teamPlay.toString()}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">채점방식: </label>
+        <span>{lecture.gradeMethod}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">aisw: </label>
+        <span>{lecture.aiSw.toString()}</span>
+      </div>
+      <div className="mb-2">
+        <label className="text-gray-600">강의평가: </label>
+        <span>{lecture.course_evaluation}</span>
+      </div>
+      <button onClick={() => handleDeleteClass(lecture.lectureId)} className="mt-2 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">강의 삭제</button>
+    </div>
+  ))}
+</div>
 
-
-             
-              <button onClick={() => handleDeleteClass(lecture.lectureId)}>강의삭제</button>
-            </li>
-          ))} */}
+<ul className="flex justify-center ">
+          {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
+            (_, index) => (
+              <li
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`cursor-pointer mx-1 ${
+                  currentPage === index + 1 ? "font-bold" : ""
+                }`}
+              >
+                {index + 1}
+              </li>
+            )
+          )}
         </ul>
+       
+     
+
+  {/* <div className="flex justify-center items-center overflow-auto">
+ 
+  <button
+    onClick={handlePrevbtn}
+    disabled={currentPage === 1}
+    className="mr-2 px-4 py-2 border rounded bg-gray-200 hover:bg-gray-300"
+  >
+    이전
+  </button>
+
+ 
+  <ul className="flex">
+   
+    {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
+      (_, index) => {
+        
+        if (index + 1 >= currentPage - 2 && index + 1 <= currentPage + 2) {
+          return (
+            <li key={index} className="mx-1">
+              <button
+                onClick={() => setCurrentPage(index + 1)}
+                className={`px-4 py-2 border rounded ${
+                  currentPage === index + 1
+                    ? "bg-blue-500 hover:bg-blue-700 text-white"
+                    : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                }`}
+              >
+                {index + 1}
+              </button>
+            </li>
+          );
+        } else {
+          return null; 
+        }
+      }
+    )}
+  </ul>
+
+ 
+  <button
+    onClick={handleNextbtn}
+    disabled={currentPage === Math.ceil(lecture.length / lecturePerPage)}
+    className="ml-2 px-4 py-2 border rounded bg-gray-200 hover:bg-gray-300"
+  >
+    다음
+  </button>
+</div> */}
+
+</div>
+     
       </div>
 
-      </div>
 
 
 

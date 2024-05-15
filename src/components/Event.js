@@ -16,7 +16,10 @@ const Event = () => {
   const [showEditForm, setShowEditForm] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
-  const [selectedEventIndex, setSelectedEventIndex] = useState(-1); // 선택한 이벤트의 인덱스
+  const [selectedEventIndex, setSelectedEventIndex] = useState(-1); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [eventsPerPage] = useState(5); // 페이지당 표시할 전공 수
+
 
   useEffect(() => {
     fetchEvents();
@@ -113,6 +116,14 @@ const Event = () => {
     setSelectedEventIndex(-1);
   };
 
+
+  const indexOfLastEvent = currentPage * eventsPerPage;
+  const indexOfFirstEvent = indexOfLastEvent - eventsPerPage;
+  const currentEvents = events.slice(indexOfFirstEvent, indexOfLastEvent);
+
+  // 페이지 번호 변경
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="container mx-auto flex flex-col justify-center items-center">
       <h1 className="text-3xl font-bold mb-4">행사관리</h1>
@@ -131,20 +142,39 @@ const Event = () => {
           </div>
         )}
       </div>
-      <div>
+      <div className="auto">
         <h2 className="text-xl font-bold mb-2 justify-center items-center ml-8">행사</h2>
         <ul>
-          {events.map(event => (
-            <li key={event.eventId} className="mb-2">
+          {currentEvents.map(event => (
+            <div key={event.eventId} className="mb-2 border-4">
+              <div className="border-4 border-gray-400 rounded-md">
               <span className="mr-4">{event.eventName}</span>
+              </div>
+             
               <span className="mr-4">{event.eventPeriod}</span>
               <span className="mr-4">{event.description}</span>
               <span className="mr-4">{event.modified.toString()}</span>
               <span className="mr-4">{event.canceld}</span>
               <button onClick={() => deleteEvent(event.eventId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">행사 취소</button>
               <button onClick={() => handleEditClick(event.eventId)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">행사 수정</button>
-            </li>
+            </div>
           ))}
+        </ul>
+          {/* 페이지네이션 */}
+          <ul className="flex justify-center">
+          {Array.from({ length: Math.ceil(events.length / eventsPerPage) }).map(
+            (_, index) => (
+              <li
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`cursor-pointer mx-1 ${
+                  currentPage === index + 1 ? "font-bold" : ""
+                }`}
+              >
+                {index + 1}
+              </li>
+            )
+          )}
         </ul>
       </div>
       {showEditForm && (

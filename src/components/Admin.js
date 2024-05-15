@@ -48,7 +48,7 @@ const Admin= () => {
             <button className="mt-5 mb-5 font-gmarket text-4xl"onClick={handleClassManagementClick}>강의관리</button>
           </div>
           {/* 오른쪽 컨텐츠 */}
-          <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-center relative items-center">
+          <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-center relative items-center " >
             {/* 선택된 메뉴에 따라 다른 컴포넌트 표시 */}
             {selectedMenu === "eventManagement" && (
               <Event/>
