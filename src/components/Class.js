@@ -9,21 +9,18 @@ import RoomJson from "../image/room.json"
 
 const Class = () => {
 
+  const { auth } = useContext(AuthContext);
+  const axiosPrivate = useAxiosPrivate();
+
+
     const [lecture, setLecture] = useState([]);
     const [professor,setProfessor] = useState([]);
     const [room,setRoom] = useState([]);
     const [time,setTime] = useState([]);
     const [newlectureList,setnewlectureList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [lecturePerPage] = useState(30); // 페이지당 강의 수를 5개로 설정
-    const [pageNumberLimit] = useState(10); // 페이지 번호를 10개씩 보여주도록 설정
-    const [maxPageNumberLimit, setMaxPageNumberLimit] = useState(10);
-    const [minPageNumberLimit, setMinPageNumberLimit] = useState(0);
-   
-   
-
-    const { auth } = useContext(AuthContext);
-    const axiosPrivate = useAxiosPrivate();
+    const [lecturePerPage] = useState(300); // 페이지당 강의 수를 5개로 설정
+    const [showForm, setShowForm] = useState(false); // 추가된 부분
     const [newLecture, setNewLecture] = useState({
       lectureName: "",
       classification: "",
@@ -45,7 +42,10 @@ const Class = () => {
       course_evaluation: 0,
       memberId: ""
     });
-    const [showForm, setShowForm] = useState(false); // 추가된 부분
+   
+
+    
+    
 
 
     useEffect(() => {
@@ -57,10 +57,9 @@ const Class = () => {
       
 
       const addLectureList = () => {
-
-        const newLectureRequirement = {...newLecture};
-        setnewlectureList([...newlectureList,newLectureRequirement]);
-        setLecture({
+        const newLectureRequirement = { ...newLecture };
+        setnewlectureList([...newlectureList, newLectureRequirement]);
+        setNewLecture({
           lectureName: "",
           classification: "",
           room: "",
@@ -80,9 +79,9 @@ const Class = () => {
           aiSw: false,
           course_evaluation: 0,
           memberId: ""
-        })
-
-      }
+        });
+      };
+      
 
 
       const removeLectureList = (index) => {
@@ -93,29 +92,21 @@ const Class = () => {
       }
 
 
-      const submitLectureList = async () => {
-        try{
-         
-          await axiosPrivate.post("/admin/lecture", {
-            requestLectureDTOList: [newlectureList]
-          });
-          window.alert('성공');
-          console.log(newlectureList);
-
-        }catch(error){
-          console.error('에러가 발생하였습니다');
-        }
-
-      }
+      
 
       const fetchLecture = async () => {
         try {
           const response = await axiosPrivate.get('/admin/lecture');
-          setLecture(response.data);
+          if (Array.isArray(response.data)) {
+            setLecture(response.data);
+          } else {
+            setLecture([response.data]);
+          }
         } catch (error) {
           console.error('Error fetching lecture:', error);
         }
       };
+    
 
       const getProfessor = async () => {
 
@@ -134,8 +125,9 @@ const Class = () => {
 
       const handleDeleteClass = async (lectureId) => {
         try {
-        await axiosPrivate.put(`/admin/lecture?lectureId=${lectureId}`)
+        await axiosPrivate.put(`/admin/lecture/` + lectureId)
         fetchLecture();
+        window.alert('강의삭제완료')
 
         }catch(error) {
             console.error('에러',error)
@@ -148,29 +140,11 @@ const Class = () => {
       const handleAddClass = async () => {
         try {
           await axiosPrivate.post("/admin/lecture", {
-            requestLectureDTOList: [newLecture]
+            requestLectureDTOList: newlectureList,
           });
+         
+          setnewlectureList([]);
           fetchLecture();
-          setNewLecture({
-            lectureName: "",
-            classification: "",
-            room: "",
-            credit: 0,
-            division: 0,
-            grade: 0,
-            lectureTime: "",
-            classMethod: "",
-            testType: "",
-            teamwork: 0,
-            entrepreneurship: 0,
-            creativeThinking: 0,
-            harnessingResource: 0,
-            teamPlay: false,
-            gradeMethod: "",
-            aiSw: false,
-            course_evaluation: 0,
-            memberId: ""
-          });
           // 강의 추가 후 폼을 숨김
           setShowForm(false);
           window.alert('추가되었습니다')
@@ -180,35 +154,12 @@ const Class = () => {
         }
       };
 
-// 페이지 이동 함수
-const handlePageClick = (e) => {
-  setCurrentPage(Number(e.target.textContent));
-};
-
-const handleNextbtn = () => {
-  setCurrentPage(currentPage + 1);
-  if (currentPage + 1 > maxPageNumberLimit) {
-    setMaxPageNumberLimit(maxPageNumberLimit + pageNumberLimit);
-    setMinPageNumberLimit(minPageNumberLimit + pageNumberLimit);
-  }
-};
-
-const handlePrevbtn = () => {
-  setCurrentPage(currentPage - 1);
-  if ((currentPage - 1) % pageNumberLimit === 0) {
-    setMaxPageNumberLimit(maxPageNumberLimit - pageNumberLimit);
-    setMinPageNumberLimit(minPageNumberLimit - pageNumberLimit);
-  }
-};
 
 
   // 현재 페이지의 강의 계산
   const indexOfLastLecture = currentPage * lecturePerPage;
   const indexOfFirstLecture = indexOfLastLecture - lecturePerPage;
-  const currentLecture = lecture.slice(
-    indexOfFirstLecture,
-    indexOfLastLecture
-  );
+  const currentLecture = lecture.slice(indexOfFirstLecture,indexOfLastLecture);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
@@ -223,7 +174,7 @@ const handlePrevbtn = () => {
 
            <div className="mb-4">
             {showForm && (
-              <div className="mt-4 p-4 border border-gray-300 rounded items-row justify-center">
+              <div className="mt-4 p-4 border border-gray-300 rounded items-row justify-center flex flex-col">
                 <h2>강의 추가</h2>
                 <label>강의명:
                 <input
@@ -542,25 +493,21 @@ const handlePrevbtn = () => {
           </div>
         ))}
 
-
-
-
-
-
-                <button onClick={addLectureList}>강의 추가</button>
-                <button onClick={submitLectureList}>추가된 강의 제출</button>
+                
               </div>
             )}
 
         </div>
+        <button onClick={addLectureList}>추가리스트에 넣기</button>
+                <button onClick={handleAddClass}>추가된 강의리스트 제출</button>
 
 
-        <div>
+        <div className="flex flex-col justify-center border p-4 overflow-auto ml-10  items-center  h-auto   w-auto">
         
         
-        <div className="flex flex-col justify-center border p-4 overflow-auto ml-10  items-center mt-96 h-96  w-100">
+        <div >
   {currentLecture.map(lecture => (
-    <div key={lecture.lectureId} className="flex flex-col border p-2 mr-4 mb-4 w-80">
+    <div key={lecture.lectureId} className="flex flex-col border  ">
       <div className="mb-2">
         <label className="text-gray-600">강의명: </label>
         <span>{lecture.lectureName}</span>

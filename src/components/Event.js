@@ -49,17 +49,20 @@ const Event = () => {
 
   const deleteEvent = async (eventId) => {
     try {
-      await axiosPrivate.put(`/admin/event/cancel?eventId=${eventId}`);
+      console.log(eventId)
+      await axiosPrivate.put(`/admin/event/cancel/` + eventId);
       fetchEvents();
+      console.log(events)
+      window.alert('행사가 취소되었습니다')
     } catch (error) {
       console.error('Error cancelling event:', error);
     }
   };
 
-  const updateEvent = async () => {
+  const updateEvent = async (eventId) => {
     try {
       const eventPeriod = `${moment(startDate).format('YYYY-MM-DD')} ~ ${moment(endDate).format('YYYY-MM-DD')}`;
-      await axiosPrivate.put('/admin/event/update', { ...editedEvent, eventPeriod });
+      await axiosPrivate.put(`/admin/event/update/` + editedEvent.eventId, { ...editedEvent, eventPeriod });
       fetchEvents();
       setEditedEvent({ id: '', eventName: '', eventPeriod: '', description: '' });
       setShowEditForm(false);
@@ -125,7 +128,7 @@ const Event = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="container mx-auto flex flex-col justify-center items-center">
+    <div className="container mx-auto flex flex-col justify-center items-center overflow-auto">
       <h1 className="text-3xl font-bold mb-4">행사관리</h1>
       <div className="mb-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setShowAddForm(!showAddForm)}>행사 추가</button>
@@ -142,19 +145,27 @@ const Event = () => {
           </div>
         )}
       </div>
-      <div className="auto">
+      <div >
         <h2 className="text-xl font-bold mb-2 justify-center items-center ml-8">행사</h2>
         <ul>
           {currentEvents.map(event => (
-            <div key={event.eventId} className="mb-2 border-4">
-              <div className="border-4 border-gray-400 rounded-md">
-              <span className="mr-4">{event.eventName}</span>
-              </div>
+            <div key={event.eventId} className="mt-4 p-4 border border-gray-300 rounded overflow-hidden ">
              
+              
+
+              <label className="text-gray-600">행사명: </label>
+              <span className="mr-4">{event.eventName}</span>
+             
+        
+              <label className="text-gray-600">행사기간: </label>
               <span className="mr-4">{event.eventPeriod}</span>
-              <span className="mr-4">{event.description}</span>
+              <br/>
+              <label className="text-gray-600 ">행사설명 </label>
+              <span className="mr-4 block mb-2  w-full border border-gray-300 p-2 rounded"  >{event.description}</span>
+              <label className="text-gray-600">행사수정여부: </label>
               <span className="mr-4">{event.modified.toString()}</span>
-              <span className="mr-4">{event.canceld}</span>
+              <label className="text-gray-600">행사취소여부: </label>
+              <span className="mr-4">{event.canceld.toString()}</span>
               <button onClick={() => deleteEvent(event.eventId)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">행사 취소</button>
               <button onClick={() => handleEditClick(event.eventId)} className="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-1 px-2 rounded">행사 수정</button>
             </div>
@@ -187,7 +198,7 @@ const Event = () => {
             <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} className="border border-gray-300 p-2 rounded" />
           </div>
           <input type="text" name="description" placeholder="Description" value={editedEvent.description} onChange={handleChangeEdit} className="block mb-2 border border-gray-300 p-2 rounded" />
-          <button onClick={updateEvent} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Event</button>
+          <button onClick={() => {updateEvent(editedEvent.id)}} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Update Event</button>
         </div>
       )}
       {newEvents.length > 0 && (

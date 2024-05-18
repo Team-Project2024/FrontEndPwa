@@ -4,10 +4,10 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { useNavigate, useLocation,Link } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
 import AuthContext from "../context/AuthProvider";
+import useLogout from "../hooks/useLogout";
 
 
 
-import settingimg from "../image/setting.png"
 import TestJson from "../image/TestJson.json"
 import Test from "./UiTest";
 
@@ -19,7 +19,8 @@ const Chat =() => {
     const [botMessages, setBotMessages] = useState([]); // 챗봇의 답변저장
     const [inputText, setInputText] = useState('');
     const [data, setData] = useState([]); // parse 테스트용
-    const { auth } = useContext(AuthContext);
+    const [dd,setdd] = useState([]);
+    const { auth ,} = useContext(AuthContext);
   
     const [showSettings, setShowSettings] = useState(false); 
 
@@ -27,6 +28,15 @@ const Chat =() => {
       console.log(`Navigating to /detail/${itemType}/${itemId}`);
       navigate(`/detail/${itemType}/${itemId}`, { state: { itemType, itemId, content: TestJson.content } });
     };
+
+    
+
+    const logout = useLogout();
+
+
+   
+
+
     const Chatdata = {
         message:inputText
     }
@@ -79,6 +89,7 @@ const Chat =() => {
         // Step 2: JSON.parse를 사용하여 객체로 변환
         const parsedContent = JSON.parse(modifiedChatBotContent);
         console.log('Parsed Content:', parsedContent); //이걸 화면에 렌더하기
+        setdd(parsedContent);
 
         window.alert('성공');
       } catch (err) {
@@ -107,6 +118,14 @@ const Chat =() => {
     }, []);
 
 
+
+    const signout = async () => {
+       
+      await logout();
+      
+      navigate('/login');
+     
+  }
 
       
 
@@ -153,7 +172,7 @@ const Chat =() => {
         {/* 설정 아이콘 */}
         <div className="absolute top-0 right-0 mt-10 mr-10">
           <button onClick={() => setShowSettings(!showSettings)}>
-            <img src="../image/setting.png" alt="Settings" className="w-8 h-8" />
+            <img src="/setting.png" alt="Settings" className="w-8 h-8" />
           </button>
         </div>
 
@@ -161,18 +180,20 @@ const Chat =() => {
         {showSettings && (
           <div className="absolute top-0 right-0 mt-20 mr-10 p-4 bg-white rounded-md shadow-md">
             {/* 설정 내용 */}
-            <h3>Settings</h3>
+            <h3 onClick={logout}>로그아웃</h3>
             {/* 설정 내용 추가 */}
           </div>
         )}
 
    
      
+
        {/* {날짜별 채팅방 div} */}
         <div className="absolute left-0 h-5/6 bg-chat-date w-1/5  rounded-[5px] drop-shadow-xl z-10 items-center justify-row flex flex-col">
 
-        <h2 className=" mt-24 mr-10 text-3xl font-bold  z-10">LUMOS</h2>
-        <button  onClick={deleteEntireChat}className="bg-gray-500 rounded-md ml-30  w-30">일괄삭제</button>
+        <h2 className=" text-5xl font-gmarket mt-40  ">LUMOS</h2>
+         
+        <button  onClick={deleteEntireChat}className="bg-gray-300 rounded-md ml-60  w-30 border-4 w-40 h-10">일괄삭제</button>
           <h2 className="mt-3 mb-3">2024.05.27</h2>
           <h2 className="mt-3 mb-3">2024.05.27</h2>
           <h2 className="mt-3 mb-3">2024.05.27</h2>
@@ -201,6 +222,10 @@ const Chat =() => {
           </li>
         ))}
       </ul>
+    </div>
+
+    <div>
+      <h2>{dd[0]}</h2>
     </div>
 
          {/* {TestJson.content.map((item) => (
