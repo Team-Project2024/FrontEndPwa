@@ -92,16 +92,17 @@ const Class = () => {
       }
 
 
-      
+       //setEvents(response.data.responseEventInfoDTOList);
 
       const fetchLecture = async () => {
         try {
           const response = await axiosPrivate.get('/admin/lecture');
-          if (Array.isArray(response.data)) {
-            setLecture(response.data);
-          } else {
-            setLecture([response.data]);
-          }
+         
+          console.log(response.data)
+            setLecture(response.data.responseLectureDTOList);
+          
+       
+          
         } catch (error) {
           console.error('Error fetching lecture:', error);
         }
@@ -121,7 +122,7 @@ const Class = () => {
           }
         };
 
- 
+       
 
       const handleDeleteClass = async (lectureId) => {
         try {

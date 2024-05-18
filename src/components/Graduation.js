@@ -30,7 +30,7 @@ const Graduation = () => {
   const fetchMajors = async () => {
     try {
       const response = await axiosPrivate.get("/admin/major");
-      setMajor(response.data);
+      setMajor(response.data.responseMajorDTOList);
     } catch (error) {
       console.error("Error fetching majors:", error);
     }

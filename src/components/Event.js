@@ -28,7 +28,12 @@ const Event = () => {
   const fetchEvents = async () => {
     try {
       const response = await axiosPrivate.get('/admin/event');
-      setEvents(response.data);
+
+      console.log(response.data.responseEventInfoDTOList)
+      
+      // 새로운 구조에 맞춰서 이벤트 리스트를 설정
+      setEvents(response.data.responseEventInfoDTOList);
+
     } catch (error) {
       console.error('Error fetching events:', error);
     }

@@ -20,7 +20,9 @@ const Major = () => {
   const fetchMajors = async () => {
     try {
       const response = await axiosPrivate.get("/admin/major");
-      setMajors(response.data);
+     
+      setMajors(response.data.responseMajorDTOList
+      );
     } catch (error) {
       console.error("Error fetching majors:", error);
     }
