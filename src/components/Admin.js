@@ -6,13 +6,20 @@ import { useState, useEffect } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import Event from "./Event";
 import Major from "./Major";
+import SideBar from "react-side-bar";
 import Graduation from "./Graduation";
 import Class from "./Class";
+import Navbar from "./Navbar";
+
 import useLogout from "../hooks/useLogout";
 
 
 
 const Admin= () => {
+
+  
+
+
     const [selectedMenu, setSelectedMenu] = useState(""); // 현재 선택된 메뉴 상태
     const [showSettings, setShowSettings] = useState(false); 
 
@@ -38,7 +45,9 @@ const Admin= () => {
   
     return (
       <React.Fragment>
+          <Navbar></Navbar>
         <div className="bg-left-main flex flex-row h-screen justify-center items-center">
+          
         <div className="absolute top-0 right-0 mt-40 mx-40">
           <button onClick={() => setShowSettings(!showSettings)}>
             <img src="/setting.png" alt="Settings" className="w-8 h-8" />
@@ -56,6 +65,9 @@ const Admin= () => {
           {/* 왼쪽 메뉴 */}
           <div className="absolute left-0 h-5/6 bg-chat-date w-1/5  rounded-[5px] drop-shadow-xl z-10 items-center justify-center flex flex-col">
             <h2 className=" text-5xl font-gmarket mb-96  ">LUMOS</h2>
+        
+          
+           
             {/* 행사관리 버튼 */}
             <button className="mt-5 mb-5  font-gmarket text-4xl" onClick={handleEventManagementClick}>행사관리</button>
             {/* 수업관리 버튼 */}

@@ -24,12 +24,16 @@ const Chat =() => {
   
     const [showSettings, setShowSettings] = useState(false); 
 
-    const handleItemClick = (itemType, itemId) => {
-      console.log(`Navigating to /detail/${itemType}/${itemId}`);
-      navigate(`/detail/${itemType}/${itemId}`, { state: { itemType, itemId, content: TestJson.content } });
-    };
+    // const handleItemClick = (itemType, itemId) => {
+    //   console.log(`Navigating to /detail/${itemType}/${itemId}`);
+    //   navigate(`/detail/${itemType}/${itemId}`, { state: { itemType, itemId, content: TestJson.content } });
+    // };
 
-    
+    const handleItemClick = (itemType, itemId) => {
+      sessionStorage.setItem('contentData', JSON.stringify(TestJson.content)); 
+      window.open(`/detail/${itemType}/${itemId}`, '_blank'); 
+      sessionStorage.clear();
+    };
 
     const logout = useLogout();
 

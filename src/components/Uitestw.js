@@ -45,7 +45,7 @@ const UII = () => {
           <SidebarItem text="이번달 행사가 궁금해" />
         </div>
       </div>
-      <div className="flex-1 flex flex-col bg-white">
+      <div className="flex-1 flex flex-col bg-white w-4">
         <div className="flex-1 p-6 overflow-y-auto">
           {messages.map((msg, index) => (
             <Message key={index} type={msg.type} text={msg.text} />

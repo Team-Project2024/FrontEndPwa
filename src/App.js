@@ -16,6 +16,7 @@ import PersistLogin from './components/PersistLogin';
 import Test from './components/UiTest';
 import DetailPage from './components/Detail';
 import UII from './components/Uitestw';
+import SlideMenu from 'react-slide-menu';
 import { Routes, Route } from 'react-router-dom';
 
 
@@ -51,8 +52,8 @@ function App() {
 
       <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>
         <Route path="chat" element={<Chat/>} />
-        <Route path='/detail/lecture/:lectureId' element={<DetailPage />} />
-        <Route path='/detail/event/:eventId' element={<DetailPage />}/>
+        <Route path='/detail/:itemType/:itemId' element={<DetailPage />} />
+      
       </Route>
 
     

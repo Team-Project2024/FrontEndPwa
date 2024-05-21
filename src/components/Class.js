@@ -57,6 +57,11 @@ const Class = () => {
       
 
       const addLectureList = () => {
+
+        if(newLecture.lectureName  == null) {
+          window.alert('강의명을  입력해주세요')
+          return 0;
+        }
         const newLectureRequirement = { ...newLecture };
         setnewlectureList([...newlectureList, newLectureRequirement]);
         setNewLecture({
@@ -250,7 +255,7 @@ const Class = () => {
         setNewLecture({ ...newLecture, credit: e.target.value })
       }
     >
-      <option value={""}>학점선택</option>
+      
       <option value={1}>1</option>
       <option value={2}>2</option>
       <option value={3}>3</option>
@@ -268,7 +273,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, classification: e.target.value })
   }
 >
-  <option value="">분류 선택</option>
+ 
   <option value="전공공통">전공공통</option>
   <option value="자유선택">자유선택</option>
   <option value="일반교양1">일반교양1</option>
@@ -287,7 +292,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, division: e.target.value })
   }
 >
-  <option value="">분반 선택</option>
+ 
   <option value={1}>1</option>
   <option value={2}>2</option>
   <option value={3}>3</option>
@@ -308,7 +313,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, grade: e.target.value })
   }
 >
-  <option value="">학년 선택</option>
+ 
   <option value={1}>1</option>
   <option value={2}>2</option>
   <option value={3}>3</option>
@@ -325,7 +330,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, classMethod: e.target.value })
   }
 >
-  <option value="">수업방식 선택</option>
+  
   <option value="대면">대면</option>
   <option value="사이버">사이버</option>
   <option value="하이브리드">하이브리드</option>
@@ -341,7 +346,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, testType: e.target.value })
   }
 >
-  <option value="">시험방식 선택</option>
+  
   <option value="과제 대체">과제대체</option>
   <option value="실습, 발표 대체">실습, 발표 대체</option>
   <option value="시험2번">시험2번</option>
@@ -357,7 +362,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, teamwork: e.target.value })
   }
 >
-  <option value="">팀워크</option>
+  
   <option value={1}>1</option>
   <option value={2}>2</option>
   <option value={3}>3</option>
@@ -373,7 +378,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, entrepreneurship: e.target.value })
   }
 >
-  <option value="">entrepreneurship</option>
+ 
   <option value={1}>1</option>
   <option value={2}>2</option>
   <option value={3}>3</option>
@@ -391,7 +396,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, creativeThinking: e.target.value })
   }
 >
-  <option value="">creativeThinking</option>
+ 
   <option value={1}>1</option>
   <option value={2}>2</option>
   <option value={3}>3</option>
@@ -407,7 +412,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, harnessingResource: e.target.value })
   }
 >
-  <option value="">harnessingResource</option>
+ 
   <option value={1}>1</option>
   <option value={2}>2</option>
   <option value={3}>3</option>
@@ -425,7 +430,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, teamPlay: e.target.value })
   }
 >
-  <option value="">조별과제 유무</option>
+ 
   <option value={false}>없음</option>
   <option value={true}>있음</option>
  
@@ -442,7 +447,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, gradeMethod: e.target.value })
   }
 >
-  <option value="">채점방식</option>
+ 
   <option value={"상대평가"}>상대평가</option>
   <option value={"절대평가"}>절대평가</option>
   <option value={"PF"}>PF</option>
@@ -460,7 +465,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, aiSw: e.target.value })
   }
 >
-  <option value="">aisw 유무</option>
+ 
   <option value={false}>해당없음</option>
   <option value={true}>해당됨</option>
  
@@ -477,7 +482,7 @@ const Class = () => {
     setNewLecture({ ...newLecture, course_evaluation: e.target.value })
   }
 >
-  <option value="">강의평가</option>
+ 
   <option value={0}>0</option>
   <option value={1}>1</option>
  

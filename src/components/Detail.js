@@ -1,46 +1,41 @@
-import React from "react";
-import { useParams, useLocation } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 const DetailPage = () => {
-  const params = useParams();
-  const location = useLocation();
-  const { state } = location;
+  const { itemType, itemId } = useParams(); // itemType과 itemId 받기
+  const [detailInfo, setDetailInfo] = useState(null);
 
-  // 디버깅용 로그
-  console.log("Params itemType:", state.itemType); 
-  console.log("Params itemId:", state.itemId);
-  console.log("State:", state);
-
- 
-
-  let detailInfo;
-  if (state && state.content) {
-    if (state.itemType === "lecture" && state.content.lecture) {
-      detailInfo = state.content.lecture.data.find(lecture => lecture.lectureId === parseInt(state.itemId));
-    } else if (state.itemType === "event" && state.content.event) {
-      detailInfo = state.content.event.data.find(event => event.eventId === parseInt(state.itemId));
+  useEffect(() => {
+    const dataString = sessionStorage.getItem('contentData');
+    if (dataString) {
+      const data = JSON.parse(dataString);
+      let detail = null;
+      if (itemType === "lecture" && data.lecture) {
+        detail = data.lecture.data.find(lecture => lecture.lectureId === parseInt(itemId));
+      } else if (itemType === "event" && data.event) {
+        detail = data.event.data.find(event => event.eventId === parseInt(itemId));
+      }
+      setDetailInfo(detail);
     }
+  }, [itemType, itemId]);
+
+  if (!detailInfo) {
+    return <p>해당 항목을 찾을 수 없습니다.</p>;
   }
 
   return (
     <div>
-      {detailInfo ? (
+      <h2>{itemType === 'lecture' ? detailInfo.lectureName : detailInfo.eventName}</h2>
+      <p>{detailInfo.description}</p>
+      {itemType === 'lecture' ? (
         <div>
-          <h2>{state.itemType === 'lecture' ? detailInfo.lectureName : detailInfo.eventName}</h2>
-          <p>{detailInfo.description}</p>
-          {state.itemType === 'lecture' ? (
-            <div>
-              <p>강의실: {detailInfo.room}</p>
-              <p>강의 시간: {detailInfo.lectureTime}</p>
-            </div>
-          ) : (
-            <div>
-              <p>장소: {detailInfo.room}</p>
-            </div>
-          )}
+          <p>강의실: {detailInfo.room}</p>
+          <p>강의 시간: {detailInfo.lectureTime}</p>
         </div>
       ) : (
-        <p>해당 항목을 찾을 수 없습니다.</p>
+        <div>
+          <p>장소: {detailInfo.room}</p>
+        </div>
       )}
     </div>
   );
