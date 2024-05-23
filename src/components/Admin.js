@@ -8,6 +8,7 @@ import Event from "./Event";
 import Major from "./Major";
 import SideBar from "react-side-bar";
 import Graduation from "./Graduation";
+import { BrowserView,MobileView } from "react-device-detect";
 import Class from "./Class";
 import Navbar from "./Navbar";
 
@@ -45,7 +46,9 @@ const Admin= () => {
   
     return (
       <React.Fragment>
-          <Navbar></Navbar>
+
+        <BrowserView>
+        <Navbar></Navbar>
         <div className="bg-left-main flex flex-row h-screen justify-center items-center">
           
         <div className="absolute top-0 right-0 mt-40 mx-40">
@@ -63,7 +66,7 @@ const Admin= () => {
           </div>
         )}
           {/* 왼쪽 메뉴 */}
-          <div className="absolute left-0 h-5/6 bg-chat-date w-1/5  rounded-[5px] drop-shadow-xl z-10 items-center justify-center flex flex-col">
+          <div className=" h-5/6 bg-chat-date w-1/5  rounded-[5px] drop-shadow-xl z-10 items-center justify-center flex flex-col">
             <h2 className=" text-5xl font-gmarket mb-96  ">LUMOS</h2>
         
           
@@ -78,7 +81,7 @@ const Admin= () => {
             <button className="mt-5 mb-5 font-gmarket text-4xl"onClick={handleClassManagementClick}>강의관리</button>
           </div>
           {/* 오른쪽 컨텐츠 */}
-          <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-center relative items-center " >
+          <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-center relative items-center overflow-auto " >
             {/* 선택된 메뉴에 따라 다른 컴포넌트 표시 */}
             {selectedMenu === "eventManagement" && (
               <Event/>
@@ -94,6 +97,14 @@ const Admin= () => {
             )}
           </div>
         </div>
+        </BrowserView>
+
+
+        <MobileView>
+{/* 여기거 렌더링 */}
+
+        </MobileView>
+      
       </React.Fragment>
     );
   };

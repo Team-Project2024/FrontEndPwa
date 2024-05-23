@@ -3,6 +3,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import AuthContext from "../context/AuthProvider";
+import { BrowserView,MobileView } from "react-device-detect";
 import moment from 'moment';
 
 const Event = () => {
@@ -133,7 +134,12 @@ const Event = () => {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
   return (
-    <div className="container mx-auto flex flex-col justify-center items-center overflow-auto">
+
+    
+    
+    <React.Fragment>
+      <BrowserView >
+      <div className="container mx-auto flex flex-col justify-center items-center  ">
       <h1 className="text-3xl font-bold mb-4">행사관리</h1>
       <div className="mb-4">
         <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => setShowAddForm(!showAddForm)}>행사 추가</button>
@@ -150,11 +156,11 @@ const Event = () => {
           </div>
         )}
       </div>
-      <div >
+      <div className="overflow-y-auto" >
         <h2 className="text-xl font-bold mb-2 justify-center items-center ml-8">행사</h2>
         <ul>
           {currentEvents.map(event => (
-            <div key={event.eventId} className="mt-4 p-4 border border-gray-300 rounded overflow-hidden ">
+            <div key={event.eventId} className="mt-4 p-4 border border-gray-300 rounded overflow-hidden w-full ">
              
               
 
@@ -223,6 +229,17 @@ const Event = () => {
         </div>
       )}
     </div>
+      </BrowserView>
+
+
+      <MobileView>
+        {/* 모바일 ui */}
+
+      </MobileView>
+
+
+    </React.Fragment>
+   
   );
 };
 
