@@ -2,20 +2,26 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const DetailPage = () => {
-  const { itemType, itemId } = useParams(); // itemType과 itemId 받기
+  const { itemType, itemId } = useParams();
   const [detailInfo, setDetailInfo] = useState(null);
 
   useEffect(() => {
     const dataString = sessionStorage.getItem('contentData');
     if (dataString) {
-      const data = JSON.parse(dataString);
-      let detail = null;
-      if (itemType === "lecture" && data.lecture) {
-        detail = data.lecture.data.find(lecture => lecture.lectureId === parseInt(itemId));
-      } else if (itemType === "event" && data.event) {
-        detail = data.event.data.find(event => event.eventId === parseInt(itemId));
+      try {
+        const data = JSON.parse(dataString);
+        let detail = null;
+        if (data.table === "lecture" && itemType === "lecture") {
+          const parsedData = data.data; // JSON 배열로 이미 존재
+          detail = parsedData.find(lecture => lecture.lectureId === parseInt(itemId));
+        } else if (data.table === "event" && itemType === "event") {
+          const parsedData = data.data; // JSON 배열로 이미 존재
+          detail = parsedData.find(event => event.eventId === parseInt(itemId));
+        }
+        setDetailInfo(detail);
+      } catch (error) {
+        console.error('Error parsing contentData:', error);
       }
-      setDetailInfo(detail);
     }
   }, [itemType, itemId]);
 
@@ -26,7 +32,6 @@ const DetailPage = () => {
   return (
     <div>
       <h2>{itemType === 'lecture' ? detailInfo.lectureName : detailInfo.eventName}</h2>
-      <p>{detailInfo.description}</p>
       {itemType === 'lecture' ? (
         <div>
           <p>강의실: {detailInfo.room}</p>
@@ -34,7 +39,7 @@ const DetailPage = () => {
         </div>
       ) : (
         <div>
-          <p>장소: {detailInfo.room}</p>
+          <p>행사 장소: {detailInfo.room}</p>
         </div>
       )}
     </div>
