@@ -68,36 +68,39 @@ const Chat =() => {
   
     const fetchMessages = async (chatRoomId) => {
       try {
-        const response = await axiosPrivate.get(`/api/chat?chatRoomId=${chatRoomId}`);
+        const response = await axiosPrivate.get(
+          `/api/chat?chatRoomId=${chatRoomId}`
+        );
         const { userChat = [], chatBot = [] } = response.data; // 기본값을 빈 배열로 설정
-  
-        console.log(response.data);
-  
         // 파싱 로직 수정
-        const parsedChatBot = chatBot.map(message => {
+        const parsedChatBot = chatBot.map((message) => {
           let parsedContent;
           try {
             parsedContent = JSON.parse(message.content);
             console.log(parsedContent);
             // data 필드가 문자열 형태인 경우 JSON 파싱
-            if (parsedContent.data && typeof parsedContent.data === 'string') {
+            if (parsedContent.data && typeof parsedContent.data === "string") {
               parsedContent.data = JSON.parse(parsedContent.data);
             }
           } catch (error) {
-            console.error('Error parsing chat bot message content:', error);
+            console.error("Error parsing chat bot message content:", error);
             parsedContent = { content: message.content };
           }
-          return { ...message, content: parsedContent, type: 'bot' };
+          return { ...message, content: parsedContent, type: "bot" };
         });
-  
-        const combinedMessages = [
-          ...userChat.map(msg => ({ ...msg, type: 'user' })),
-          ...parsedChatBot
-        ].sort((a, b) => new Date(a.chatDate) - new Date(b.chatDate));
-  
+        const combinedMessages = [];
+        const maxLength = Math.max(userChat.length, parsedChatBot.length);
+        for (let i = 0; i < maxLength; i++) {
+          if (userChat[i]) {
+            combinedMessages.push({ ...userChat[i], type: "user" });
+          }
+          if (parsedChatBot[i]) {
+            combinedMessages.push(parsedChatBot[i]);
+          }
+        }
         setMessages(combinedMessages);
       } catch (error) {
-        console.error('Error fetching messages:', error);
+        console.error("Error fetching messages:", error);
       }
     };
   
@@ -129,8 +132,10 @@ const Chat =() => {
       try {
         let newChatRoomId = null;
         if (isNewChatRoom) {
-          newChatRoomId = await createNewChatRoom(inputMessage);
+          newChatRoomId = await createNewChatRoom(inputMessage); 
           setIsNewChatRoom(false);
+          fetchChatRooms();
+          setSelectedChatRoomId(newChatRoomId);
           fetchChatRooms();
          
         }
@@ -228,37 +233,24 @@ const Chat =() => {
         </ul>
       </div>
       <div className="w-2/3 p-4 flex flex-col">
-        <div className="flex-grow mb-4 overflow-y-auto">
-          {messages.map((message, index) => (
-            <div key={index} className={`mb-2 ${message.type === 'user' ? 'text-right' : 'text-left'}`}>
-              <p className={`inline-block py-2 px-4 rounded ${message.type === 'user' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-                {typeof message.content === 'string' ? message.content : message.content.content}
-              </p>
-              {message.type === 'bot' && message.content.table === 'lecture' && message.content.data && (
-                <div>
-                  <ul>
-                    {message.content.data.map((lecture, idx) => (
-                      <li key={lecture.lectureId} onClick={() => handleItemClick('lecture', lecture.lectureId)}>
-                        <span>{idx + 1}.{lecture.lectureName}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-              {message.type === 'bot' && message.content.table === 'event' && message.content.data && (
-                <div>
-                  <ul>
-                    {message.content.data.map((event, idx) => (
-                      <li key={event.eventId} onClick={() => handleItemClick('event', event.eventId)}>
-                        <span>{idx + 1}.{event.eventName}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+      <div className="flex-grow mb-4 overflow-y-auto max-w-full ">
+  {messages.map((message, index) => (
+    <div key={index} className={`mb-2 ${message.type === 'user' ? 'flex justify-end' : 'text-left'}`}>
+      <p className={`inline-block py-2 px-4 rounded ${message.type === 'user' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+        {typeof message.content === 'string' ? message.content : message.content.content}
+        {message.type === 'bot' && (message.content.table === 'lecture' || message.content.table === 'event') && message.content.data && (
+          <ul>
+            {message.content.data.map((item, idx) => (
+              <li key={idx} onClick={() => handleItemClick(message.content.table, item[`${message.content.table}Id`])}>
+                <span>{idx + 1}.{item[`${message.content.table}Name`]}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </p>
+    </div>
+  ))}
+</div>
         <div className="flex">
           <input
             type="text"
