@@ -125,7 +125,7 @@ const Chat = () => {
   };
   const handleCreateChatRoom = () => {
     setIsNewChatRoom(true);
-    window.alert('이제 첫 질문을 전송시 채팅방이 생성됩니다');
+    
   };
 
   const handleDeleteChatRoom = async (chatRoomId) => {
