@@ -47,7 +47,7 @@ function App() {
       {/* 로그인 완료, 권한이 있어야 접근가능 */}
       <Route element={<PersistLogin/>}>
       <Route element={<RequireAuth allowedRoles={['ROLE_STUDENT', 'ROLE_ADMIN', 'ROLE_PROFESSOR']} auth={auth} />}>
-       <Route path="/" element={<Home />} />
+       <Route path="/" element={<Chat />} />
       </Route>
 
       <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR','ROLE_STUDENT','ROLE_ADMIN']} auth={auth}/>}>

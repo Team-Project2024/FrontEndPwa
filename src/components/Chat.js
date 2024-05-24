@@ -40,7 +40,7 @@ const Chat = () => {
       );
       setChatRooms(sortedChatRooms);
 
-      fetchChatRooms();
+     
     } catch (error) {
       console.error('Error fetching chat rooms:', error);
     }
