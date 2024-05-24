@@ -11,6 +11,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import useLogout from "../hooks/useLogout";
 import Button from '@mui/material/Button';
 
 const LOGIN_URL = "/login";
@@ -25,10 +26,29 @@ const Login = () => {
   const [password, setPwd] = useState(""); // 비밀번호 state
   const [errMsg, setErrMsg] = useState(""); // 에러메세지 state
   const [open, setOpen] = useState(false); 
+  const logout = useLogout();
+
+
+  
+
+  useEffect(() => {
+    // Clear session storage
+    sessionStorage.clear();
+
+    // Clear cookies
+    
+
+    // Clear state
+    
+    setAuth(null);
+    
+    
+  }, []);
 
   useEffect(() => {
     userReff.current.focus();
   }, []);
+
 
   useEffect(() => {
     setErrMsg("");

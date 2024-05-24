@@ -16,14 +16,13 @@ const Chat = () => {
   const [isNewChatRoom, setIsNewChatRoom] = useState(false);
   const [isChatRoomListVisible, setIsChatRoomListVisible] = useState(true);
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
+  const [tempChatRoom, setTempChatRoom] = useState(null);
 
   useEffect(() => {
     fetchChatRooms();
     if (sessionStorage.getItem("selectedChatRoomId")) {
-      console.log(sessionStorage.getItem("selectedChatRoomId"));
-      console.log(sessionStorage.getItem("y"));
       handleChatRoomSelect(sessionStorage.getItem("selectedChatRoomId"));
-      window.scroll(0, sessionStorage.y);
+      window.scroll(0, sessionStorage.getItem("y"));
     }
   }, []);
 
@@ -39,8 +38,6 @@ const Chat = () => {
         new Date(b.lastChatDate) - new Date(a.lastChatDate)
       );
       setChatRooms(sortedChatRooms);
-
-     
     } catch (error) {
       console.error('Error fetching chat rooms:', error);
     }
@@ -48,14 +45,15 @@ const Chat = () => {
 
   const handleChatRoomSelect = async (chatRoomId) => {
     setSelectedChatRoomId(chatRoomId);
-    setIsNewChatRoom(false); 
+    setIsNewChatRoom(false);
+    setTempChatRoom(null);
     fetchMessages(chatRoomId);
   };
 
   const fetchMessages = async (chatRoomId) => {
     try {
       const response = await axiosPrivate.get(`/api/chat?chatRoomId=${chatRoomId}`);
-      const { userChat = [], chatBot = [] } = response.data; 
+      const { userChat = [], chatBot = [] } = response.data;
       const parsedChatBot = chatBot.map((message) => {
         let parsedContent;
         try {
@@ -98,6 +96,7 @@ const Chat = () => {
   const sendMessage = async (message, chatRoomId) => {
     try {
       await axiosPrivate.post(`/api/chat?message=${message}&chatRoomId=${chatRoomId}`);
+      
     } catch (error) {
       console.error('Error sending message:', error);
       throw error;
@@ -107,10 +106,8 @@ const Chat = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
     setIsSending(true);
-  
-   
+    setInputMessage('');
     setLastUserQuestion(inputMessage);
-  
     try {
       let newChatRoomId = null;
       if (isNewChatRoom) {
@@ -121,12 +118,10 @@ const Chat = () => {
           { chatRoomId: newChatRoomId, lastChatDate: new Date().toISOString() },
         ]);
         setSelectedChatRoomId(newChatRoomId);
+        setTempChatRoom(null);
       }
       await sendMessage(inputMessage, newChatRoomId || selectedChatRoomId);
       fetchMessages(newChatRoomId || selectedChatRoomId);
-      setInputMessage('');
-  
-      
       setLastUserQuestion(null);
       fetchChatRooms();
     } catch (error) {
@@ -140,17 +135,16 @@ const Chat = () => {
     setIsNewChatRoom(true);
     setSelectedChatRoomId(null);
     setMessages([]);
+    setTempChatRoom({ chatRoomId: 'newchat', lastChatDate: new Date().toISOString() });
   };
 
   const handleDeleteChatRoom = async (chatRoomId) => {
     try {
       await axiosPrivate.delete(`/api/chat-room?chatRoomId=${chatRoomId}`);
-     
       if (chatRoomId === selectedChatRoomId) {
         setSelectedChatRoomId(null);
         setMessages([]);
       }
-     
       window.alert('채팅방을 삭제하였습니다.');
       fetchChatRooms();
     } catch (error) {
@@ -161,10 +155,8 @@ const Chat = () => {
   const handleDeleteAllChatRooms = async () => {
     try {
       await axiosPrivate.delete('/api/all/chat-room');
-     
       setSelectedChatRoomId(null);
       setMessages([]);
-    
       window.alert('모든 채팅방을 삭제하였습니다.');
       fetchChatRooms();
     } catch (error) {
@@ -195,6 +187,38 @@ const Chat = () => {
     setIsChatRoomListVisible(!isChatRoomListVisible);
   };
 
+  const formatDate = (date) => {
+    const currentDate = new Date();
+    const targetDate = new Date(date);
+    const diffTime = Math.abs(currentDate - targetDate);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) {
+      return "오늘";
+    } else if (diffDays === 1) {
+      return "어제";
+    } else if (diffDays <= 7) {
+      return "지난 7일";
+    } else if (diffDays <= 30) {
+      return "지난 30일";
+    } else {
+      return targetDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long' });
+    }
+  };
+
+  const groupChatRoomsByDate = (rooms) => {
+    return rooms.reduce((acc, room) => {
+      const dateCategory = formatDate(room.lastChatDate);
+      if (!acc[dateCategory]) {
+        acc[dateCategory] = [];
+      }
+      acc[dateCategory].push(room);
+      return acc;
+    }, {});
+  };
+
+  const groupedChatRooms = groupChatRoomsByDate(chatRooms);
+
   return (
     <div className="flex h-screen">
       <div className="w-1/3 border-r border-gray-300 p-4 overflow-y-auto lg:block hidden">
@@ -209,23 +233,34 @@ const Chat = () => {
           전체 채팅방 삭제
         </button>
         <ul>
-          {chatRooms.map((chatRoom) => (
-            <li
-              key={chatRoom.chatRoomId}
-              onClick={() => handleChatRoomSelect(chatRoom.chatRoomId)}
-              className="cursor-pointer hover:bg-gray-200 p-2"
-            >
-              채팅방ID:{chatRoom.chatRoomId}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDeleteChatRoom(chatRoom.chatRoomId);
-                }}
-                className="bg-red-500 text-white px-2 py-1 rounded"
-              >
-                삭제
-              </button>
+          {tempChatRoom && (
+            <li className="cursor-pointer hover:bg-gray-200 p-2">
+              NewChat
+              <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2">생성중...</button>
             </li>
+          )}
+          {Object.keys(groupedChatRooms).sort((a, b) => new Date(b) - new Date(a)).map((date) => (
+            <React.Fragment key={date}>
+              <li className="text-gray-600 font-bold">{date}</li>
+              {groupedChatRooms[date].sort((a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)).map((chatRoom) => (
+                <li
+                  key={chatRoom.chatRoomId}
+                  onClick={() => handleChatRoomSelect(chatRoom.chatRoomId)}
+                  className="cursor-pointer hover:bg-gray-200 p-2"
+                >
+                  {chatRoom.chatRoomId}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteChatRoom(chatRoom.chatRoomId);
+                    }}
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                  >
+                    삭제
+                  </button>
+                </li>
+              ))}
+            </React.Fragment>
           ))}
         </ul>
       </div>
@@ -247,23 +282,34 @@ const Chat = () => {
             전체 채팅방 삭제
           </button>
           <ul>
-            {chatRooms.map((chatRoom) => (
-              <li
-                key={chatRoom.chatRoomId}
-                onClick={() => handleChatRoomSelect(chatRoom.chatRoomId)}
-                className="cursor-pointer hover:bg-gray-200 p-2"
-              >
-                채팅방ID:{chatRoom.chatRoomId}
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteChatRoom(chatRoom.chatRoomId);
-                  }}
-                  className="bg-red-500 text-white px-2 py-1 rounded"
-                >
-                  삭제
-                </button>
+            {tempChatRoom && (
+              <li className="cursor-pointer hover:bg-gray-200 p-2">
+                NewChat
+                <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2">생성중...</button>
               </li>
+            )}
+            {Object.keys(groupedChatRooms).sort((a, b) => new Date(b) - new Date(a)).map((date) => (
+              <React.Fragment key={date}>
+                <li className="text-gray-600 font-bold">{date}</li>
+                {groupedChatRooms[date].sort((a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)).map((chatRoom) => (
+                  <li
+                    key={chatRoom.chatRoomId}
+                    onClick={() => handleChatRoomSelect(chatRoom.chatRoomId)}
+                    className="cursor-pointer hover:bg-gray-200 p-2"
+                  >
+                    {chatRoom.chatRoomId}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteChatRoom(chatRoom.chatRoomId);
+                      }}
+                      className="bg-red-500 text-white px-2 py-1 rounded"
+                    >
+                      삭제
+                    </button>
+                  </li>
+                ))}
+              </React.Fragment>
             ))}
           </ul>
         </div>
@@ -276,27 +322,19 @@ const Chat = () => {
                 {typeof message.content === 'string' ? message.content : message.content.content}
                 {message.type === 'bot' && (message.content.table === 'lecture' || message.content.table === 'event') && message.content.data && (
                   <ul>
-                  {message.content.data.map((item, idx) => (
-                    <li
-                      key={idx}
-                      onClick={() => {
-                        sessionStorage.setItem(
-                          "selectedChatRoomId",
-                          selectedChatRoomId
-                        );
-                        sessionStorage.setItem("y", window.pageYOffset);
-                        handleItemClick(
-                          message.content.table,
-                          item[`${message.content.table}Id`]
-                        );
-                      }}
-                    >
-                      <span>
-                        {idx + 1}.{item[`${message.content.table}Name`]}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                    {message.content.data.map((item, idx) => (
+                      <li
+                        key={idx}
+                        onClick={() => {
+                          sessionStorage.setItem("selectedChatRoomId", selectedChatRoomId);
+                          sessionStorage.setItem("y", window.pageYOffset);
+                          handleItemClick(message.content.table, item[`${message.content.table}Id`]);
+                        }}
+                      >
+                        <span>{idx + 1}.{item[`${message.content.table}Name`]}</span>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </p>
             </div>
@@ -311,7 +349,7 @@ const Chat = () => {
         <div className="flex">
           <input
             type="text"
-            className="flex-grow border rounded px-4 py-2 disabled:border-red-400"
+            className="flex-grow border rounded px-4 py-2"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={activeEnter}

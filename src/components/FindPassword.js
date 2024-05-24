@@ -7,6 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import useLogout from "../hooks/useLogout";
 
 const FINDPASSWORD_URL = '/find-pw';
 const VERIFYCODEURL = '/code-verification';
@@ -22,10 +23,12 @@ function FindPassword() {
   const [checkPw, setcheckPw] = useState("");
   const [code, setVerifyCode] = useState("");
   const [open, setOpen] = useState(false);
+  const [trimOpen, settrimOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
   const [count, setCount] = useState(60); // 3 minutes countdown
   const [isVerifyDisabled, setIsVerifyDisabled] = useState(false);
   const [isResendVisible, setIsResendVisible] = useState(false); 
+  const logout = useLogout();
   const userRef = useRef();
   const navigate = useNavigate();
 
@@ -51,6 +54,10 @@ function FindPassword() {
   const handleClose = () => {
     setOpen(false);
     navigate('/');
+  }
+
+  const handleTrimClose = () => {
+    settrimOpen(false);
   }
 
   const handleErrorClose = () => {
@@ -123,6 +130,10 @@ function FindPassword() {
 
   const ChangePassword = async (e) => {
     e.preventDefault();
+    if(password !== checkPw){
+       settrimOpen(true);
+       return;
+    }
     try {
       const response = await axios.post(CHANGEPASSWORD_URL,
         JSON.stringify({ id, password, checkPw }),
@@ -209,7 +220,7 @@ function FindPassword() {
                 <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드요청</button>
               </div>
               <div className='flex justify-center'>
-                <Link to="/">로그인창으로돌아가기</Link>
+                <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
               </div>
             </form>
           </div>
@@ -235,6 +246,9 @@ function FindPassword() {
           <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
             <h2 className='text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
             <div>
+            <div className='mt-2 justify-center items-center'>
+              <p className="text-red-500 justify-center">{Math.floor(count / 60)}:{(count % 60).toString().padStart(2, '0')}</p>
+            </div>
               <div className="mt-2">
                 <input id="verifycode" type="text" placeholder='인증코드입력'
                   ref={userRef}
@@ -243,9 +257,7 @@ function FindPassword() {
                   required className="block w-full sm:w-80 rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
               </div>
             </div>
-            <div className='mt-2'>
-              <p className="text-red-500">{Math.floor(count / 60)}:{(count % 60).toString().padStart(2, '0')}</p>
-            </div>
+           
             <div className='items-center flex justify-center mb-6'>
               <button onClick={VerifyCation} type="submit" disabled={isVerifyDisabled} className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드인증</button>
             </div>
@@ -255,7 +267,7 @@ function FindPassword() {
               </div>
             )}
             <div className='flex justify-center'>
-              <Link to="/">로그인창으로돌아가기</Link>
+              <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
             </div>
           </div>
         </div>
@@ -297,7 +309,7 @@ function FindPassword() {
               <button onClick={ChangePassword} type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">변경</button>
             </div>
             <div className='flex justify-center'>
-              <Link to="/">로그인창으로돌아가기</Link>
+              <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
             </div>
           </div>
         </div>
@@ -313,6 +325,13 @@ function FindPassword() {
           <DialogContent>{errMsg}</DialogContent>
           <DialogActions>
             <Button onClick={handleErrorClose} color="primary">닫기</Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={trimOpen} onClose={handleTrimClose}>
+          <DialogTitle>비밀번호 불일치</DialogTitle>
+          <DialogContent>새 비밀번호와 확인비밀번호가 일치하지 않습니다.</DialogContent>
+          <DialogActions>
+            <Button onClick={handleTrimClose} color="primary">닫기</Button>
           </DialogActions>
         </Dialog>
       </section>

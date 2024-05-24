@@ -8,6 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import useLogout from "../hooks/useLogout";
 
 const FINDID_URL = '/find-id';
 
@@ -19,6 +20,8 @@ const FindId = () => {
     const [open, setOpen] = useState(false); // Modal open state
     const [isSuccess, setIsSuccess] = useState(false); // Success state
     const userReff = useRef();
+
+    const logout = useLogout();
 
     useEffect(() => {
         userReff.current.focus();
@@ -116,7 +119,7 @@ const FindId = () => {
                             </div>
                         </form>
                         <div className='flex justify-start'>
-                            <Link to="/">로그인창으로 돌아가기</Link>
+                            <Link  onClick={logout}to="/login">로그인창으로 돌아가기</Link>
                         </div>
                     </div>
                 </div>

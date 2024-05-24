@@ -16,7 +16,7 @@ const useLogout = () => {
                 withCredentials: true
             });
             removeCookie('Refresh_Token'); //저장된 쿠키중 RefreshToken 삭제
-            window.location.reload(); //삭제 적용을 위해 페이지 강제 새로고침
+            // window.location.reload(); //삭제 적용을 위해 페이지 강제 새로고침
            
         }catch (err) {
             console.error(err);
