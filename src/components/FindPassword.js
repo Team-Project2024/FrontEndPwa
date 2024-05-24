@@ -23,6 +23,9 @@ function FindPassword() {
   const [code, setVerifyCode] = useState("");
   const [open, setOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
+  const [count, setCount] = useState(60); // 3 minutes countdown
+  const [isVerifyDisabled, setIsVerifyDisabled] = useState(false);
+  const [isResendVisible, setIsResendVisible] = useState(false); 
   const userRef = useRef();
   const navigate = useNavigate();
 
@@ -34,6 +37,16 @@ function FindPassword() {
     setErrMsg("");
   }, [id, email, name, password, checkPw, code]);
 
+  useEffect(() => {
+    let timer;
+    if (step === 2 && count > 0) {
+      timer = setTimeout(() => setCount(count - 1), 1000);
+    } else if (count === 0) {
+      setIsVerifyDisabled(true);
+      setIsResendVisible(true); 
+    }
+    return () => clearTimeout(timer);
+  }, [count, step]);
 
   const handleClose = () => {
     setOpen(false);
@@ -63,6 +76,9 @@ function FindPassword() {
       );
       if (response.status === 200) {
         setStep(2);
+        setCount(180); 
+        setIsVerifyDisabled(false);
+        setIsResendVisible(false);
       } else {
         setErrMsg('요청이 실패했습니다.');
         setErrorOpen(true);
@@ -79,6 +95,8 @@ function FindPassword() {
 
   const VerifyCation = async (e) => {
     e.preventDefault();
+    if (isVerifyDisabled) return; 
+
     try {
       const response = await axios.post(VERIFYCODEURL,
         JSON.stringify({ id, code }),
@@ -129,7 +147,32 @@ function FindPassword() {
     }
   }
 
- 
+  const handleResend = async () => {
+    try {
+      const response = await axios.post(FINDPASSWORD_URL,
+        JSON.stringify({ id, email, name }),
+        {
+          headers: { 'Content-Type': 'application/json' },
+          withCredentials: true
+        }
+      );
+      if (response.status === 200) {
+        setIsVerifyDisabled(false);
+        setIsResendVisible(false);
+        setCount(180); 
+      } else {
+        setErrMsg('요청이 실패했습니다.');
+        setErrorOpen(true);
+      }
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg('No Server Response');
+      } else if (err.response?.status === 400) {
+        setErrMsg('실패');
+      }
+      setErrorOpen(true);
+    }
+  }
 
   const renderStep1 = () => {
     return (
@@ -200,9 +243,17 @@ function FindPassword() {
                   required className="block w-full sm:w-80 rounded-md border-0 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></input>
               </div>
             </div>
-            <div className='items-center flex justify-center mb-6'>
-              <button onClick={VerifyCation} type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드인증</button>
+            <div className='mt-2'>
+              <p className="text-red-500">{Math.floor(count / 60)}:{(count % 60).toString().padStart(2, '0')}</p>
             </div>
+            <div className='items-center flex justify-center mb-6'>
+              <button onClick={VerifyCation} type="submit" disabled={isVerifyDisabled} className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드인증</button>
+            </div>
+            {isVerifyDisabled && (
+              <div className='items-center flex justify-center mb-6'>
+                <button onClick={handleResend} className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드 재요청</button>
+              </div>
+            )}
             <div className='flex justify-center'>
               <Link to="/">로그인창으로돌아가기</Link>
             </div>
