@@ -7,6 +7,8 @@ import Switch from '@mui/material/Switch';
 import React from "react";
 import TextAni from "./TextAni";
 import { BrowserView,MobileView} from "react-device-detect";
+import LoginModal from "../components/modals/LoginModal"
+
 
 
 const LOGIN_URL = "/login";
@@ -21,6 +23,7 @@ const Login = () => {
   const [id, setUser] = useState("");  //학번/교번 state
   const [password, setPwd] = useState(""); // 비밀번호 state
   const [errMsg, setErrMsg] = useState(""); // 에러메세지 state
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     userReff.current.focus();
@@ -94,6 +97,16 @@ const Login = () => {
 useEffect(() => {
   localStorage.setItem("persist", persist); //persist state 상태변화시 로컬스토리지에 persist 추가
 }, [persist])
+
+
+const handleOpenModal = () => {
+  setShowModal(true);
+};
+
+const handleCloseModal = () => {
+  setShowModal(false);
+};
+
 
 
 

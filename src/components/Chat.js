@@ -19,19 +19,22 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatRooms();
-  }, []);
+  }, [],[chatRooms]);
 
   const fetchChatRooms = async () => {
     try {
       const response = await axiosPrivate.get('/api/chat-room');
       if (response.data.repsonseChatRoomDTOList == null) {
+        setChatRooms([]);
         return;
       }
-      // Sort chat rooms by lastChatDate
+      
       const sortedChatRooms = response.data.repsonseChatRoomDTOList.sort((a, b) => 
         new Date(b.lastChatDate) - new Date(a.lastChatDate)
       );
       setChatRooms(sortedChatRooms);
+
+      fetchChatRooms();
     } catch (error) {
       console.error('Error fetching chat rooms:', error);
     }
@@ -99,7 +102,7 @@ const Chat = () => {
     if (!inputMessage.trim()) return;
     setIsSending(true);
   
-    // 사용자의 마지막 질문을 저장
+   
     setLastUserQuestion(inputMessage);
   
     try {
@@ -107,36 +110,43 @@ const Chat = () => {
       if (isNewChatRoom) {
         newChatRoomId = await createNewChatRoom(inputMessage);
         setIsNewChatRoom(false);
-        fetchChatRooms();
+        setChatRooms((prevChatRooms) => [
+          ...prevChatRooms,
+          { chatRoomId: newChatRoomId, lastChatDate: new Date().toISOString() },
+        ]);
         setSelectedChatRoomId(newChatRoomId);
-        fetchChatRooms();
       }
       await sendMessage(inputMessage, newChatRoomId || selectedChatRoomId);
       fetchMessages(newChatRoomId || selectedChatRoomId);
       setInputMessage('');
   
-      // 응답을 받은 후 사용자의 마지막 질문 초기화
+      
       setLastUserQuestion(null);
+      fetchChatRooms();
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {
       setIsSending(false);
     }
   };
+
   const handleCreateChatRoom = () => {
     setIsNewChatRoom(true);
-    
+    setSelectedChatRoomId(null);
+    setMessages([]);
   };
 
   const handleDeleteChatRoom = async (chatRoomId) => {
     try {
       await axiosPrivate.delete(`/api/chat-room?chatRoomId=${chatRoomId}`);
-      fetchChatRooms();
+     
       if (chatRoomId === selectedChatRoomId) {
         setSelectedChatRoomId(null);
         setMessages([]);
       }
+     
       window.alert('채팅방을 삭제하였습니다.');
+      fetchChatRooms();
     } catch (error) {
       console.error('Error deleting chat room:', error);
     }
@@ -145,10 +155,12 @@ const Chat = () => {
   const handleDeleteAllChatRooms = async () => {
     try {
       await axiosPrivate.delete('/api/all/chat-room');
-      fetchChatRooms();
+     
       setSelectedChatRoomId(null);
       setMessages([]);
+    
       window.alert('모든 채팅방을 삭제하였습니다.');
+      fetchChatRooms();
     } catch (error) {
       console.error('Error deleting all chat rooms:', error);
     }
@@ -250,31 +262,30 @@ const Chat = () => {
       )}
       <div className="w-2/3 p-4 flex flex-col">
         <div className="flex-grow mb-4 overflow-y-auto max-w-full">
-     
-           {messages.map((message, index) => (
-          <div key={index} className={`mb-2 ${message.type === 'user' ? 'flex justify-end' : 'text-left'}`}>
-            <p className={`inline-block py-2 px-4 rounded ${message.type === 'user' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-              {typeof message.content === 'string' ? message.content : message.content.content}
-              {message.type === 'bot' && (message.content.table === 'lecture' || message.content.table === 'event') && message.content.data && (
-                <ul>
-                  {message.content.data.map((item, idx) => (
-                    <li key={idx} onClick={() => handleItemClick(message.content.table, item[`${message.content.table}Id`])}>
-                      <span>{idx + 1}.{item[`${message.content.table}Name`]}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </p>
-          </div>
-        ))}
+          {messages.map((message, index) => (
+            <div key={index} className={`mb-2 ${message.type === 'user' ? 'flex justify-end' : 'text-left'}`}>
+              <p className={`inline-block py-2 px-4 rounded ${message.type === 'user' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
+                {typeof message.content === 'string' ? message.content : message.content.content}
+                {message.type === 'bot' && (message.content.table === 'lecture' || message.content.table === 'event') && message.content.data && (
+                  <ul>
+                    {message.content.data.map((item, idx) => (
+                      <li key={idx} onClick={() => handleItemClick(message.content.table, item[`${message.content.table}Id`])}>
+                        <span>{idx + 1}.{item[`${message.content.table}Name`]}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </p>
+            </div>
+          ))}
 
-{lastUserQuestion && (
-          <div className="mb-2 flex justify-end">
-            <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800">{lastUserQuestion}</p>
-          </div>
-        )}
-      </div>
-      <div className="flex">
+          {lastUserQuestion && (
+            <div className="mb-2 flex justify-end">
+              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800">{lastUserQuestion}</p>
+            </div>
+          )}
+        </div>
+        <div className="flex">
           <input
             type="text"
             className="flex-grow border rounded px-4 py-2 disabled:border-red-400"
