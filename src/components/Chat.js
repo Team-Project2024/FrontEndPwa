@@ -19,7 +19,13 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatRooms();
-  }, [],[chatRooms]);
+    if (sessionStorage.getItem("selectedChatRoomId")) {
+      console.log(sessionStorage.getItem("selectedChatRoomId"));
+      console.log(sessionStorage.getItem("y"));
+      handleChatRoomSelect(sessionStorage.getItem("selectedChatRoomId"));
+      window.scroll(0, sessionStorage.y);
+    }
+  }, []);
 
   const fetchChatRooms = async () => {
     try {
@@ -168,12 +174,14 @@ const Chat = () => {
 
   const handleItemClick = (itemType, itemId) => {
     const message = messages.find(
-      msg => msg.type === 'bot' && msg.content.table === itemType && msg.content.data.some(item => item[`${itemType}Id`] === itemId)
+      (msg) =>
+        msg.type === "bot" &&
+        msg.content.table === itemType &&
+        msg.content.data.some((item) => item[`${itemType}Id`] === itemId)
     );
-
     if (message) {
-      sessionStorage.setItem('contentData', JSON.stringify(message.content));
-      window.open(`/detail/${itemType}/${itemId}`, '_blank');
+      sessionStorage.setItem("contentData", JSON.stringify(message.content));
+      navigate(`/detail/${itemType}/${itemId}`);
     }
   };
 
@@ -268,12 +276,27 @@ const Chat = () => {
                 {typeof message.content === 'string' ? message.content : message.content.content}
                 {message.type === 'bot' && (message.content.table === 'lecture' || message.content.table === 'event') && message.content.data && (
                   <ul>
-                    {message.content.data.map((item, idx) => (
-                      <li key={idx} onClick={() => handleItemClick(message.content.table, item[`${message.content.table}Id`])}>
-                        <span>{idx + 1}.{item[`${message.content.table}Name`]}</span>
-                      </li>
-                    ))}
-                  </ul>
+                  {message.content.data.map((item, idx) => (
+                    <li
+                      key={idx}
+                      onClick={() => {
+                        sessionStorage.setItem(
+                          "selectedChatRoomId",
+                          selectedChatRoomId
+                        );
+                        sessionStorage.setItem("y", window.pageYOffset);
+                        handleItemClick(
+                          message.content.table,
+                          item[`${message.content.table}Id`]
+                        );
+                      }}
+                    >
+                      <span>
+                        {idx + 1}.{item[`${message.content.table}Name`]}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
                 )}
               </p>
             </div>
