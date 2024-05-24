@@ -22,7 +22,7 @@ function FindPassword() {
     const [code, setVerifyCode] = useState("");
 
     const userRef = useRef();
-    const errRef = useRef();
+   
 
 
     //정규표현식 추가하기
@@ -35,7 +35,7 @@ function FindPassword() {
 
         if(!idRegex.test(id)) {
             setErrMsg('입력을 확인해주세요');
-            errRef.current.focus();
+          
             return;
         }
         
@@ -56,7 +56,7 @@ function FindPassword() {
             } else {
                 // 응답실패
                 setErrMsg('요청이 실패했습니다.');
-                errRef.current.focus();
+                
             }
         } catch (err) {
             if (!err?.response) {
@@ -64,7 +64,7 @@ function FindPassword() {
             } else if (err.response?.status === 400) {
                 setErrMsg('실패');
             }
-            errRef.current.focus();
+           
            
             console.log(id,email,name)
         }
@@ -88,7 +88,7 @@ function FindPassword() {
                 } else {
                    
                     setErrMsg('요청이 실패했습니다.');
-                    errRef.current.focus();
+                  
                 }
 
         } catch (err) {
@@ -98,7 +98,7 @@ function FindPassword() {
                 setErrMsg('실패');
                 console.log({id,code})
             }
-            errRef.current.focus();
+           
           
         }
 
@@ -108,7 +108,9 @@ function FindPassword() {
         e.preventDefault();
        
 
-
+        console.log(id);
+        console.log(checkPw);
+        console.log(password);
         try{
             const response = await axios.post(CHANGEPASSWORD_URL,
                 JSON.stringify({id,password,checkPw}),
@@ -116,6 +118,8 @@ function FindPassword() {
                     headers: { 'Content-Type': 'application/json' },
                     withCredentials: true
                 }
+
+               
                 );
                 if (response.status === 200) {
                    
@@ -124,7 +128,7 @@ function FindPassword() {
                 } else {
                   
                     setErrMsg('요청이 실패했습니다.');
-                    errRef.current.focus();
+                   
                 }
          
             
@@ -134,8 +138,7 @@ function FindPassword() {
             } else if (err.response?.status === 400) {
                 setErrMsg('실패');
             }
-            errRef.current.focus();
-            
+          
         }
 
     }
@@ -340,8 +343,8 @@ function FindPassword() {
             <div class="mt-2">
               <input id="password"  type="text"  placeholder='비밀번호 입력' 
               ref={userRef}
-              value={code}
-              onChange={(e)=>setVerifyCode(e.target.value)}
+              value={password}
+              onChange={(e)=>setNewPassword(e.target.value)}
               required class="block w-full sm:w-80  rounded-md border-0 py-3
                text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
                 placeholder:text-gray-400 focus:ring-2 focus:ring-inset
@@ -353,7 +356,7 @@ function FindPassword() {
             <div className="flex items-center justify-between">
             </div>
             <div className="mt-2 ">
-              <input id="checkPw"  type="text"  placeholder='비밀번호 확인' 
+              <input id="checkPw"  type="password"  placeholder='비밀번호 확인' 
               ref={userRef}
               value={checkPw}
               onChange={(e)=>setcheckPw(e.target.value)}
@@ -366,7 +369,7 @@ function FindPassword() {
          
       
           <div className='items-center flex justify-center mb-6'>
-            <button onClick={ChangePassword}type="submit" class="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드요청</button>
+            <button onClick={ChangePassword}type="submit" class="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">변경</button>
           </div>
       
           <div className='flex justify-start '>
