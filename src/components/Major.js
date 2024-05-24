@@ -30,6 +30,16 @@ const Major = () => {
 
   const addMajor = () => {
     // 새로운 전공을 임시 목록에 추가
+    if (newMajor.department.trim() === "") {
+      window.alert('학과를 입력해주세요');
+      return;
+    }
+
+    if (newMajors.some(major => major.department === newMajor.department && major.track === newMajor.track)) {
+      window.alert('이미 추가된 전공입니다.');
+      return;
+    }
+
     setNewMajors([...newMajors, newMajor]);
     setNewMajor({ department: "", track: "" });
   };

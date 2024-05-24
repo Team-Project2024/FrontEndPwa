@@ -58,11 +58,12 @@ const Class = () => {
 
       const addLectureList = () => {
 
-        if(newLecture.lectureName  == null) {
-          window.alert('강의명을  입력해주세요')
+       
+        const newLectureRequirement = { ...newLecture };
+        if(newLectureRequirement.lectureName  === '') {
+          window.alert('강의명을 입력해주세요')
           return 0;
         }
-        const newLectureRequirement = { ...newLecture };
         setnewlectureList([...newlectureList, newLectureRequirement]);
         setNewLecture({
           lectureName: "",

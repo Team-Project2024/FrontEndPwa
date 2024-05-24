@@ -66,7 +66,7 @@ const Admin= () => {
           </div>
         )}
           {/* 왼쪽 메뉴 */}
-          <div className=" h-5/6 bg-chat-date w-1/5  rounded-[5px] drop-shadow-xl z-10 items-center justify-center flex flex-col">
+          <div className=" h-5/6 bg-chat-date w-1/5  rounded-[5px] drop-shadow-xl z-10 items-center justify-center flex flex-col ">
             <h2 className=" text-5xl font-gmarket mb-96  ">LUMOS</h2>
         
           
@@ -81,7 +81,7 @@ const Admin= () => {
             <button className="mt-5 mb-5 font-gmarket text-4xl"onClick={handleClassManagementClick}>강의관리</button>
           </div>
           {/* 오른쪽 컨텐츠 */}
-          <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-center relative items-center overflow-auto " >
+          <div className="h-5/6 w-4/5 bg-chat-ui rounded-[50px] flex flex-col justify-center  items-center overflow-auto " >
             {/* 선택된 메뉴에 따라 다른 컴포넌트 표시 */}
             {selectedMenu === "eventManagement" && (
               <Event/>

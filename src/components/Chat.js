@@ -151,6 +151,7 @@ const Chat =() => {
     
     const handleCreateChatRoom = () => {
       setIsNewChatRoom(true);
+      window.alert('이제 첫 질문을 전송시 채팅방이 생성됩니다')
     };
 
 
@@ -254,7 +255,7 @@ const Chat =() => {
         <div className="flex">
           <input
             type="text"
-            className="flex-grow border rounded px-4 py-2"
+            className="flex-grow border rounded px-4 py-2 disabled:border-red-400"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             disabled={isSending}
