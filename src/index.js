@@ -14,7 +14,7 @@ ReactDOM.render(
   <React.StrictMode>
    
     <BrowserRouter>
-    <MobileProvider>
+  
       <AuthProvider>
      
         <Routes>
@@ -22,7 +22,7 @@ ReactDOM.render(
         </Routes>
         
       </AuthProvider>
-      </MobileProvider>
+     
     </BrowserRouter>
     
    

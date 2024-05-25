@@ -16,6 +16,7 @@ import PersistLogin from './components/PersistLogin';
 import Test from './components/UiTest';
 import DetailPage from './components/Detail';
 import UII from './components/Uitestw';
+import PublicRoute from './Route/PublicRoute';
 import SlideMenu from 'react-slide-menu';
 import { Routes, Route } from 'react-router-dom';
 
@@ -31,14 +32,18 @@ function App() {
 
   return (
     <Routes>
-    <Route path="/" element={<Layout />}>
+    <Route path="/"  element={<Layout />}>
       {/* 로그인되지않아도 접근가능 */}
-      <Route path="login" element={<Login />} />
-      <Route path="findid" element={<FindId/>} />
-      <Route path="findpassword" element={<FindPassword/>} />
-      <Route path="unauthorized" element={<Unauthorized />} />
-      <Route path="test" element={<Test/>}/>
-      <Route path="test2" element={<UII/>} />
+
+      <Route element={<PublicRoute />}>
+          <Route path="login" element={<Login />} />
+          <Route path="findid" element={<FindId />} />
+          <Route path="findpassword" element={<FindPassword />} />
+          <Route path="unauthorized" element={<Unauthorized />} />
+          <Route path="test" element={<Test />} />
+          <Route path="test2" element={<UII />} />
+        </Route>
+
       
    
       

@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
 import useAuth from "../hooks/useAuth";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import base64 from "base-64";
@@ -7,6 +7,7 @@ import Switch from '@mui/material/Switch';
 import React from "react";
 import TextAni from "./TextAni";
 import { BrowserView, MobileView } from "react-device-detect";
+import AuthContext from "../context/AuthProvider";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -27,28 +28,20 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState(""); // 에러메세지 state
   const [open, setOpen] = useState(false); 
   const logout = useLogout();
-
+  const { auth } = useContext(AuthContext);
 
   
-
   useEffect(() => {
-    // Clear session storage
+   
     sessionStorage.clear();
-
-    // Clear cookies
-    
-
-    // Clear state
-    
-    setAuth(null);
-    
-    
-  }, []);
+  
+    setAuth(null); 
+  }, [setAuth]);
+  
 
   useEffect(() => {
     userReff.current.focus();
   }, []);
-
 
   useEffect(() => {
     setErrMsg("");
