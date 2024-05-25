@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
-import moment from 'moment';
+import moment from "moment";
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -39,45 +39,46 @@ const Chat = () => {
     }
   }, [messages]);
 
- 
+  const fetchChatRooms = async () => {
+    try {
+      const response = await axiosPrivate.get("/api/chat-room");
+      if (response.data.repsonseChatRoomDTOList == null) {
+        setChatRooms([]);
+        return;
+      }
 
-const fetchChatRooms = async () => {
-  try {
-    const response = await axiosPrivate.get("/api/chat-room");
-    if (response.data.repsonseChatRoomDTOList == null) {
-      setChatRooms([]);
-      return;
+      console.log(response);
+
+      const chatRooms = response.data.repsonseChatRoomDTOList.map((room) => {
+        // moment.js를 사용하여 서버 날짜를 로컬 시간대로 변환
+        room.lastChatDate = moment
+          .utc(room.lastChatDate)
+          .local()
+          .format("YYYY-MM-DD HH:mm:ss");
+        return room;
+      });
+
+      const sortedChatRooms = chatRooms.sort(
+        (a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)
+      );
+      setChatRooms(sortedChatRooms);
+    } catch (error) {
+      console.error("Error fetching chat rooms:", error);
     }
-
-    console.log(response);
-
-    const chatRooms = response.data.repsonseChatRoomDTOList.map(room => {
-      // moment.js를 사용하여 서버 날짜를 로컬 시간대로 변환
-      room.lastChatDate = moment.utc(room.lastChatDate).local().format('YYYY-MM-DD HH:mm:ss');
-      return room;
-    });
-
-    const sortedChatRooms = chatRooms.sort(
-      (a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)
-    );
-    setChatRooms(sortedChatRooms);
-  } catch (error) {
-    console.error("Error fetching chat rooms:", error);
-  }
-};
+  };
 
   const formatDate = (date) => {
     const currentDate = new Date();
     const targetDate = new Date(date);
-    
+
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth();
     const currentDay = currentDate.getDate();
-    
+
     const targetYear = targetDate.getFullYear();
     const targetMonth = targetDate.getMonth();
     const targetDay = targetDate.getDate();
-  
+
     // Check if the date is today
     if (
       currentYear === targetYear &&
@@ -86,11 +87,10 @@ const fetchChatRooms = async () => {
     ) {
       return "오늘";
     }
-  
-    
+
     const yesterday = new Date(currentDate);
     yesterday.setDate(currentDate.getDate() - 1);
-  
+
     if (
       yesterday.getFullYear() === targetYear &&
       yesterday.getMonth() === targetMonth &&
@@ -98,24 +98,21 @@ const fetchChatRooms = async () => {
     ) {
       return "어제";
     }
-  
-   
+
     const lastWeek = new Date(currentDate);
     lastWeek.setDate(currentDate.getDate() - 7);
-  
+
     if (targetDate > lastWeek) {
       return "지난 7일";
     }
-  
-    
+
     const lastMonth = new Date(currentDate);
     lastMonth.setDate(currentDate.getDate() - 30);
-  
+
     if (targetDate > lastMonth) {
       return "지난 30일";
     }
-  
-    
+
     return targetDate.toLocaleDateString("ko-KR", {
       year: "numeric",
       month: "long",
@@ -328,7 +325,11 @@ const fetchChatRooms = async () => {
                   .map((chatRoom) => (
                     <li
                       key={chatRoom.chatRoomId}
-                      onClick={() => handleChatRoomSelect(chatRoom.chatRoomId)}
+                      onClick={() => {
+                        sessionStorage.removeItem("y");
+                        sessionStorage.removeItem("selectedChatRoomId");
+                        handleChatRoomSelect(chatRoom.chatRoomId);
+                      }}
                       className="cursor-pointer hover:bg-gray-200 p-2"
                     >
                       {chatRoom.firstChat}
@@ -392,10 +393,14 @@ const fetchChatRooms = async () => {
                     .map((chatRoom) => (
                       <li
                         key={chatRoom.chatRoomId}
-                        onClick={() => handleChatRoomSelect(chatRoom.chatRoomId)}
+                        onClick={() => {
+                          handleChatRoomSelect(chatRoom.chatRoomId);
+                          sessionStorage.removeItem("y");
+                          sessionStorage.removeItem("selectedChatRoomId");
+                        }}
                         className="cursor-pointer hover:bg-gray-200 p-2"
                       >
-                        {chatRoom.chatRoomId}
+                        {chatRoom.firstChat}
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
