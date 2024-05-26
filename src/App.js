@@ -1,6 +1,5 @@
 
 import Login from './components/Login';
-import Home from './components/Home';
 import Chat from './components/Chat';
 import Layout from './components/Layout';
 import Admin from './components/Admin';
@@ -10,13 +9,12 @@ import RequireAuth from './components/RequireAuth';
 import FindId from './components/FindId';
 import FindPassword from './components/FindPassword';
 import useAuth from "./hooks/useAuth";
-import Student from './components/Student';
-import Professor from './components/Professor';
+
 import PersistLogin from './components/PersistLogin';
 import Test from './components/UiTest';
 import DetailPage from './components/Detail';
 import UII from './components/Uitestw';
-import PublicRoute from './Route/PublicRoute';
+
 import SlideMenu from 'react-slide-menu';
 import { Routes, Route } from 'react-router-dom';
 
@@ -64,13 +62,7 @@ function App() {
     
       
 
-      <Route element={<RequireAuth allowedRoles={['ROLE_STUDENT']} auth={auth} />}>
-        <Route path="student" element={<Student/>} />
-      </Route>
-
-      <Route element={<RequireAuth allowedRoles={['ROLE_PROFESSOR']} auth={auth}/>}>
-        <Route path='professor' element={<Professor/>}/>
-      </Route>
+      
 
       <Route element={<RequireAuth allowedRoles={['ROLE_ADMIN']} auth={auth} />}>
         <Route path="admin" element={<Admin />} />
