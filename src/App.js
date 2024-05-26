@@ -35,14 +35,14 @@ function App() {
     <Route path="/"  element={<Layout />}>
       {/* 로그인되지않아도 접근가능 */}
 
-      <Route element={<PublicRoute />}>
+    
           <Route path="login" element={<Login />} />
           <Route path="findid" element={<FindId />} />
           <Route path="findpassword" element={<FindPassword />} />
           <Route path="unauthorized" element={<Unauthorized />} />
           <Route path="test" element={<Test />} />
           <Route path="test2" element={<UII />} />
-        </Route>
+        
 
       
    

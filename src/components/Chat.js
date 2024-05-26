@@ -50,7 +50,7 @@ const Chat = () => {
       console.log(response);
 
       const chatRooms = response.data.repsonseChatRoomDTOList.map((room) => {
-        // moment.js를 사용하여 서버 날짜를 로컬 시간대로 변환
+        // 서버 날짜를 로컬 시간대로 변환
         room.lastChatDate = moment
           .utc(room.lastChatDate)
           .local()
@@ -79,7 +79,7 @@ const Chat = () => {
     const targetMonth = targetDate.getMonth();
     const targetDay = targetDate.getDate();
 
-    // Check if the date is today
+    
     if (
       currentYear === targetYear &&
       currentMonth === targetMonth &&
@@ -430,9 +430,9 @@ const Chat = () => {
               }`}
             >
               <p
-                className={`inline-block py-2 px-4 rounded ${
+                className={`inline-block py-2 px-4 rounded    ${
                   message.type === "user"
-                    ? "bg-blue-100 text-blue-800"
+                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 "
                     : "bg-gray-100 text-gray-800"
                 }`}
               >
@@ -476,7 +476,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
           {lastUserQuestion && (
             <div className="mb-2 flex justify-end">
-              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800">
+              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800  break-words whitespace-pre-wrap max-w-full">
                 {lastUserQuestion}
               </p>
             </div>

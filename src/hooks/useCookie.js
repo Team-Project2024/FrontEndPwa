@@ -9,7 +9,7 @@ const useCookie = (name) => {
     return null; // or a default value
   }
 
-  return cookies.get([name]);
+  return cookies;
 };
 
 export default useCookie;
