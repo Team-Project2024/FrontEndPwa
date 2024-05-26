@@ -18,6 +18,9 @@ const Chat = () => {
   const [isChatRoomListVisible, setIsChatRoomListVisible] = useState(true);
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
   const [tempChatRoom, setTempChatRoom] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true"
+  );
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
@@ -79,7 +82,6 @@ const Chat = () => {
     const targetMonth = targetDate.getMonth();
     const targetDay = targetDate.getDate();
 
-    
     if (
       currentYear === targetYear &&
       currentMonth === targetMonth &&
@@ -274,6 +276,14 @@ const Chat = () => {
     setIsChatRoomListVisible(!isChatRoomListVisible);
   };
 
+  const toggleDarkMode = () => {
+    setIsDarkMode((prevMode) => {
+      const newMode = !prevMode;
+      localStorage.setItem("darkMode", newMode);
+      return newMode;
+    });
+  };
+
   const groupChatRoomsByDate = (rooms) => {
     return rooms.reduce((acc, room) => {
       const dateCategory = formatDate(room.lastChatDate);
@@ -288,26 +298,32 @@ const Chat = () => {
   const groupedChatRooms = groupChatRoomsByDate(chatRooms);
 
   return (
-    <div className="flex h-screen">
-      <div className="w-1/3 border-r border-gray-300 p-4 overflow-y-auto lg:block hidden">
-        <h2 className="text-xl mb-4">채팅방 목록</h2>
+    <div className={`flex h-screen ${isDarkMode ? "dark" : ""}`}>
+      <div className="w-1/3 border-r border-gray-300 p-4 overflow-y-auto lg:block hidden dark:border-gray-600 dark:bg-gray-600">
+        <h2 className="text-xl mb-4 dark:text-gray-200">채팅방 목록</h2>
         <button
-          className="mt-2 bg-green-500 text-white rounded px-4 py-2"
+          className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
           onClick={handleCreateChatRoom}
         >
           채팅방 생성
         </button>
         <button
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+          className="mt-4 bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
           onClick={handleDeleteAllChatRooms}
         >
           전체 채팅방 삭제
         </button>
+        <button
+          className="mt-4 bg-gray-500 text-white px-4 py-2 rounded dark:bg-gray-700"
+          onClick={toggleDarkMode}
+        >
+          다크 모드 {isDarkMode ? "끄기" : "켜기"}
+        </button>
         <ul>
           {tempChatRoom && (
-            <li className="cursor-pointer hover:bg-gray-200 p-2">
+            <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
               NewChat
-              <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2">
+              <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2 dark:bg-gray-700">
                 생성중...
               </button>
             </li>
@@ -316,7 +332,7 @@ const Chat = () => {
             .sort((a, b) => new Date(b) - new Date(a))
             .map((date) => (
               <React.Fragment key={date}>
-                <li className="text-gray-600 font-bold">{date}</li>
+                <li className="text-gray-600 font-bold dark:text-white">{date}</li>
                 {groupedChatRooms[date]
                   .sort(
                     (a, b) =>
@@ -330,7 +346,7 @@ const Chat = () => {
                         sessionStorage.removeItem("selectedChatRoomId");
                         handleChatRoomSelect(chatRoom.chatRoomId);
                       }}
-                      className="cursor-pointer hover:bg-gray-200 p-2"
+                      className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-white"
                     >
                       {chatRoom.firstChat}
                       <button
@@ -338,7 +354,7 @@ const Chat = () => {
                           e.stopPropagation();
                           handleDeleteChatRoom(chatRoom.chatRoomId);
                         }}
-                        className="bg-red-500 text-white px-2 py-1 rounded"
+                        className="bg-red-500 text-white px-2 py-1 rounded dark:bg-red-700"
                       >
                         삭제
                       </button>
@@ -351,31 +367,37 @@ const Chat = () => {
       <div className="lg:hidden block p-4">
         <button
           onClick={toggleChatRoomList}
-          className="bg-blue-500 text-white rounded px-4 py-2"
+          className="bg-blue-500 text-white rounded px-4 py-2 dark:bg-blue-700"
         >
           {isChatRoomListVisible ? "채팅방 목록 숨기기" : "채팅방 목록 보기"}
         </button>
       </div>
       {isChatRoomListVisible && (
-        <div className="w-full border-r border-gray-300 p-4 overflow-y-auto lg:hidden">
-          <h2 className="text-xl mb-4">채팅방 목록</h2>
+        <div className="w-full border-r border-gray-300 p-4 overflow-y-auto lg:hidden dark:border-gray-600">
+          <h2 className="text-xl mb-4 dark:text-black-500">채팅방 목록</h2>
           <button
-            className="mt-2 bg-green-500 text-white rounded px-4 py-2"
+            className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
             onClick={handleCreateChatRoom}
           >
             채팅방 생성
           </button>
           <button
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
             onClick={handleDeleteAllChatRooms}
           >
             전체 채팅방 삭제
           </button>
+          <button
+            className="mt-4 bg-gray-500 text-white px-4 py-2 rounded dark:bg-gray-700"
+            onClick={toggleDarkMode}
+          >
+            다크 모드 {isDarkMode ? "끄기" : "켜기"}
+          </button>
           <ul>
             {tempChatRoom && (
-              <li className="cursor-pointer hover:bg-gray-200 p-2">
+              <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
                 NewChat
-                <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2">
+                <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2 dark:bg-gray-700">
                   생성중...
                 </button>
               </li>
@@ -384,7 +406,7 @@ const Chat = () => {
               .sort((a, b) => new Date(b) - new Date(a))
               .map((date) => (
                 <React.Fragment key={date}>
-                  <li className="text-gray-600 font-bold">{date}</li>
+                  <li className="text-gray-600 font-bold dark:text-gray-400">{date}</li>
                   {groupedChatRooms[date]
                     .sort(
                       (a, b) =>
@@ -398,7 +420,7 @@ const Chat = () => {
                           sessionStorage.removeItem("y");
                           sessionStorage.removeItem("selectedChatRoomId");
                         }}
-                        className="cursor-pointer hover:bg-gray-200 p-2"
+                        className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200"
                       >
                         {chatRoom.firstChat}
                         <button
@@ -406,7 +428,7 @@ const Chat = () => {
                             e.stopPropagation();
                             handleDeleteChatRoom(chatRoom.chatRoomId);
                           }}
-                          className="bg-red-500 text-white px-2 py-1 rounded"
+                          className="bg-red-500 text-white px-2 py-1 rounded dark:bg-red-700"
                         >
                           삭제
                         </button>
@@ -417,7 +439,7 @@ const Chat = () => {
           </ul>
         </div>
       )}
-      <div className="w-2/3 p-4 flex flex-col">
+      <div className="w-2/3 p-4 flex flex-col dark:bg-gray-900 dark:text-gray-200">
         <div
           className="flex-grow mb-4 overflow-y-auto max-w-full"
           ref={messagesContainerRef}
@@ -430,10 +452,10 @@ const Chat = () => {
               }`}
             >
               <p
-                className={`inline-block py-2 px-4 rounded    ${
+                className={`inline-block py-2 px-4 rounded ${
                   message.type === "user"
-                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 "
-                    : "bg-gray-100 text-gray-800"
+                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 dark:bg-blue-900 dark:text-blue-300"
+                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
                 }`}
               >
                 {typeof message.content === "string"
@@ -476,7 +498,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
           {lastUserQuestion && (
             <div className="mb-2 flex justify-end">
-              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800  break-words whitespace-pre-wrap max-w-full">
+              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800  break-words whitespace-pre-wrap max-w-full dark:bg-blue-900 dark:text-blue-300">
                 {lastUserQuestion}
               </p>
             </div>
@@ -485,14 +507,14 @@ const Chat = () => {
         <div className="flex">
           <input
             type="text"
-            className="flex-grow border rounded px-4 py-2 "
+            className="flex-grow border rounded px-4 py-2 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={activeEnter}
             disabled={isSending}
           />
           <button
-            className="ml-2 bg-blue-500 text-white rounded px-4 py-2"
+            className="ml-2 bg-blue-500 text-white rounded px-4 py-2 dark:bg-blue-700"
             onClick={handleSendMessage}
             disabled={isSending}
           >
