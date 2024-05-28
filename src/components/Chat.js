@@ -15,7 +15,7 @@ const Chat = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [isNewChatRoom, setIsNewChatRoom] = useState(false);
-  const [isChatRoomListVisible, setIsChatRoomListVisible] = useState(true);
+  const [isChatRoomListVisible, setIsChatRoomListVisible] = useState(false);
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
   const [tempChatRoom, setTempChatRoom] = useState(null);
   const [isDarkMode, setIsDarkMode] = useState(
@@ -87,7 +87,7 @@ const Chat = () => {
       currentMonth === targetMonth &&
       currentDay === targetDay
     ) {
-      return "오늘-------------------------------------------------";
+      return "오늘";
     }
 
     const yesterday = new Date(currentDate);
@@ -98,21 +98,21 @@ const Chat = () => {
       yesterday.getMonth() === targetMonth &&
       yesterday.getDate() === targetDay
     ) {
-      return "어제-------------------------------------------------";
+      return "어제";
     }
 
     const lastWeek = new Date(currentDate);
     lastWeek.setDate(currentDate.getDate() - 7);
 
     if (targetDate > lastWeek) {
-      return "지난 7일--------------------------------------------";
+      return "지난 7일";
     }
 
     const lastMonth = new Date(currentDate);
     lastMonth.setDate(currentDate.getDate() - 30);
 
     if (targetDate > lastMonth) {
-      return "지난 30일-------------------------------------------";
+      return "지난 30일";
     }
 
     return targetDate.toLocaleDateString("ko-KR", {
@@ -135,6 +135,7 @@ const Chat = () => {
         `/api/chat?chatRoomId=${chatRoomId}`
       );
       const { userChat = [], chatBot = [] } = response.data;
+      console.log(response.data);
       const parsedChatBot = chatBot.map((message) => {
         let parsedContent;
         try {
@@ -299,7 +300,29 @@ const Chat = () => {
 
   return (
     <div className={`flex h-screen ${isDarkMode ? "dark" : ""}`}>
-      <div className="w-1/3 border-r border-gray-300 p-4 overflow-y-auto lg:block hidden dark:border-gray-600 dark:bg-gray-600">
+      {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
+      <div className="lg:hidden block p-4 absolute top-2 left-4 z-10">
+        <button
+          onClick={toggleChatRoomList}
+          className="bg-blue-500 text-white rounded px-4 py-2 dark:bg-blue-700"
+        >
+          {isChatRoomListVisible ? "채팅방 목록 숨기기" : "채팅방 목록 보기"}
+        </button>
+      </div>
+
+      <div
+        className={`${
+          isChatRoomListVisible ? "block" : "hidden"
+        } lg:block lg:relative absolute inset-0 lg:w-1/4 w-3/4 bg-white border-r border-gray-300 p-4 overflow-y-auto dark:border-gray-600 dark:bg-gray-600 z-20`}
+      >
+        <div className="lg:hidden flex justify-end mb-4">
+          <button
+            onClick={toggleChatRoomList}
+            className="bg-red-500 text-white rounded px-4 py-2 dark:bg-red-700"
+          >
+            채팅방 목록 닫기
+          </button>
+        </div>
         <h2 className="text-xl mb-4 dark:text-gray-200">채팅방 목록</h2>
         <button
           className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
@@ -314,12 +337,12 @@ const Chat = () => {
           전체 채팅방 삭제
         </button>
         <button
-        type="button"
-        onClick={toggleDarkMode}
-        class="inline-block rounded bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-dark-3 transition duration-150 ease-in-out hover:bg-neutral-700 hover:shadow-dark-2 focus:bg-neutral-700 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-dark-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong dark:bg-slate-200 dark:text-black">
-        다크 모드 {isDarkMode ? "끄기" : "켜기"}
-      </button>
-     
+          type="button"
+          onClick={toggleDarkMode}
+          className="mt-4 bg-gray-500 text-white rounded px-4 py-2 dark:bg-gray-700"
+        >
+          다크 모드 {isDarkMode ? "끄기" : "켜기"}
+        </button>
         <ul>
           {tempChatRoom && (
             <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
@@ -338,9 +361,7 @@ const Chat = () => {
                   .sort(
                     (a, b) =>
                       new Date(b.lastChatDate) - new Date(a.lastChatDate)
-                    
                   )
-                 
                   .map((chatRoom) => (
                     <li
                       key={chatRoom.chatRoomId}
@@ -367,82 +388,12 @@ const Chat = () => {
             ))}
         </ul>
       </div>
-      <div className="lg:hidden block p-4">
-        <button
-          onClick={toggleChatRoomList}
-          className="bg-blue-500 text-white rounded px-4 py-2 dark:bg-blue-700"
-        >
-          {isChatRoomListVisible ? "채팅방 목록 숨기기" : "채팅방 목록 보기"}
-        </button>
-      </div>
-      {isChatRoomListVisible && (
-        <div className="w-full border-r border-gray-300 p-4 overflow-y-auto lg:hidden dark:border-gray-600">
-          <h2 className="text-xl mb-4 dark:text-black-500">채팅방 목록</h2>
-          <button
-            className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
-            onClick={handleCreateChatRoom}
-          >
-            채팅방 생성
-          </button>
-          <button
-            className="mt-4 bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
-            onClick={handleDeleteAllChatRooms}
-          >
-            전체 채팅방 삭제
-          </button>
-          <button
-            className="mt-4 bg-gray-500 text-white px-4 py-2 rounded dark:bg-gray-700"
-            onClick={toggleDarkMode}
-          >
-            다크 모드 {isDarkMode ? "끄기" : "켜기"}
-          </button>
-          <ul>
-            {tempChatRoom && (
-              <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
-                NewChat
-                <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2 dark:bg-gray-700">
-                  생성중...
-                </button>
-              </li>
-            )}
-            {Object.keys(groupedChatRooms)
-              .sort((a, b) => new Date(b) - new Date(a))
-              .map((date) => (
-                <React.Fragment key={date}>
-                  <li className="text-gray-600 font-bold dark:text-gray-400">{date}</li>
-                  {groupedChatRooms[date]
-                    .sort(
-                      (a, b) =>
-                        new Date(b.lastChatDate) - new Date(a.lastChatDate)
-                    )
-                    .map((chatRoom) => (
-                      <li
-                        key={chatRoom.chatRoomId}
-                        onClick={() => {
-                          handleChatRoomSelect(chatRoom.chatRoomId);
-                          sessionStorage.removeItem("y");
-                          sessionStorage.removeItem("selectedChatRoomId");
-                        }}
-                        className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200"
-                      >
-                        {chatRoom.firstChat}
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeleteChatRoom(chatRoom.chatRoomId);
-                          }}
-                          className="bg-red-500 text-white px-2 py-1 rounded dark:bg-red-700"
-                        >
-                          삭제
-                        </button>
-                      </li>
-                    ))}
-                </React.Fragment>
-              ))}
-          </ul>
-        </div>
-      )}
-      <div className="w-2/3 p-4 flex flex-col dark:bg-gray-900 dark:text-gray-200">
+
+      <div
+        className={`flex-grow p-4 flex flex-col dark:bg-gray-900 dark:text-gray-200 ${
+          isChatRoomListVisible ? "lg:w-3/4" : "w-full"
+        }`}
+      >
         <div
           className="flex-grow mb-4 overflow-y-auto max-w-full"
           ref={messagesContainerRef}
@@ -458,7 +409,7 @@ const Chat = () => {
                 className={`inline-block py-2 px-4 rounded ${
                   message.type === "user"
                     ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 dark:bg-blue-900 dark:text-blue-300 font-gmarket"
-                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 font-gmarket"
+                    : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-96 dark:bg-gray-700 dark:text-gray-300 font-gmarket"
                 }`}
               >
                 {typeof message.content === "string"
@@ -501,7 +452,7 @@ const Chat = () => {
           <div ref={messagesEndRef} />
           {lastUserQuestion && (
             <div className="mb-2 flex justify-end">
-              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800  break-words whitespace-pre-wrap max-w-full dark:bg-blue-900 dark:text-blue-300">
+              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-full dark:bg-blue-900 dark:text-blue-300">
                 {lastUserQuestion}
               </p>
             </div>
