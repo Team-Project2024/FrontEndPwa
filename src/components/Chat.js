@@ -3,12 +3,14 @@ import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
-import { FaBars, FaTimes } from "react-icons/fa";
+import useLogout from "../hooks/useLogout";
+import { FaBars, FaTimes, FaSignOutAlt, FaTrashAlt } from "react-icons/fa";
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
+  const logout = useLogout();
 
   const [chatRooms, setChatRooms] = useState([]);
   const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
@@ -54,7 +56,6 @@ const Chat = () => {
       console.log(response);
 
       const chatRooms = response.data.repsonseChatRoomDTOList.map((room) => {
-        // 서버 날짜를 로컬 시간대로 변환
         room.lastChatDate = moment
           .utc(room.lastChatDate)
           .local()
@@ -320,7 +321,7 @@ const Chat = () => {
             className="text-2xl text-red-500 dark:text-red-700 cursor-pointer"
           />
         </div>
-        <h2 className="text-xl mb-4 dark:text-gray-200">채팅방 목록</h2>
+        <h2 className="text-xl mb-4 dark:text-gray-200 font-gmarket">LUMOS</h2>
         <button
           className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
           onClick={handleCreateChatRoom}
@@ -353,11 +354,12 @@ const Chat = () => {
             .sort((a, b) => new Date(b) - new Date(a))
             .map((date) => (
               <React.Fragment key={date}>
-                <li className="text-gray-600 font-bold dark:text-white">{date}</li>
+                <li className="text-gray-600 font-bold dark:text-white">
+                  {date}
+                </li>
                 {groupedChatRooms[date]
                   .sort(
-                    (a, b) =>
-                      new Date(b.lastChatDate) - new Date(a.lastChatDate)
+                    (a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)
                   )
                   .map((chatRoom) => (
                     <li
@@ -375,15 +377,23 @@ const Chat = () => {
                           e.stopPropagation();
                           handleDeleteChatRoom(chatRoom.chatRoomId);
                         }}
-                        className="bg-red-500 text-white px-2 py-1 rounded dark:bg-red-700"
+                        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
                       >
-                        삭제
+                        <FaTrashAlt className="mr-1" />
                       </button>
                     </li>
                   ))}
               </React.Fragment>
             ))}
         </ul>
+
+        {/* 로그아웃 버튼 */}
+        <div className="absolute bottom-4 left-4 lg:left-auto lg:right-4">
+          <FaSignOutAlt
+            onClick={logout}
+            className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
+          />
+        </div>
       </div>
 
       <div
@@ -392,21 +402,21 @@ const Chat = () => {
         }`}
       >
         <div
-          className="flex-grow mb-4 overflow-y-auto max-w-full"
+          className="flex-grow mb-4 overflow-y-auto  mx-auto max-w-2xl"
           ref={messagesContainerRef}
         >
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`mb-2 ${
+              className={`mb-4 ${
                 message.type === "user" ? "flex justify-end" : "text-left"
               }`}
             >
               <p
                 className={`inline-block py-2 px-4 rounded ${
                   message.type === "user"
-                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 dark:bg-blue-900 dark:text-blue-300 font-gmarket"
-                    : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-96 dark:bg-gray-700 dark:text-gray-300 font-gmarket"
+                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-2xl dark:bg-blue-900 dark:text-blue-300 font-gmarket ml-96"
+                    : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-2xl dark:bg-gray-700 dark:text-gray-300 font-gmarket"
                 }`}
               >
                 {typeof message.content === "string"
