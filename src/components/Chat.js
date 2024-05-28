@@ -87,7 +87,7 @@ const Chat = () => {
       currentMonth === targetMonth &&
       currentDay === targetDay
     ) {
-      return "오늘";
+      return "오늘-------------------------------------------------";
     }
 
     const yesterday = new Date(currentDate);
@@ -98,21 +98,21 @@ const Chat = () => {
       yesterday.getMonth() === targetMonth &&
       yesterday.getDate() === targetDay
     ) {
-      return "어제";
+      return "어제-------------------------------------------------";
     }
 
     const lastWeek = new Date(currentDate);
     lastWeek.setDate(currentDate.getDate() - 7);
 
     if (targetDate > lastWeek) {
-      return "지난 7일";
+      return "지난 7일--------------------------------------------";
     }
 
     const lastMonth = new Date(currentDate);
     lastMonth.setDate(currentDate.getDate() - 30);
 
     if (targetDate > lastMonth) {
-      return "지난 30일";
+      return "지난 30일-------------------------------------------";
     }
 
     return targetDate.toLocaleDateString("ko-KR", {
@@ -314,11 +314,12 @@ const Chat = () => {
           전체 채팅방 삭제
         </button>
         <button
-          className="mt-4 bg-gray-500 text-white px-4 py-2 rounded dark:bg-gray-700"
-          onClick={toggleDarkMode}
-        >
-          다크 모드 {isDarkMode ? "끄기" : "켜기"}
-        </button>
+        type="button"
+        onClick={toggleDarkMode}
+        class="inline-block rounded bg-neutral-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-neutral-50 shadow-dark-3 transition duration-150 ease-in-out hover:bg-neutral-700 hover:shadow-dark-2 focus:bg-neutral-700 focus:shadow-dark-2 focus:outline-none focus:ring-0 active:bg-neutral-900 active:shadow-dark-2 motion-reduce:transition-none dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong dark:bg-slate-200 dark:text-black">
+        다크 모드 {isDarkMode ? "끄기" : "켜기"}
+      </button>
+     
         <ul>
           {tempChatRoom && (
             <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
@@ -337,7 +338,9 @@ const Chat = () => {
                   .sort(
                     (a, b) =>
                       new Date(b.lastChatDate) - new Date(a.lastChatDate)
+                    
                   )
+                 
                   .map((chatRoom) => (
                     <li
                       key={chatRoom.chatRoomId}
@@ -346,7 +349,7 @@ const Chat = () => {
                         sessionStorage.removeItem("selectedChatRoomId");
                         handleChatRoomSelect(chatRoom.chatRoomId);
                       }}
-                      className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-white"
+                      className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-white font-gmarket"
                     >
                       {chatRoom.firstChat}
                       <button
@@ -454,8 +457,8 @@ const Chat = () => {
               <p
                 className={`inline-block py-2 px-4 rounded ${
                   message.type === "user"
-                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 dark:bg-blue-900 dark:text-blue-300"
-                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
+                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-96 dark:bg-blue-900 dark:text-blue-300 font-gmarket"
+                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300 font-gmarket"
                 }`}
               >
                 {typeof message.content === "string"
