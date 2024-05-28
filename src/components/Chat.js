@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
+import { FaBars, FaTimes } from "react-icons/fa";
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -302,12 +303,10 @@ const Chat = () => {
     <div className={`flex h-screen ${isDarkMode ? "dark" : ""}`}>
       {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
       <div className="lg:hidden block p-4 absolute top-2 left-4 z-10">
-        <button
+        <FaBars
           onClick={toggleChatRoomList}
-          className="bg-blue-500 text-white rounded px-4 py-2 dark:bg-blue-700"
-        >
-          {isChatRoomListVisible ? "채팅방 목록 숨기기" : "채팅방 목록 보기"}
-        </button>
+          className="text-2xl text-blue-500 dark:text-blue-700 cursor-pointer"
+        />
       </div>
 
       <div
@@ -316,12 +315,10 @@ const Chat = () => {
         } lg:block lg:relative absolute inset-0 lg:w-1/4 w-3/4 bg-white border-r border-gray-300 p-4 overflow-y-auto dark:border-gray-600 dark:bg-gray-600 z-20`}
       >
         <div className="lg:hidden flex justify-end mb-4">
-          <button
+          <FaTimes
             onClick={toggleChatRoomList}
-            className="bg-red-500 text-white rounded px-4 py-2 dark:bg-red-700"
-          >
-            채팅방 목록 닫기
-          </button>
+            className="text-2xl text-red-500 dark:text-red-700 cursor-pointer"
+          />
         </div>
         <h2 className="text-xl mb-4 dark:text-gray-200">채팅방 목록</h2>
         <button
