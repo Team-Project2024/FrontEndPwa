@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
+import {  FaTrashAlt,FaPlus } from "react-icons/fa";
 
 const Graduation = () => {
   const { auth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
   const [years, setYears] = useState([]);
-  const [selectedYear, setSelectedYear] = useState('');
-  const [selectedMajorId, setSelectedMajorId] = useState('');
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedMajorId, setSelectedMajorId] = useState("");
   const [major, setMajor] = useState([]);
   const [graduationList, setGraduationList] = useState([]);
   const [graduationRequirements, setGraduationRequirements] = useState({
@@ -45,29 +46,29 @@ const Graduation = () => {
   const handleYearChange = (e) => {
     const { value } = e.target;
     setSelectedYear(value);
-    setGraduationRequirements(prevState => ({
+    setGraduationRequirements((prevState) => ({
       ...prevState,
-      year: value // 연도 선택 시 graduationRequirements의 year 속성 업데이트
+      year: value
     }));
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setGraduationRequirements(prevState => ({
+    setGraduationRequirements((prevState) => ({
       ...prevState,
-      [name]: parseInt(value) // 숫자로 변환하여 저장
+      [name]: parseInt(value)
     }));
   };
 
   const addGraduationRequirement = () => {
-    if(selectedYear === "") {
-      window.alert('학번을 선택해주세요')
+    if (selectedYear === "") {
+      window.alert("학번을 선택해주세요");
       return;
-    }else if(graduationRequirements.majorId === "") {
-      window.alert('전공을 선택해주세요');
+    } else if (graduationRequirements.majorId === "") {
+      window.alert("전공을 선택해주세요");
       return;
     }
-    
+
     const newRequirement = { ...graduationRequirements };
     setGraduationList([...graduationList, newRequirement]);
     setGraduationRequirements({
@@ -91,152 +92,137 @@ const Graduation = () => {
 
   const submitGraduationRequirements = async () => {
     try {
-      await axiosPrivate.post('/admin/graduation', { requestGRList: graduationList });
-      console.log('성공');
-      window.alert('성공');
+      await axiosPrivate.post("/admin/graduation", { requestGRList: graduationList });
+      console.log("성공");
+      window.alert("성공");
 
       setGraduationList([]);
     } catch (error) {
-      console.error('Error adding graduation requirements:', error);
-      window.alert('추가된 졸업요건이 없거나 \n이미 등록된 졸업요건과 동일한 졸업요건이 존재합니다.')
+      console.error("Error adding graduation requirements:", error);
+      window.alert("추가된 졸업요건이 없거나 \n이미 등록된 졸업요건과 동일한 졸업요건이 존재합니다.");
 
       console.log(graduationList);
     }
   };
 
-    return(
-        <div>
-      
-      <div>
-      <label className="font-gmarket"htmlFor="year">학번:</label>
-      <select 
-      className="  ml-3 mb-4 p-2 border border-gray-300 rounded-md"
-      id="year" onChange={handleYearChange} value={selectedYear}>
-  <option value="">학번선택</option>
-  {years.map(year => (
-    <option key={year} value={year}>{year}</option>
-  ))}
-</select>
-      </div>
-    
-      <div className="flex flex-col p-4 border-2 border-gray-300 rounded-lg">
-        
-        <label className="font-gmarket">인성교양: 
-          <select  className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"
-          name="characterCulture" value={graduationRequirements.characterCulture} onChange={handleChange}>
-          {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-          </select>
+  return (
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">졸업요건 추가</h1>
 
+      <div className="flex justify-center mb-6">
+        <label className="font-gmarket mr-4 mt-3 rounded-full" htmlFor="year">
+          학번:
         </label>
-       
-        <label className="font-gmarket">기초교양:
-            <select
-            className=" ml-3  mb-4 p-2 border border-gray-300 rounded-md" name="basicLiberalArts" value={graduationRequirements.basicLiberalArts} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
-       
-        <label className="font-gmarket">일반교양:
-            <select
-            className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md" name="generalLiberalArts" value={graduationRequirements.generalLiberalArts} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
-           
-        <label className="font-gmarket">전공공통:
-            <select 
-            className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"name="majorCommon" value={graduationRequirements.majorCommon} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
-          
-        <label className="font-gmarket">전공심화:
-            <select 
-            className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"name="majorAdvanced" value={graduationRequirements.majorAdvanced} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
-           
-        <label className="font-gmarket">자유선택:
-            <select 
-            className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"
-            name="freeChoice" value={graduationRequirements.freeChoice} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
+        <select
+          className="p-2 border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none rounded-full shadow-lg"
+          id="year"
+          onChange={handleYearChange}
+          value={selectedYear}
+        >
+          <option value="">학번선택</option>
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
 
-          
-        <label className="font-gmarket">졸업학점 :
-            <select 
-            className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"
-            name="graduationCredits" value={graduationRequirements.graduationCredits} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
-           
-      
-            <label className="font-gmarket">msc:
-            <select
-            className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"
-            name="msc" value={graduationRequirements.msc} onChange={handleChange}>
-            {Array.from({ length: 100 }, (_, index) => (
-                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                ))}
-            </select>
-            </label>  
-           
-       
-            <label className="font-gmarket">전공Id:
+      <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-4xl mx-auto mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {[
+            { label: "인성교양", name: "characterCulture" },
+            { label: "기초교양", name: "basicLiberalArts" },
+            { label: "일반교양", name: "generalLiberalArts" },
+            { label: "전공공통", name: "majorCommon" },
+            { label: "전공심화", name: "majorAdvanced" },
+            { label: "자유선택", name: "freeChoice" },
+            { label: "졸업학점", name: "graduationCredits" },
+            { label: "MSC", name: "msc" }
+          ].map(({ label, name }) => (
+            <div key={name}>
+              <label className="font-gmarket">{label}:</label>
               <select
-              className=" ml-3 mb-4 p-2 border border-gray-300 rounded-md"
-                  value={graduationRequirements.majorId}
-                  onChange={(e) =>
-                    setGraduationRequirements({ ...graduationRequirements, majorId: e.target.value })
-                  }
-                >
-                <option value="">전공선택</option>
-                {major.map((major) => (
-                  <option key={major.majorId} value={major.majorId}>
-                    {major.department}
+                className="ml-3 mb-4 p-2 border border-gray-300 rounded-full shadow-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                name={name}
+                value={graduationRequirements[name]}
+                onChange={handleChange}
+              >
+                {Array.from({ length: 100 }, (_, index) => (
+                  <option key={index + 1} value={index + 1}>
+                    {index + 1}
                   </option>
                 ))}
-                </select>
-              </label>
-
-              {graduationList.map((requirement, index) => (
-          <div key={index}>
-            <label className="font-gmarket">추가된졸업요건: {index+1}번째</label>
-            {/* Add labels for other requirements */}
-            <button className="border-4  font-gmarket px-3 py-1 rounded-lg bg-slate-300"onClick={() => removeGraduationRequirement(index)}>삭제</button>
+              </select>
+            </div>
+          ))}
+          <div>
+            <label className="font-gmarket">전공:</label>
+            <select
+              className="ml-3 mb-4 p-2 border border-gray-300 rounded-full shadow-lg w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              value={graduationRequirements.majorId}
+              onChange={(e) =>
+                setGraduationRequirements({ ...graduationRequirements, majorId: e.target.value })
+              }
+            >
+              <option value="">전공선택</option>
+              {major.map((major) => (
+                <option key={major.majorId} value={major.majorId}>
+                  {major.department}
+                </option>
+              ))}
+            </select>
           </div>
-        ))}
-        
-        
-        <button className="border-4 font-gmarket px-3 py-1 rounded-lg bg-slate-400" onClick={submitGraduationRequirements}>졸업요건 제출</button>
-        <button  className="border-4 font-gmarket px-3 py-1 rounded-lg bg-slate-400"onClick={addGraduationRequirement}>졸업요건 추가</button>
+        </div>
+        <div className="flex justify-end mt-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300"
+            onClick={addGraduationRequirement}
+          >
+            졸업요건 추가
+          </button>
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ml-2"
+            onClick={submitGraduationRequirements}
+          >
+            졸업요건 제출
+          </button>
+        </div>
       </div>
+
+      {graduationList.length > 0 && (
+        <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-bold mb-4">추가된 졸업요건</h2>
+          {graduationList.map((requirement, index) => (
+            <div key={index} className="mb-4 p-4 bg-white rounded-lg shadow-md">
+              <div className="flex justify-between items-center">
+                <span className="font-gmarket">추가된 졸업요건: {index + 1}번째</span>
+                <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeGraduationRequirement(index);
+                        }}
+                        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
+                      >
+                        <FaTrashAlt className="mr-1" />
+                      </button>
+              </div>
+              <div className="mt-2">
+                <p className="font-gmarket">인성교양: {requirement.characterCulture}</p>
+                <p className="font-gmarket">기초교양: {requirement.basicLiberalArts}</p>
+                <p className="font-gmarket">일반교양: {requirement.generalLiberalArts}</p>
+                <p className="font-gmarket">전공공통: {requirement.majorCommon}</p>
+                <p className="font-gmarket">전공심화: {requirement.majorAdvanced}</p>
+                <p className="font-gmarket">자유선택: {requirement.freeChoice}</p>
+                <p className="font-gmarket">졸업학점: {requirement.graduationCredits}</p>
+                <p className="font-gmarket">MSC: {requirement.msc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
-    
-    
+  );
+};
 
-
-
-    )
-}
-
-
-export default Graduation 
+export default Graduation;

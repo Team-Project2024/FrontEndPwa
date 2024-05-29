@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
+import { FaTrashAlt } from "react-icons/fa";
 
 const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
   const indexOfLastMajor = currentPage * majorsPerPage;
@@ -8,28 +9,28 @@ const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
   const currentMajors = majors.slice(indexOfFirstMajor, indexOfLastMajor);
 
   return (
-    <div className="overflow-auto w-3/4">
-      <h2 className="text-xl font-bold mb-2 ml-10">전공목록</h2>
-      <ul className="ml-10">
+    <div className="overflow-auto w-full p-4">
+      <h2 className="text-2xl font-bold mb-4">전공목록</h2>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {currentMajors.map((major) => (
-          <li key={major.majorId} className="mb-2">
-            <div className="text-xl flex flex-col justify-center items-center rounded-xl bg-right-main shadow-2xl">
-              <div>
-                <h2 className="mt-3 mb-3 font-gmarket">학과: {major.department}</h2>
-                {major.track && <h2 className="mb-3 font-gmarket">트랙: {major.track}</h2>}
-              </div>
+          <li key={major.majorId} className="bg-white p-4 rounded-lg shadow-md border-gray-10 border-4 px-4">
+            <div className="text-xl border-gray-400 px-4">
+              <h2 className="mt-3 mb-2 font-gmarket">학과: {major.department}</h2>
+              {major.track && <h2 className="mb-2 font-gmarket">트랙: {major.track}</h2>}
             </div>
           </li>
         ))}
       </ul>
-      <ul className="flex justify-center">
+      <ul className="flex justify-center mt-4">
         {Array.from({ length: Math.ceil(majors.length / majorsPerPage) }).map(
           (_, index) => (
             <li
               key={index}
               onClick={() => paginate(index + 1)}
-              className={`cursor-pointer mx-1 ${
-                currentPage === index + 1 ? "font-bold" : ""
+              className={`cursor-pointer mx-2 px-3 py-1 rounded-full ${
+                currentPage === index + 1
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
               }`}
             >
               {index + 1}
@@ -42,15 +43,15 @@ const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
 };
 
 const NewMajorForm = ({ newMajor, handleChange, addMajor }) => (
-  <div className="mt-4 p-4 border border-gray-300 rounded">
-    <h2 className="text-xl font-bold mb-2">전공 추가</h2>
+  <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full max-w-lg mx-auto">
+    <h2 className="text-2xl font-bold mb-4">전공 추가</h2>
     <input
       type="text"
       name="department"
       placeholder="학과"
       value={newMajor.department}
       onChange={handleChange}
-      className="block mb-2 border border-gray-300 p-2 rounded"
+      className="block w-full mb-4 border border-gray-300 p-2 rounded"
     />
     <input
       type="text"
@@ -58,11 +59,11 @@ const NewMajorForm = ({ newMajor, handleChange, addMajor }) => (
       placeholder="트랙"
       value={newMajor.track}
       onChange={handleChange}
-      className="block mb-2 border border-gray-300 p-2 rounded"
+      className="block w-full mb-4 border border-gray-300 p-2 rounded"
     />
     <button
       onClick={addMajor}
-      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2"
+      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
     >
       추가
     </button>
@@ -135,41 +136,44 @@ const Major = () => {
   };
 
   return (
-    <div className="container mx-auto flex flex-col justify-center items-center overflow-auto">
-      <h1 className="text-3xl font-bold mb-4">전공관리</h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">전공관리</h1>
       <div className="mb-4">
         {showAddList ? (
-          <div className="mt-4 p-4 border border-gray-300 rounded items-row">
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
             <ul>
               {newMajors.map((major, index) => (
-                <li key={index} className="mb-2">
-                  <div className="text-xl flex flex-col justify-center items-center rounded-xl bg-right-main shadow-2xl">
-                    <div>
-                      <h2 className="mt-3 mb-3 font-gmarket">학과: {major.department}</h2>
-                      {major.track && <h2 className="mb-3 font-gmarket">트랙: {major.track}</h2>}
-                      <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                        onClick={() => deleteMajor(index)}
+                <li key={index} className="mb-4">
+                  <div className="bg-white p-4 rounded-lg shadow-md">
+                    <h2 className="mt-3 mb-2 font-gmarket">학과: {major.department}</h2>
+                    {major.track && <h2 className="mb-2 font-gmarket">트랙: {major.track}</h2>}
+                    <button
+                        onClick={(e) => {
+                        
+                          deleteMajor(index);
+                        }}
+                        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
                       >
-                        삭제
+                        <FaTrashAlt className="mr-1" />
                       </button>
-                    </div>
                   </div>
                 </li>
               ))}
             </ul>
-            <button
-              onClick={submitNewMajors}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              전송
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={() => setShowAddList(false)}
-            >
-              추가리스트 닫기
-            </button>
+            <div className="flex justify-between mt-4">
+              <button
+                onClick={submitNewMajors}
+                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              >
+                전송
+              </button>
+              <button
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                onClick={() => setShowAddList(false)}
+              >
+                추가리스트 닫기
+              </button>
+            </div>
           </div>
         ) : (
           <button
@@ -183,7 +187,7 @@ const Major = () => {
           <NewMajorForm newMajor={newMajor} handleChange={handleChange} addMajor={addMajor} />
         ) : (
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
             onClick={() => setShowAddForm(true)}
           >
             전공 추가

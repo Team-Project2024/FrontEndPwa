@@ -4,10 +4,17 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
 import useLogout from "../hooks/useLogout";
-import { FaBars, FaTimes, FaSignOutAlt, FaTrashAlt,FaMagic } from "react-icons/fa";
+import {
+  FaBars,
+  FaTimes,
+  FaSignOutAlt,
+  FaTrashAlt,
+  FaMagic,
+  FaComments
+} from "react-icons/fa";
 import chatbotIcon from "../image/logo512.png"; // Adjust the path as needed
-import senderIcon from "../image/sender.png"
-import Switcher from "../Dark/Switcher"
+import senderIcon from "../image/sender.png";
+import Switcher from "../Dark/Switcher";
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -224,6 +231,7 @@ const Chat = () => {
   };
 
   const handleCreateChatRoom = () => {
+    toggleChatRoomList();
     setIsNewChatRoom(true);
     setSelectedChatRoomId(null);
     setMessages([]);
@@ -282,14 +290,6 @@ const Chat = () => {
     setIsChatRoomListVisible(!isChatRoomListVisible);
   };
 
-  const toggleDarkMode = () => {
-    setIsDarkMode((prevMode) => {
-      const newMode = !prevMode;
-      localStorage.setItem("darkMode", newMode);
-      return newMode;
-    });
-  };
-
   const groupChatRoomsByDate = (rooms) => {
     return rooms.reduce((acc, room) => {
       const dateCategory = formatDate(room.lastChatDate);
@@ -304,231 +304,247 @@ const Chat = () => {
   const groupedChatRooms = groupChatRoomsByDate(chatRooms);
 
   return (
-    <div className={`flex lg:h-screen h-auto lg:pr-64 pr-0 lg:bg-gray-600 bg-transparent lg:py-8 py-0`}>
     <div
-      className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${
-        isDarkMode ? "dark:bg-gray-800" : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"
-      }`}
+      className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}
     >
-        {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
-        <div className="lg:hidden  block p-4 absolute top-2 left-4 z-10">
-        <FaBars
-          onClick={toggleChatRoomList}
-          className="text-2xl text-blue-500 dark:text-blue-700 cursor-pointer"
-        />
-      </div>
-
       <div
-        className={`${
-          isChatRoomListVisible ? "block" : "hidden"
-        } lg:block lg:relative absolute inset-0 lg:w-1/4 w-3/4 bg-white border-r border-gray-300 p-4  dark:border-gray-600 dark:bg-gray-600 z-20`}
-      >
-        <div className="lg:hidden flex justify-end mb-4">
-          <FaTimes
-            onClick={toggleChatRoomList}
-            className="text-2xl text-red-500 dark:text-red-700 cursor-pointer"
-          />
-        </div>
-
-        <div>
-        <h2 className="text-xl mb-4 dark:text-gray-200 font-gmarket">LUMOS</h2>
-        <button
-          className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
-          onClick={handleCreateChatRoom}
-        >
-          채팅방 생성
-        </button>
-        <button
-          className="mt-4 bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
-          onClick={handleDeleteAllChatRooms}
-        >
-          전체 채팅방 삭제
-        </button>
-        </div>
-      
-        <div className="overflow-y-auto">
-        <ul>
-          {tempChatRoom && (
-            <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
-              NewChat
-              <button className="bg-gray-500 text-white px-2 py-1 rounded ml-2 dark:bg-gray-700">
-                생성중...
-              </button>
-            </li>
-          )}
-          {Object.keys(groupedChatRooms)
-            .sort((a, b) => new Date(b) - new Date(a))
-            .map((date) => (
-              <React.Fragment key={date}>
-                <li className="text-gray-600 font-bold dark:text-white">
-                  {date}
-                </li>
-                {groupedChatRooms[date]
-                  .sort(
-                    (a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)
-                  )
-                  .map((chatRoom) => (
-                    <li
-                      key={chatRoom.chatRoomId}
-                      onClick={() => {
-                        sessionStorage.removeItem("y");
-                        sessionStorage.removeItem("selectedChatRoomId");
-                        handleChatRoomSelect(chatRoom.chatRoomId);
-                      }}
-                      className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-white font-gmarket"
-                    >
-                      {chatRoom.firstChat}
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleDeleteChatRoom(chatRoom.chatRoomId);
-                        }}
-                        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
-                      >
-                        <FaTrashAlt className="mr-1" />
-                      </button>
-                    </li>
-                  ))}
-              </React.Fragment>
-            ))}
-        </ul>
-        </div>
-       
-        <div className="bg-white  bottom-4 flex flex-row">
-          <div>
-              <Switcher />
-            </div>
-          {/* 로그아웃 버튼 */}
-          <div className="left-4 lg:left-auto lg:right-4">
-            <FaSignOutAlt
-              onClick={logout}
-              className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
-            />
-          </div>
-        </div>
-        
-      </div>
-
-      <div
-        className={`flex-grow p-4 flex flex-col dark:bg-gray-900 dark:text-gray-200 ${
-          isChatRoomListVisible ? "lg:w-3/4" : "w-full"
+        className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${
+          isDarkMode
+            ? "dark:bg-gray-800"
+            : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"
         }`}
       >
-        <div
-          className="flex-grow mb-4 overflow-y-auto mx-auto max-w-4xl scrollbar-hide"
-          ref={messagesContainerRef}
-        >
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={`mb-6 flex ${
-                message.type === "user" ? "justify-end" : "justify-start"
-              }`}
-            >
-              {message.type === "bot" && (
-                <img
-                  src={chatbotIcon}
-                  alt="Chatbot Icon"
-                  className="w-10 h-10 mr-4 self-start"
-                />
-              )}
-              <p
-                className={`inline-block py-2 px-4 rounded ${
-                  message.type === "user"
-                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-blue-300 font-gmarket ml-108"
-                    : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-700 dark:text-gray-300 font-gmarket"
-                }`}
-              >
-                {typeof message.content === "string"
-                  ? message.content
-                  : message.content.content}
-                {message.type === "bot" &&
-                  (message.content.table === "lecture" ||
-                    message.content.table === "event") &&
-                  message.content.data && (
-                    <ul>
-                      {message.content.data.map((item, idx) => (
-                        <li
-                          key={idx}
-                          onClick={() => {
-                            sessionStorage.setItem(
-                              "selectedChatRoomId",
-                              selectedChatRoomId
-                            );
+        {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
+        <div className="lg:hidden block p-4 absolute top-2 left-4 z-10">
+          <FaBars
+            onClick={toggleChatRoomList}
+            className="text-2xl text-black dark:text-white cursor-pointer"
+          />
+        </div>
 
-                            sessionStorage.setItem(
-                              "y",
-                              messagesContainerRef.current.scrollTop
-                            );
-                            handleItemClick(
-                              message.content.table,
-                              item[`${message.content.table}Id`]
-                            );
+        <div
+          className={`lg:block dark:bg-gray-800 overflow-y-scroll scrollbar-hide bg-white lg:relative absolute inset-0 lg:w-1/4 w-2/5 border-r border-gray-300 dark:border-gray-600 z-20 flex flex-col h-full ${
+            isChatRoomListVisible ? "" : "hidden"
+          }`}
+        >
+          <div className="lg:hidden pt-2 pr-2 flex justify-end mb-4">
+            <FaTimes
+              onClick={toggleChatRoomList}
+              className="text-2xl text-black dark:text-white cursor-pointer"
+            />
+          </div>
+          {/* 위에 고정시키고자 하는 부분 */}
+          <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
+            <div className="">
+              <div className="text-xl mb-4 dark:text-gray-200 font-gmarket">
+                LUMOS
+              </div>
+              <div className="mt-2 flex justify-between">
+                <button
+                className="bg-blue-400 px-4 py-2 rounded-lg"
+                
+                >
+                <FaComments
+            onClick={handleCreateChatRoom}
+            className="text-2xl text-black dark:text-white cursor-pointer"
+          />
+                </button>
+           
+                <button
+                  className="bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
+                  onClick={handleDeleteAllChatRooms}
+                >
+                  <FaTrashAlt className="mr-1" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="pb-4 pl-4 pr-4 h-full flex-grow overflow-y-auto scrollbar-hide mt-4 lg:mt-0 lg:flex-grow lg:overflow-y-auto">
+            <ul>
+              {tempChatRoom && (
+                <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
+                  NewChat
+                </li>
+              )}
+              {Object.keys(groupedChatRooms)
+                .sort((a, b) => new Date(b) - new Date(a))
+                .map((date) => (
+                  <React.Fragment key={date}>
+                    <li className="text-gray-600 font-bold dark:text-white mt-5">
+                      {date}
+                    </li>
+                    <hr className="border-black dark:border-gray-500 my-" />
+                    {groupedChatRooms[date]
+                      .sort(
+                        (a, b) =>
+                          new Date(b.lastChatDate) - new Date(a.lastChatDate)
+                      )
+                      .map((chatRoom) => (
+                        <li
+                          key={chatRoom.chatRoomId}
+                          onClick={() => {
+                            sessionStorage.removeItem("y");
+                            sessionStorage.removeItem("selectedChatRoomId");
+                            handleChatRoomSelect(chatRoom.chatRoomId);
                           }}
+                          className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-white font-gmarket flex flex-row justify-between"
                         >
-                          <span>
-                            {idx + 1}.{item[`${message.content.table}Name`]}
-                          </span>
+                          <div>{chatRoom.firstChat}</div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteChatRoom(chatRoom.chatRoomId);
+                            }}
+                            className="text-xl text-red-500  cursor-pointer ml-2"
+                          >
+                            <FaTimes className="mr-1" />
+                          </button>
                         </li>
                       ))}
-                    </ul>
-                  )}
-              </p>
+                  </React.Fragment>
+                ))}
+            </ul>
+          </div>
+          <div className="sticky bottom-0 left-0 p-4 bg-white dark:bg-gray-800 flex justify-between items-center">
+            <div>
+              <Switcher />
             </div>
-          ))}
-          <div ref={messagesEndRef} />
-          {lastUserQuestion && (
-            <div className="mb-2 flex justify-end">
-              <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-full dark:bg-blue-900 dark:text-blue-300">
-                {lastUserQuestion}
-              </p>
+            {/* 로그아웃 버튼 */}
+            <div>
+              <FaSignOutAlt
+                onClick={logout}
+                className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
+              />
             </div>
-          )}
+          </div>
         </div>
-        <div className="flex">
-          <input
-            type="text"
-            className="flex-grow border rounded px-4 py-2 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 "
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            onKeyDown={activeEnter}
-            disabled={isSending}
-          />
-          <FaMagic
-           
-            className=" text-black rounded text-4xl mt-2 mr-3 ml-8 cursor-pointer dark:text-white "
-            onClick={handleSendMessage}
-            disabled={isSending}
+
+        <div
+          className={`flex-grow p-4 flex flex-col dark:bg-gray-900 dark:text-gray-200   ${
+            isChatRoomListVisible ? "lg:w-full" : "w-full"
+          }`}
+        >
+          <div
+            className="flex-grow mb-4 p-16 lg:p-8 overflow-y-auto  scrollbar-hide  "
+            ref={messagesContainerRef}
           >
-           
-            {isSending ? (
-              <svg
-                className="animate-spin h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"
-                ></path>
-              </svg>
+            {tempChatRoom !== null ? (
+              <div className="flex items-center justify-center h-full font-gmarket ">
+                <p>챗봇에게 궁금한 정보를 물어보세요!</p>
+              </div>
             ) : (
-              "전송"
+              messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`mb-6 flex ${
+                    message.type === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  {message.type === "bot" && (
+                    <img
+                      src={chatbotIcon}
+                      alt="Chatbot Icon"
+                      className="w-10 h-10 mr-4 self-start"
+                    />
+                  )}
+                  <p
+                    className={`inline-block py-2 px-4 rounded ${
+                      message.type === "user"
+                        ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-blue-300 font-gmarket ml-108"
+                        : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-700 dark:text-gray-300 font-gmarket"
+                    }`}
+                  >
+                    {typeof message.content === "string"
+                      ? message.content
+                      : message.content.content}
+                    {message.type === "bot" &&
+                      (message.content.table === "lecture" ||
+                        message.content.table === "event") &&
+                      message.content.data && (
+                        <ul>
+                          {message.content.data.map((item, idx) => (
+                            <li
+                              key={idx}
+                              onClick={() => {
+                                sessionStorage.setItem(
+                                  "selectedChatRoomId",
+                                  selectedChatRoomId
+                                );
+
+                                sessionStorage.setItem(
+                                  "y",
+                                  messagesContainerRef.current.scrollTop
+                                );
+                                handleItemClick(
+                                  message.content.table,
+                                  item[`${message.content.table}Id`]
+                                );
+                              }}
+                            >
+                              <span>
+                                {idx + 1}.{item[`${message.content.table}Name`]}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                  </p>
+                </div>
+              ))
             )}
-          </FaMagic>
+            {}
+            <div ref={messagesEndRef} />
+            {lastUserQuestion && (
+              <div className="mb-2 flex justify-end">
+                <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-full dark:bg-blue-900 dark:text-blue-300">
+                  {lastUserQuestion}
+                </p>
+              </div>
+            )}
+          </div>
+          <div className="flex">
+            <input
+              type="text"
+              className="flex-grow border rounded px-4 py-2 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 "
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyDown={activeEnter}
+              disabled={isSending}
+            />
+            <FaMagic
+              className=" text-black rounded text-4xl mt-2 mr-3 ml-8 cursor-pointer dark:text-white "
+              onClick={handleSendMessage}
+              disabled={isSending}
+            >
+              {isSending ? (
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"
+                  ></path>
+                </svg>
+              ) : (
+                "전송"
+              )}
+            </FaMagic>
+          </div>
         </div>
       </div>
-    </div>
     </div>
   );
 };

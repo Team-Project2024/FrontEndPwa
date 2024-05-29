@@ -11,7 +11,7 @@ export default function Switcher() {
     setDarkSide(checked);
   };
   return (
-    <div className="mr-4 md:mr-8 mt-2 ">
+    <div>
       <DarkModeSwitch checked={darkSide} onChange={toggleDarkMode} size={30} />
     </div>
   );
