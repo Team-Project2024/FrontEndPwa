@@ -88,7 +88,9 @@ const Class = () => {
   const fetchLecture = async () => {
     try {
       const response = await axiosPrivate.get("/admin/lecture");
+      console.log(response)
       setLecture(response.data.responseLectureDTOList);
+
     } catch (error) {
       console.error("Error fetching lecture:", error);
     }
@@ -496,46 +498,46 @@ const Class = () => {
 
 <div className="grid grid-cols-1 gap-4">
 {currentLecture.map((lecture) => (
-      <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-        <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
-          {[
-            { label: "교수명", value: lecture.memberName },
-            { label: "팀워크", value: lecture.teamwork },
-            { label: "분류", value: lecture.classification },
-            { label: "기업가정신", value: lecture.entrepreneurship },
-            { label: "강의실", value: lecture.room },
-            { label: "창의적 사고", value: lecture.creativeThinking },
-            { label: "학점", value: lecture.credit },
-            { label: "자원활용", value: lecture.harnessingResource },
-            { label: "분반", value: lecture.division },
-            { label: "조별과제", value: lecture.teamPlay.toString() },
-            { label: "학년", value: lecture.grade },
-            { label: "채점방식", value: lecture.gradeMethod },
-            { label: "강의시간", value: lecture.lectureTime },
-            { label: "AISW", value: lecture.aiSw.toString() },
-            { label: "수업방식", value: lecture.classMethod },
-            { label: "강의평가", value: lecture.course_evaluation },
-            { label: "시험방식", value: lecture.testType },
-          ].map((item) => (
-            <div key={item.label} className="flex flex-col">
-              <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
-              <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
-              {item.value === 'null' || item.value === '' ? '입력안됨' : item.value}
-              </span>
-            </div>
-          ))}
+  <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+    <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
+      {[
+        { label: "교수명", value: lecture.memberName },
+        { label: "팀워크", value: lecture.teamwork },
+        { label: "분류", value: lecture.classification },
+        { label: "기업가정신", value: lecture.entrepreneurship },
+        { label: "강의실", value: lecture.room },
+        { label: "창의적 사고", value: lecture.creativeThinking },
+        { label: "학점", value: lecture.credit },
+        { label: "자원활용", value: lecture.harnessingResource },
+        { label: "분반", value: lecture.division },
+        { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
+        { label: "학년", value: lecture.grade },
+        { label: "채점방식", value: lecture.gradeMethod },
+        { label: "강의시간", value: lecture.lectureTime },
+        { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
+        { label: "수업방식", value: lecture.classMethod },
+        { label: "강의평가", value: lecture.course_evaluation },
+        { label: "시험방식", value: lecture.testType },
+      ].map((item) => (
+        <div key={item.label} className="flex flex-col">
+          <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
+          <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
+            {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
+          </span>
         </div>
-        <div className="flex justify-center mt-4">
-          <button
-            onClick={() => handleDeleteClass(lecture.lectureId)}
-            className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
-          >
-            <FaTrashAlt className="mr-1" />
-          </button>
-        </div>
-      </div>
-    ))}
+      ))}
+    </div>
+    <div className="flex justify-center mt-4">
+      <button
+        onClick={() => handleDeleteClass(lecture.lectureId)}
+        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
+      >
+        <FaTrashAlt className="mr-1" />
+      </button>
+    </div>
+  </div>
+))}
 </div>
 
       <ul className="flex justify-center mt-6">

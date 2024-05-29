@@ -2,6 +2,10 @@ import React, { useState, useEffect, useContext } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import {  FaTrashAlt,FaPlus } from "react-icons/fa";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
 
 const Graduation = () => {
   const { auth } = useContext(AuthContext);
@@ -10,6 +14,7 @@ const Graduation = () => {
   const [selectedYear, setSelectedYear] = useState("");
   const [selectedMajorId, setSelectedMajorId] = useState("");
   const [major, setMajor] = useState([]);
+  const [open, setOpen] = useState(false); 
   const [graduationList, setGraduationList] = useState([]);
   const [graduationRequirements, setGraduationRequirements] = useState({
     characterCulture: 1,
@@ -167,10 +172,10 @@ const Graduation = () => {
             >
               <option value="">전공선택</option>
               {major.map((major) => (
-                <option key={major.majorId} value={major.majorId}>
-                  {major.department}
-                </option>
-              ))}
+  <option key={major.majorId} value={major.majorId}>
+    {major.department} {major.track && `(${major.track})`}
+  </option>
+))}
             </select>
           </div>
         </div>

@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
+import 'react-tooltip/dist/react-tooltip.css' //반드시 필요
+import { Tooltip } from 'react-tooltip'
+
 import useLogout from "../hooks/useLogout";
 import {
   FaBars,
@@ -12,9 +15,14 @@ import {
   FaMagic,
   FaComments
 } from "react-icons/fa";
-import chatbotIcon from "../image/logo512.png"; // Adjust the path as needed
+import chatbotIcon from "../image/chatbot.png"; // Adjust the path as needed
 import senderIcon from "../image/sender.png";
 import Switcher from "../Dark/Switcher";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -31,6 +39,7 @@ const Chat = () => {
   const [isChatRoomListVisible, setIsChatRoomListVisible] = useState(false);
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
   const [tempChatRoom, setTempChatRoom] = useState(null);
+  const [open,setOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
@@ -43,17 +52,28 @@ const Chat = () => {
 
     if (sessionStorage.getItem("selectedChatRoomId")) {
       handleChatRoomSelect(sessionStorage.getItem("selectedChatRoomId"));
+
+    }else {
+      handleCreateChatRoom();
     }
   }, []);
 
   useEffect(() => {
     const savedScrollPosition = sessionStorage.getItem("y");
     if (!sessionStorage.getItem("selectedChatRoomId")) {
+
       messagesEndRef.current?.scrollIntoView({ block: "end" });
+
+  
     } else if (savedScrollPosition && messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition);
     }
   }, [messages]);
+
+  const handleOpenWarning = () => {
+    setOpen(!open);
+
+  }
 
   const fetchChatRooms = async () => {
     try {
@@ -189,6 +209,10 @@ const Chat = () => {
     }
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   const sendMessage = async (message, chatRoomId) => {
     try {
       await axiosPrivate.post(
@@ -248,7 +272,7 @@ const Chat = () => {
         setSelectedChatRoomId(null);
         setMessages([]);
       }
-      window.alert("채팅방을 삭제하였습니다.");
+     
       fetchChatRooms();
     } catch (error) {
       console.error("Error deleting chat room:", error);
@@ -260,8 +284,9 @@ const Chat = () => {
       await axiosPrivate.delete("/api/all/chat-room");
       setSelectedChatRoomId(null);
       setMessages([]);
-      window.alert("모든 채팅방을 삭제하였습니다.");
+     
       fetchChatRooms();
+      setOpen(!open);
     } catch (error) {
       console.error("Error deleting all chat rooms:", error);
     }
@@ -346,15 +371,18 @@ const Chat = () => {
                 >
                 <FaComments
             onClick={handleCreateChatRoom}
-            className="text-2xl text-black dark:text-white cursor-pointer"
+            className="text-2xl text-white dark:text-white cursor-pointer"
+            
           />
+        
                 </button>
+                
            
                 <button
                   className="bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
-                  onClick={handleDeleteAllChatRooms}
+                  onClick={handleOpenWarning}
                 >
-                  <FaTrashAlt className="mr-1" />
+                  <FaTrashAlt className="" />
                 </button>
               </div>
             </div>
@@ -396,7 +424,7 @@ const Chat = () => {
                               e.stopPropagation();
                               handleDeleteChatRoom(chatRoom.chatRoomId);
                             }}
-                            className="text-xl text-red-500  cursor-pointer ml-2"
+                            className="text-xl text-gray-400  cursor-pointer ml-2"
                           >
                             <FaTimes className="mr-1" />
                           </button>
@@ -451,8 +479,8 @@ const Chat = () => {
                   <p
                     className={`inline-block py-2 px-4 rounded ${
                       message.type === "user"
-                        ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-blue-300 font-gmarket ml-108"
-                        : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-700 dark:text-gray-300 font-gmarket"
+                        ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-600 dark:text-gray-300 font-gmarket ml-108"
+                        : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-white font-gmarket"
                     }`}
                   >
                     {typeof message.content === "string"
@@ -545,6 +573,26 @@ const Chat = () => {
           </div>
         </div>
       </div>
+      <Dialog open={open} onClose={handleClose}>
+      <DialogTitle className="text-xl font-semibold">정말로 모든 대화방을 삭제하시겠습니까?</DialogTitle>
+      <DialogContent className="items-center justify-center flex flex-col space-y-4 p-6">
+        <p className="text-gray-600">이 작업은 되돌릴 수 없습니다.</p>
+        <Button
+          className="border border-gray-400 rounded-md bg-red-500 text-white px-4 py-2 hover:bg-red-600"
+          onClick={handleDeleteAllChatRooms}
+        >
+          삭제하기
+        </Button>
+      </DialogContent>
+      <DialogActions className="flex justify-center p-4">
+        <Button 
+          onClick={handleClose} 
+          className="text-blue-500 hover:text-blue-700"
+        >
+          취소
+        </Button>
+      </DialogActions>
+    </Dialog>
     </div>
   );
 };

@@ -1,85 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
-import { FaTrashAlt } from "react-icons/fa";
-
-const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
-  const indexOfLastMajor = currentPage * majorsPerPage;
-  const indexOfFirstMajor = indexOfLastMajor - majorsPerPage;
-  const currentMajors = majors.slice(indexOfFirstMajor, indexOfLastMajor);
-
-  return (
-    <div className="overflow-auto w-full p-4">
-      <h2 className="text-2xl font-bold mb-4">전공목록</h2>
-      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {currentMajors.map((major) => (
-          <li key={major.majorId} className="bg-white p-4 rounded-lg shadow-md border-gray-10 border-4 px-4">
-            <div className="text-xl border-gray-400 px-4">
-              <h2 className="mt-3 mb-2 font-gmarket">학과: {major.department}</h2>
-              {major.track && <h2 className="mb-2 font-gmarket">트랙: {major.track}</h2>}
-            </div>
-          </li>
-        ))}
-      </ul>
-      <ul className="flex justify-center mt-4">
-        {Array.from({ length: Math.ceil(majors.length / majorsPerPage) }).map(
-          (_, index) => (
-            <li
-              key={index}
-              onClick={() => paginate(index + 1)}
-              className={`cursor-pointer mx-2 px-3 py-1 rounded-full ${
-                currentPage === index + 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
-              }`}
-            >
-              {index + 1}
-            </li>
-          )
-        )}
-      </ul>
-    </div>
-  );
-};
-
-const NewMajorForm = ({ newMajor, handleChange, addMajor }) => (
-  <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full max-w-lg mx-auto">
-    <h2 className="text-2xl font-bold mb-4">전공 추가</h2>
-    <input
-      type="text"
-      name="department"
-      placeholder="학과"
-      value={newMajor.department}
-      onChange={handleChange}
-      className="block w-full mb-4 border border-gray-300 p-2 rounded"
-    />
-    <input
-      type="text"
-      name="track"
-      placeholder="트랙"
-      value={newMajor.track}
-      onChange={handleChange}
-      className="block w-full mb-4 border border-gray-300 p-2 rounded"
-    />
-    <button
-      onClick={addMajor}
-      className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full"
-    >
-      추가
-    </button>
-  </div>
-);
+import { FaTrashAlt, FaPlus } from "react-icons/fa";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 const Major = () => {
   const { auth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
   const [majors, setMajors] = useState([]);
   const [newMajors, setNewMajors] = useState([]); // 임시로 추가한 전공 목록
+  const [open, setOpen] = useState(false); 
   const [newMajor, setNewMajor] = useState({ department: "", track: "" });
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [showAddList, setShowAddList] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [majorsPerPage] = useState(100); // 페이지당 표시할 전공 수
+
+  const [showAddList, setShowAddList] = useState(true);
 
   useEffect(() => {
     fetchMajors();
@@ -94,17 +31,28 @@ const Major = () => {
     }
   };
 
+  const handleClose = () => {
+    setOpen(false);
+  }
+
   const addMajor = () => {
     if (newMajor.department.trim() === "") {
       window.alert("학과를 입력해주세요");
       return;
     }
-
-    if (newMajors.some(major => major.department === newMajor.department && major.track === newMajor.track)) {
-      window.alert("이미 추가된 전공입니다.");
+  
+    // Check if the major already exists in the fetched majors
+    if (majors.some(major => major.department === newMajor.department && major.track === newMajor.track)) {
+      setOpen(true);
       return;
     }
-
+  
+    // Check if the major already exists in the new majors list
+    if (newMajors.some(major => major.department === newMajor.department && major.track === newMajor.track)) {
+      setOpen(true);
+      return;
+    }
+  
     setNewMajors([...newMajors, newMajor]);
     setNewMajor({ department: "", track: "" });
   };
@@ -120,14 +68,11 @@ const Major = () => {
     setNewMajor((prevState) => ({ ...prevState, [name]: value }));
   };
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
   const submitNewMajors = async () => {
     try {
       await axiosPrivate.post("/admin/major", { requestMajorList: newMajors });
       setNewMajors([]);
       fetchMajors();
-      setShowAddForm(false);
       setShowAddList(false);
       window.alert("추가되었습니다");
     } catch (error) {
@@ -136,70 +81,74 @@ const Major = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">전공관리</h1>
-      <div className="mb-4">
-        {showAddList ? (
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-            <ul>
-              {newMajors.map((major, index) => (
-                <li key={index} className="mb-4">
-                  <div className="bg-white p-4 rounded-lg shadow-md">
-                    <h2 className="mt-3 mb-2 font-gmarket">학과: {major.department}</h2>
-                    {major.track && <h2 className="mb-2 font-gmarket">트랙: {major.track}</h2>}
-                    <button
-                        onClick={(e) => {
-                        
-                          deleteMajor(index);
-                        }}
-                        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
-                      >
-                        <FaTrashAlt className="mr-1" />
-                      </button>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            <div className="flex justify-between mt-4">
-              <button
-                onClick={submitNewMajors}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              >
-                전송
-              </button>
-              <button
-                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-                onClick={() => setShowAddList(false)}
-              >
-                추가리스트 닫기
-              </button>
-            </div>
-          </div>
-        ) : (
+    <div className="container mx-auto p-8">
+      <h1 className="text-4xl font-bold mb-8 text-center">전공관리</h1>
+      <div className="mb-8 flex justify-center">
+        <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-2xl">
+          <h2 className="text-3xl font-bold mb-6 text-center">전공 추가</h2>
+          <input
+            type="text"
+            name="department"
+            placeholder="학과"
+            value={newMajor.department}
+            onChange={handleChange}
+            className="block w-full mb-6 p-4 border border-gray-400 rounded-lg text-xl"
+          />
+          <input
+            type="text"
+            name="track"
+            placeholder="트랙"
+            value={newMajor.track}
+            onChange={handleChange}
+            className="block w-full mb-6 p-4 border border-gray-400 rounded-lg text-xl"
+          />
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => setShowAddList(true)}
+            onClick={addMajor}
+            className="w-full py-4 bg-green-500 hover:bg-green-700 text-white text-2xl font-bold rounded-lg transition duration-300"
           >
-            추가리스트 보기
+            추가
           </button>
-        )}
-        {showAddForm ? (
-          <NewMajorForm newMajor={newMajor} handleChange={handleChange} addMajor={addMajor} />
-        ) : (
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
-            onClick={() => setShowAddForm(true)}
-          >
-            전공 추가
-          </button>
-        )}
+        </div>
       </div>
-      <MajorList
-        majors={majors}
-        currentPage={currentPage}
-        majorsPerPage={majorsPerPage}
-        paginate={paginate}
-      />
+      {newMajors.length > 0 && (
+        <div className="mt-8 bg-gray-200 p-8 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold mb-6 text-center">추가된 전공</h2>
+          {newMajors.map((major, index) => (
+            <div key={index} className="mb-6 p-6 bg-white rounded-lg shadow-md">
+              <div className="flex flex-col justify-between items-center">
+                <span className="text-xl font-gmarket mb-2">학과: {major.department}</span>
+                <span className="text-xl font-gmarket mb-2">트랙: {major.track}</span>
+                <button
+                  onClick={() => deleteMajor(index)}
+                  className="text-2xl text-red-500  cursor-pointer ml-2 mt-4"
+                >
+                  <FaTrashAlt className="mr-1" />
+                </button>
+              </div>
+            </div>
+          ))}
+          <div className="flex justify-center mt-8">
+            <button
+              onClick={submitNewMajors}
+              className="py-4 px-8 bg-blue-500 hover:bg-blue-700 text-white text-2xl font-bold rounded-lg transition duration-300"
+            >
+              <FaPlus className="" /> 
+            </button>
+          </div>
+        </div>
+      )}
+
+      <Dialog open={open} onClose={handleClose}>
+        <DialogTitle>전공 추가 실패</DialogTitle>
+        <DialogContent>
+          이미 추가된 전공입니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
