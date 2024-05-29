@@ -17,6 +17,6 @@ module.exports = {
       gmarket:["gmarket"],
     },
   },
-  plugins: [],
+  plugins: [require("tailwind-scrollbar-hide")],
 }
 

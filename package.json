@@ -28,7 +28,9 @@
     "react-slide-menu": "^0.5.1",
     "react-spinners": "^0.13.8",
     "react-text-transition": "^3.1.0",
-    "react-type-animation": "^3.2.0"
+    "react-toggle-dark-mode": "^1.1.1",
+    "react-type-animation": "^3.2.0",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "scripts": {
     "start": "react-scripts start",

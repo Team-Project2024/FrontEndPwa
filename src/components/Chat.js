@@ -4,7 +4,10 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
 import useLogout from "../hooks/useLogout";
-import { FaBars, FaTimes, FaSignOutAlt, FaTrashAlt } from "react-icons/fa";
+import { FaBars, FaTimes, FaSignOutAlt, FaTrashAlt,FaMagic } from "react-icons/fa";
+import chatbotIcon from "../image/logo512.png"; // Adjust the path as needed
+import senderIcon from "../image/sender.png"
+import Switcher from "../Dark/Switcher"
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -301,9 +304,14 @@ const Chat = () => {
   const groupedChatRooms = groupChatRoomsByDate(chatRooms);
 
   return (
-    <div className={`flex h-screen ${isDarkMode ? "dark" : ""}`}>
-      {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
-      <div className="lg:hidden block p-4 absolute top-2 left-4 z-10">
+    <div className={`flex lg:h-screen h-auto lg:pr-64 pr-0 lg:bg-gray-600 bg-transparent lg:py-8 py-0`}>
+    <div
+      className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${
+        isDarkMode ? "dark:bg-gray-800" : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"
+      }`}
+    >
+        {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
+        <div className="lg:hidden  block p-4 absolute top-2 left-4 z-10">
         <FaBars
           onClick={toggleChatRoomList}
           className="text-2xl text-blue-500 dark:text-blue-700 cursor-pointer"
@@ -313,7 +321,7 @@ const Chat = () => {
       <div
         className={`${
           isChatRoomListVisible ? "block" : "hidden"
-        } lg:block lg:relative absolute inset-0 lg:w-1/4 w-3/4 bg-white border-r border-gray-300 p-4 overflow-y-auto dark:border-gray-600 dark:bg-gray-600 z-20`}
+        } lg:block lg:relative absolute inset-0 lg:w-1/4 w-3/4 bg-white border-r border-gray-300 p-4  dark:border-gray-600 dark:bg-gray-600 z-20`}
       >
         <div className="lg:hidden flex justify-end mb-4">
           <FaTimes
@@ -321,6 +329,8 @@ const Chat = () => {
             className="text-2xl text-red-500 dark:text-red-700 cursor-pointer"
           />
         </div>
+
+        <div>
         <h2 className="text-xl mb-4 dark:text-gray-200 font-gmarket">LUMOS</h2>
         <button
           className="mt-2 bg-green-500 text-white rounded px-4 py-2 dark:bg-green-700"
@@ -334,13 +344,9 @@ const Chat = () => {
         >
           전체 채팅방 삭제
         </button>
-        <button
-          type="button"
-          onClick={toggleDarkMode}
-          className="mt-4 bg-gray-500 text-white rounded px-4 py-2 dark:bg-gray-700"
-        >
-          다크 모드 {isDarkMode ? "끄기" : "켜기"}
-        </button>
+        </div>
+      
+        <div className="overflow-y-auto">
         <ul>
           {tempChatRoom && (
             <li className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-gray-200">
@@ -386,14 +392,21 @@ const Chat = () => {
               </React.Fragment>
             ))}
         </ul>
-
-        {/* 로그아웃 버튼 */}
-        <div className="absolute bottom-4 left-4 lg:left-auto lg:right-4">
-          <FaSignOutAlt
-            onClick={logout}
-            className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
-          />
         </div>
+       
+        <div className="bg-white  bottom-4 flex flex-row">
+          <div>
+              <Switcher />
+            </div>
+          {/* 로그아웃 버튼 */}
+          <div className="left-4 lg:left-auto lg:right-4">
+            <FaSignOutAlt
+              onClick={logout}
+              className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
+            />
+          </div>
+        </div>
+        
       </div>
 
       <div
@@ -402,21 +415,28 @@ const Chat = () => {
         }`}
       >
         <div
-          className="flex-grow mb-4 overflow-y-auto  mx-auto max-w-2xl"
+          className="flex-grow mb-4 overflow-y-auto mx-auto max-w-4xl scrollbar-hide"
           ref={messagesContainerRef}
         >
           {messages.map((message, index) => (
             <div
               key={index}
-              className={`mb-4 ${
-                message.type === "user" ? "flex justify-end" : "text-left"
+              className={`mb-6 flex ${
+                message.type === "user" ? "justify-end" : "justify-start"
               }`}
             >
+              {message.type === "bot" && (
+                <img
+                  src={chatbotIcon}
+                  alt="Chatbot Icon"
+                  className="w-10 h-10 mr-4 self-start"
+                />
+              )}
               <p
                 className={`inline-block py-2 px-4 rounded ${
                   message.type === "user"
-                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-2xl dark:bg-blue-900 dark:text-blue-300 font-gmarket ml-96"
-                    : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-2xl dark:bg-gray-700 dark:text-gray-300 font-gmarket"
+                    ? "bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-blue-300 font-gmarket ml-108"
+                    : "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-700 dark:text-gray-300 font-gmarket"
                 }`}
               >
                 {typeof message.content === "string"
@@ -468,17 +488,19 @@ const Chat = () => {
         <div className="flex">
           <input
             type="text"
-            className="flex-grow border rounded px-4 py-2 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
+            className="flex-grow border rounded px-4 py-2 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 "
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             onKeyDown={activeEnter}
             disabled={isSending}
           />
-          <button
-            className="ml-2 bg-blue-500 text-white rounded px-4 py-2 dark:bg-blue-700"
+          <FaMagic
+           
+            className=" text-black rounded text-4xl mt-2 mr-3 ml-8 cursor-pointer dark:text-white "
             onClick={handleSendMessage}
             disabled={isSending}
           >
+           
             {isSending ? (
               <svg
                 className="animate-spin h-5 w-5 text-white"
@@ -503,9 +525,10 @@ const Chat = () => {
             ) : (
               "전송"
             )}
-          </button>
+          </FaMagic>
         </div>
       </div>
+    </div>
     </div>
   );
 };

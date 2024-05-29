@@ -16,10 +16,7 @@ const Admin = () => {
 
   const logout = useLogout();
 
-  const handleEventManagementClick = () => {
-    setSelectedMenu("eventManagement"); // 행사관리 메뉴 선택
-    setIsSidebarVisible(false);
-  };
+ 
 
   const handleMajorManagementClick = () => {
     setSelectedMenu("MajorManagement");
@@ -64,12 +61,7 @@ const Admin = () => {
             />
           </div>
 
-          <button
-            className="mt-5 mb-5 w-full font-gmarket text-lg lg:text-4xl text-white lg:text-black text-center"
-            onClick={handleEventManagementClick}
-          >
-            행사관리
-          </button>
+       
           <button
             className="mt-5 mb-5 w-full font-gmarket text-lg lg:text-4xl text-white lg:text-black text-center"
             onClick={handleMajorManagementClick}
@@ -112,7 +104,7 @@ const Admin = () => {
           }`}
         >
           {/* 선택된 메뉴에 따라 다른 컴포넌트 표시 */}
-          {selectedMenu === "eventManagement" && <Event />}
+       
           {selectedMenu === "MajorManagement" && <Major />}
           {selectedMenu === "GraduationManagement" && <Graduation />}
           {selectedMenu === "ClassManagement" && <Class />}
