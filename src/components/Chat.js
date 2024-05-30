@@ -1,10 +1,12 @@
+import 'react-tooltip/dist/react-tooltip.css'
+
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
-import 'react-tooltip/dist/react-tooltip.css' //반드시 필요
-import { Tooltip } from 'react-tooltip'
+
+import { Tooltip } from 'react-tooltip';
 
 import useLogout from "../hooks/useLogout";
 import {
@@ -367,24 +369,28 @@ const Chat = () => {
               <div className="mt-2 flex justify-between">
                 <button
                 className="bg-blue-400 px-4 py-2 rounded-lg"
+               
                 
                 >
                 <FaComments
+                data-tooltip-id="my-tooltip" data-tooltip-content="새 채팅방 생성"
+                place="bottom"
             onClick={handleCreateChatRoom}
             className="text-2xl text-white dark:text-white cursor-pointer"
             
           />
         
                 </button>
-                
+   
            
-                <button
+                {/* <button
                   className="bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
                   onClick={handleOpenWarning}
                 >
                   <FaTrashAlt className="" />
-                </button>
+                </button> */}
               </div>
+              <Tooltip id="my-tooltip" />
             </div>
           </div>
 
@@ -436,11 +442,13 @@ const Chat = () => {
           </div>
           <div className="sticky bottom-0 left-0 p-4 bg-white dark:bg-gray-800 flex justify-between items-center">
             <div>
-              <Switcher />
+              <Switcher 
+              data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"/>
             </div>
             {/* 로그아웃 버튼 */}
             <div>
               <FaSignOutAlt
+               data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"
                 onClick={logout}
                 className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
               />

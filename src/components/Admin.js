@@ -1,9 +1,13 @@
+import 'react-tooltip/dist/react-tooltip.css'
+
+
 import React, { useState } from "react";
 import { FaBars, FaTimes, FaSignOutAlt,FaComments } from "react-icons/fa";
 import Major from "./Major";
 import Graduation from "./Graduation";
 import Class from "./Class";
 import useLogout from "../hooks/useLogout";
+import { Tooltip } from 'react-tooltip';
 import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
@@ -96,15 +100,18 @@ const Admin = () => {
             {/* 로그아웃 버튼 */}
             <div>
               <FaSignOutAlt
+               data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"
                 onClick={logout}
                 className="text-3xl text-gray-500  cursor-pointer"
               />
             </div>
+            <Tooltip id="my-tooltip" />
 
 
                 <div> 
                 <FaComments
       onClick={handleNavigation}
+      data-tooltip-id="my-tooltip" data-tooltip-content="챗봇 페이지로 이동"
       className="text-2xl text-gray-500  cursor-pointer"
     />
              

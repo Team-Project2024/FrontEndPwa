@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { Navigate } from "react-router-dom";
+
 const DetailPage = () => {
   const { itemType, itemId } = useParams();
   const [detailInfo, setDetailInfo] = useState(null);
   const [professor, setProfessor] = useState([]);
   const axiosPrivate = useAxiosPrivate();
+
+ 
+ 
+
+  
   useEffect(() => {
     const dataString = sessionStorage.getItem("contentData");
     if (dataString) {
@@ -42,6 +49,8 @@ const DetailPage = () => {
       console.error("에러발생", error);
     }
   };
+
+  
   return (
     <div className="min-h-screen  flex flex-col items-center bg-gray-900 dark:bg-white p-4 justify-center ">
       <div className="bg-gray-800 text-white rounded-lg w-full max-w-4xl p-8 items-center justify-center">
@@ -156,6 +165,9 @@ const DetailPage = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div>
+   
       </div>
     </div>
   );
