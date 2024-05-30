@@ -8,15 +8,65 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 
+
+const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
+  const indexOfLastMajor = currentPage * majorsPerPage;
+  const indexOfFirstMajor = indexOfLastMajor - majorsPerPage;
+  const currentMajors = majors.slice(indexOfFirstMajor, indexOfLastMajor);
+
+  return (
+    <div className="overflow-auto w-full p-4">
+      <h2 className="text-2xl font-bold mb-4">전공목록</h2>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {currentMajors.map((major) => (
+          <li key={major.majorId} className="bg-white p-4 rounded-lg shadow-md border-gray-10 border-4 px-4">
+            <div className="text-xl border-gray-400 px-4">
+              <h2 className="mt-3 mb-2 font-gmarket">학과: {major.department}</h2>
+              {major.track && <h2 className="mb-2 font-gmarket">트랙: {major.track}</h2>}
+            </div>
+          </li>
+        ))}
+      </ul>
+      <ul className="flex justify-center mt-4">
+        {Array.from({ length: Math.ceil(majors.length / majorsPerPage) }).map(
+          (_, index) => (
+            <li
+              key={index}
+              onClick={() => paginate(index + 1)}
+              className={`cursor-pointer mx-2 px-3 py-1 rounded-full ${
+                currentPage === index + 1
+                  ? "bg-blue-500 text-white"
+                  : "bg-gray-200"
+              }`}
+            >
+              {index + 1}
+            </li>
+          )
+        )}
+      </ul>
+    </div>
+  );
+};
+
+
+
+
+
+
 const Major = () => {
   const { auth } = useContext(AuthContext);
   const axiosPrivate = useAxiosPrivate();
   const [majors, setMajors] = useState([]);
   const [newMajors, setNewMajors] = useState([]); // 임시로 추가한 전공 목록
-  const [open, setOpen] = useState(false); 
   const [newMajor, setNewMajor] = useState({ department: "", track: "" });
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showAddList, setShowAddList] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [majorsPerPage] = useState(100); // 페이지당 표시할 전공 수
+  const [open, setOpen] = useState(false); 
 
-  const [showAddList, setShowAddList] = useState(true);
+
+ 
 
   useEffect(() => {
     fetchMajors();
@@ -41,13 +91,13 @@ const Major = () => {
       return;
     }
   
-    // Check if the major already exists in the fetched majors
+   
     if (majors.some(major => major.department === newMajor.department && major.track === newMajor.track)) {
       setOpen(true);
       return;
     }
   
-    // Check if the major already exists in the new majors list
+   
     if (newMajors.some(major => major.department === newMajor.department && major.track === newMajor.track)) {
       setOpen(true);
       return;
@@ -68,6 +118,8 @@ const Major = () => {
     setNewMajor((prevState) => ({ ...prevState, [name]: value }));
   };
 
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  
   const submitNewMajors = async () => {
     try {
       await axiosPrivate.post("/admin/major", { requestMajorList: newMajors });
@@ -83,8 +135,8 @@ const Major = () => {
   return (
     <div className="container mx-auto p-8">
       <h1 className="text-4xl font-bold mb-8 text-center">전공관리</h1>
-      <div className="mb-8 flex justify-center">
-        <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-2xl">
+      <div className="mb-8 flex justify-center ">
+        <div className="bg-gray-200 p-8 rounded-lg shadow-lg w-full max-w-xl">
           <h2 className="text-3xl font-bold mb-6 text-center">전공 추가</h2>
           <input
             type="text"
@@ -102,12 +154,16 @@ const Major = () => {
             onChange={handleChange}
             className="block w-full mb-6 p-4 border border-gray-400 rounded-lg text-xl"
           />
-          <button
-            onClick={addMajor}
-            className="w-full py-4 bg-green-500 hover:bg-green-700 text-white text-2xl font-bold rounded-lg transition duration-300"
-          >
-            추가
-          </button>
+       
+            <div className="flex flex-row justify-center items-center">
+            <button
+                      onClick={addMajor}
+                  className=" w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+                  >
+                  추가
+                </button>
+            </div>
+       
         </div>
       </div>
       {newMajors.length > 0 && (
@@ -137,6 +193,15 @@ const Major = () => {
           </div>
         </div>
       )}
+
+
+<MajorList
+        majors={majors}
+        currentPage={currentPage}
+        majorsPerPage={majorsPerPage}
+        paginate={paginate}
+      />
+
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>전공 추가 실패</DialogTitle>

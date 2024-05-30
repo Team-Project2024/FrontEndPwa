@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Navigate } from "react-router-dom";
+import { FaArrowLeft } from 'react-icons/fa';  
+import { Tooltip } from 'react-tooltip';
 
 const DetailPage = () => {
   const { itemType, itemId } = useParams();
   const [detailInfo, setDetailInfo] = useState(null);
   const [professor, setProfessor] = useState([]);
   const axiosPrivate = useAxiosPrivate();
+  const navigate = useNavigate();  // useNavigate 훅 사용
 
- 
- 
-
-  
   useEffect(() => {
     const dataString = sessionStorage.getItem("contentData");
     if (dataString) {
@@ -37,9 +36,11 @@ const DetailPage = () => {
       }
     }
   }, [itemType, itemId]);
+
   if (!detailInfo) {
     return <p>해당 항목을 찾을 수 없습니다.</p>;
   }
+
   const getProfessor = async () => {
     try {
       const response = await axiosPrivate.get("/admin/member-professor");
@@ -50,12 +51,19 @@ const DetailPage = () => {
     }
   };
 
-  
   return (
-    <div className="min-h-screen  flex flex-col items-center bg-gray-900 dark:bg-white p-4 justify-center ">
+    <div className="min-h-screen flex flex-col items-center bg-gray-900  p-4 justify-center">
       <div className="bg-gray-800 text-white rounded-lg w-full max-w-4xl p-8 items-center justify-center">
-        <div className="mb-8">
+        <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">LUMOS</h1>
+          <button 
+            className="text-white bg-gray-700 p-2 rounded-md" 
+            data-tooltip-id="my-tooltip" data-tooltip-content="챗봇페이지로 이동"
+            onClick={() => navigate(-1)}  // 뒤로가기 기능 추가
+          >
+            <FaArrowLeft />
+          </button>
+          <Tooltip id="my-tooltip"/>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4">
@@ -121,12 +129,7 @@ const DetailPage = () => {
                 {detailInfo.aiSw ? "O" : "X"}
               </span>
             </div>
-            <div className="flex justify-between items-center">
-              <span className="font-semibold">강의평가</span>
-              <span className="bg-gray-700 p-2 rounded-md w-2/3">
-                {detailInfo.course_evaluation}
-              </span>
-            </div>
+          
             <div className="flex justify-between items-center">
               <span className="font-semibold">수업방식</span>
               <span className="bg-gray-700 p-2 rounded-md w-2/3">
@@ -167,9 +170,9 @@ const DetailPage = () => {
         </div>
       </div>
       <div>
-   
       </div>
     </div>
   );
 };
+
 export default DetailPage;

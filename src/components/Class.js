@@ -21,23 +21,22 @@ const Class = () => {
 
   const [newLecture, setNewLecture] = useState({
     lectureName: "",
-    classification: "",
+    classification: "전공공통",
     room: "",
-    credit: 0,
-    division: 0,
-    grade: 0,
+    credit: 1,
+    division: 1,
+    grade: 1,
     lectureTime: "",
-    classMethod: "",
-    testType: "",
-    teamwork: 0,
-    entrepreneurship: 0,
-    creativeThinking: 0,
-    harnessingResource: 0,
+    classMethod: "대면",
+    testType: "과제 대체",
+    teamwork: 1,
+    entrepreneurship: 1,
+    creativeThinking: 1,
+    harnessingResource: 1,
     teamPlay: false,
-    gradeMethod: "",
-    testMethod: "",
+    gradeMethod: "상대평가",
     aiSw: false,
-    course_evaluation: 0,
+    course_evaluation: 1,
     memberId: ""
   });
 
@@ -58,23 +57,22 @@ const Class = () => {
     setNewLectureList([...newLectureList, newLectureRequirement]);
     setNewLecture({
       lectureName: "",
-      classification: "",
+      classification: "전공공통",
       room: "",
-      credit: 0,
-      division: 0,
-      grade: 0,
+      credit: 1,
+      division: 1,
+      grade: 1,
       lectureTime: "",
-      classMethod: "",
-      testType: "",
-      teamwork: 0,
-      entrepreneurship: 0,
-      creativeThinking: 0,
-      harnessingResource: 0,
+      classMethod: "대면",
+      testType: "과제 대체",
+      teamwork: 1,
+      entrepreneurship: 1,
+      creativeThinking: 1,
+      harnessingResource: 1,
       teamPlay: false,
-      gradeMethod: "",
-      testMethod: "",
+      gradeMethod: "상대평가",
       aiSw: false,
-      course_evaluation: 0,
+      course_evaluation: 1,
       memberId: ""
     });
   };
@@ -119,15 +117,36 @@ const Class = () => {
 
   const handleAddClass = async () => {
     try {
-      await axiosPrivate.post("/admin/lecture", {
-        requestLectureDTOList: newLectureList
+      console.log("Sending new lecture list:", newLectureList);
+      const response = await axiosPrivate.post("/admin/lecture", {
+        requestLectureDTOList: newLectureList.map(lecture => ({
+          lectureName: lecture.lectureName,
+          classification: lecture.classification,
+          room: lecture.room,
+          credit: lecture.credit,
+          division: lecture.division,
+          grade: lecture.grade,
+          lectureTime: lecture.lectureTime,
+          classMethod: lecture.classMethod,
+          testType: lecture.testType,
+          teamwork: lecture.teamwork,
+          entrepreneurship: lecture.entrepreneurship,
+          creativeThinking: lecture.creativeThinking,
+          harnessingResource: lecture.harnessingResource,
+          teamPlay: lecture.teamPlay,
+          gradeMethod: lecture.gradeMethod,
+          aiSw: lecture.aiSw,
+          course_evaluation: lecture.course_evaluation,
+          memberId: lecture.memberId
+        }))
       });
+      console.log("Response from server:", response);
       setNewLectureList([]);
       fetchLecture();
       setShowForm(false);
       window.alert("추가되었습니다");
     } catch (error) {
-      console.error("에러", error);
+      console.error("에러", error.response ? error.response.data : error.message);
     }
   };
 
@@ -162,7 +181,7 @@ const Class = () => {
                         }}
                         className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-2"
                       >
-                       {showForm ? <FaMinus className="mr-1 text-red-500" /> : <FaPlus className="mr-1" />}
+                       {showForm ? <FaMinus className="mr-1 text-red-500" /> : <FaPlus className="mr-1 text-blue-600"  />}
                       </button>
       </div>
 
@@ -316,6 +335,7 @@ const Class = () => {
                 }
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
+
                 <option value="대면">대면</option>
                 <option value="사이버">사이버</option>
                 <option value="하이브리드">하이브리드</option>
@@ -326,9 +346,9 @@ const Class = () => {
             <label className="font-gmarket">
               시험방식:
               <select
-                value={newLecture.testType}
+                value={newLecture.gradeMethod}
                 onChange={(e) =>
-                  setNewLecture({ ...newLecture, testType: e.target.value })
+                  setNewLecture({ ...newLecture, gradeMethod: e.target.value })
                 }
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
@@ -461,20 +481,15 @@ const Class = () => {
             </label>
           </div>
 
-          <div className="flex justify-between mt-4">
-            <button
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-              onClick={addLectureList}
-            >
-              추가리스트에 넣기
-            </button>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={handleAddClass}
-            >
-              추가된 강의리스트 제출
-            </button>
-          </div>
+          <div className="flex flex-row justify-center item">
+        <button
+            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            onClick={addLectureList}
+          >
+            졸업요건 제출
+          </button>
+        
+        </div>
         </div>
       )}
       {newLectureList.length > 0 && (
@@ -490,9 +505,21 @@ const Class = () => {
           >
             <FaTrashAlt />
           </button>
+
+          
         </li>
       ))}
     </ul>
+
+<div className="flex flex-row justify-center item">
+<button
+            className="w-1/3   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            onClick={handleAddClass}
+          >
+            추가된 강의리스트 제출
+          </button>
+  </div>
+   
   </div>
 )}
 

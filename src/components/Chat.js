@@ -317,6 +317,13 @@ const Chat = () => {
     setIsChatRoomListVisible(!isChatRoomListVisible);
   };
 
+
+
+  const TruncateText = ({ text, maxLength }) => {
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
+  const maxLength = 12;
+
   const groupChatRoomsByDate = (rooms) => {
     return rooms.reduce((acc, room) => {
       const dateCategory = formatDate(room.lastChatDate);
@@ -424,7 +431,10 @@ const Chat = () => {
                           }}
                           className="cursor-pointer hover:bg-gray-200 p-2 dark:hover:bg-gray-700 dark:text-white font-gmarket flex flex-row justify-between"
                         >
-                          <div>{chatRoom.firstChat}</div>
+                          <TruncateText
+                            text={chatRoom.firstChat}
+                            maxLength={maxLength}
+                          />
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -443,7 +453,7 @@ const Chat = () => {
           <div className="sticky bottom-0 left-0 p-4 bg-white dark:bg-gray-800 flex justify-between items-center">
             <div>
               <Switcher 
-              data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"/>
+              />
             </div>
             {/* 로그아웃 버튼 */}
             <div>
@@ -457,7 +467,7 @@ const Chat = () => {
         </div>
 
         <div
-          className={`flex-grow p-4 flex flex-col dark:bg-gray-900 dark:text-gray-200   ${
+          className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200   ${
             isChatRoomListVisible ? "lg:w-full" : "w-full"
           }`}
         >
@@ -530,10 +540,11 @@ const Chat = () => {
               ))
             )}
             {}
+           
             <div ref={messagesEndRef} />
             {lastUserQuestion && (
               <div className="mb-2 flex justify-end">
-                <p className="inline-block py-2 px-4 rounded bg-blue-100 text-blue-800 break-words whitespace-pre-wrap max-w-full dark:bg-blue-900 dark:text-blue-300">
+                <p className="inline-block py-2 px-4 rounded bg-gray-100 text-gray-800  break-words whitespace-pre-wrap max-w-full dark:bg-gray-600 dark:text-gray-300">
                   {lastUserQuestion}
                 </p>
               </div>

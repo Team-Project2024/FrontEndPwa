@@ -179,19 +179,14 @@ const Graduation = () => {
             </select>
           </div>
         </div>
-        <div className="flex justify-end mt-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300"
+        <div className="flex flex-row justify-center items-center">
+        <button
+            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={addGraduationRequirement}
-          >
-            졸업요건 추가
-          </button>
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-full shadow-lg transition duration-300 ml-2"
-            onClick={submitGraduationRequirements}
           >
             졸업요건 제출
           </button>
+        
         </div>
       </div>
 
@@ -211,6 +206,8 @@ const Graduation = () => {
                       >
                         <FaTrashAlt className="mr-1" />
                       </button>
+
+                
               </div>
               <div className="mt-2">
                 <p className="font-gmarket">인성교양: {requirement.characterCulture}</p>
@@ -224,7 +221,18 @@ const Graduation = () => {
               </div>
             </div>
           ))}
+          <div className="flex flex-row justify-center items-center">
+          <button
+            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            onClick={submitGraduationRequirements}
+          >
+            졸업요건 제출
+          </button>
+            </div>
+
+           
         </div>
+        
       )}
     </div>
   );
