@@ -12,7 +12,15 @@ import Button from '@mui/material/Button';
 const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
   const indexOfLastMajor = currentPage * majorsPerPage;
   const indexOfFirstMajor = indexOfLastMajor - majorsPerPage;
-  const currentMajors = majors.slice(indexOfFirstMajor, indexOfLastMajor);
+
+  // department와 track이 모두 있는 항목을 우선적으로 정렬
+  const sortedMajors = majors.slice().sort((a, b) => {
+    const aHasBoth = a.department && a.track ? 1 : 0;
+    const bHasBoth = b.department && b.track ? 1 : 0;
+    return bHasBoth - aHasBoth; // bHasBoth가 더 크면 b가 먼저 오게 함
+  });
+
+  const currentMajors = sortedMajors.slice(indexOfFirstMajor, indexOfLastMajor);
 
   return (
     <div className="overflow-auto w-full p-4">
@@ -34,9 +42,7 @@ const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
               key={index}
               onClick={() => paginate(index + 1)}
               className={`cursor-pointer mx-2 px-3 py-1 rounded-full ${
-                currentPage === index + 1
-                  ? "bg-blue-500 text-white"
-                  : "bg-gray-200"
+                currentPage === index + 1 ? "bg-blue-500 text-white" : "bg-gray-200"
               }`}
             >
               {index + 1}
@@ -47,7 +53,6 @@ const MajorList = ({ majors, currentPage, majorsPerPage, paginate }) => {
     </div>
   );
 };
-
 
 
 
@@ -64,6 +69,8 @@ const Major = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [majorsPerPage] = useState(100); // 페이지당 표시할 전공 수
   const [open, setOpen] = useState(false); 
+  const [addOpen,setAddOpen] = useState(false);
+  const [emptyOpen,setEmptyOpen] = useState(false);
 
 
  
@@ -84,10 +91,17 @@ const Major = () => {
   const handleClose = () => {
     setOpen(false);
   }
+  const handleEmptyClose = () => {
+    setEmptyOpen(false);
+  }
+  const handleAddClose = () => {
+    setAddOpen(false);
+  }
 
   const addMajor = () => {
     if (newMajor.department.trim() === "") {
-      window.alert("학과를 입력해주세요");
+      setEmptyOpen(!emptyOpen);
+      
       return;
     }
   
@@ -126,7 +140,8 @@ const Major = () => {
       setNewMajors([]);
       fetchMajors();
       setShowAddList(false);
-      window.alert("추가되었습니다");
+      setAddOpen(!addOpen);
+      
     } catch (error) {
       console.error("Error adding majors:", error);
     }
@@ -183,14 +198,14 @@ const Major = () => {
               </div>
             </div>
           ))}
-          <div className="flex justify-center mt-8">
+            <div className="flex flex-row justify-center items-center">
             <button
-              onClick={submitNewMajors}
-              className="py-4 px-8 bg-blue-500 hover:bg-blue-700 text-white text-2xl font-bold rounded-lg transition duration-300"
-            >
-              <FaPlus className="" /> 
-            </button>
-          </div>
+                      onClick={submitNewMajors}
+                  className=" w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-400 to-gray-400 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+                  >
+                  추가된 전공리스트 전송
+                </button>
+            </div>
         </div>
       )}
 
@@ -210,6 +225,30 @@ const Major = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={emptyOpen} onClose={handleEmptyClose}>
+        <DialogTitle>입력되지않음</DialogTitle>
+        <DialogContent>
+          입력해주세요
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEmptyClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={addOpen} onClose={handleAddClose}>
+        <DialogTitle>전공리스트 전송성공</DialogTitle>
+        <DialogContent>
+          성공적으로 전공리스트가 추가되었습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddClose} color="primary">
             닫기
           </Button>
         </DialogActions>

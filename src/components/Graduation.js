@@ -6,6 +6,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 const Graduation = () => {
   const { auth } = useContext(AuthContext);
@@ -16,6 +17,10 @@ const Graduation = () => {
   const [major, setMajor] = useState([]);
   const [open, setOpen] = useState(false); 
   const [graduationList, setGraduationList] = useState([]);
+  const [errOpen,setErrOpen] = useState(false);
+  const [emptyOpen,setEmptyOpen] = useState(false);
+
+
   const [graduationRequirements, setGraduationRequirements] = useState({
     characterCulture: 1,
     basicLiberalArts: 1,
@@ -67,10 +72,10 @@ const Graduation = () => {
 
   const addGraduationRequirement = () => {
     if (selectedYear === "") {
-      window.alert("학번을 선택해주세요");
+      setEmptyOpen(!emptyOpen);
       return;
     } else if (graduationRequirements.majorId === "") {
-      window.alert("전공을 선택해주세요");
+      setEmptyOpen(!emptyOpen);
       return;
     }
 
@@ -98,17 +103,33 @@ const Graduation = () => {
   const submitGraduationRequirements = async () => {
     try {
       await axiosPrivate.post("/admin/graduation", { requestGRList: graduationList });
+
+      setOpen(!open);
       console.log("성공");
-      window.alert("성공");
+    
 
       setGraduationList([]);
     } catch (error) {
+
+      setErrOpen(!errOpen);
       console.error("Error adding graduation requirements:", error);
       window.alert("추가된 졸업요건이 없거나 \n이미 등록된 졸업요건과 동일한 졸업요건이 존재합니다.");
 
       console.log(graduationList);
     }
   };
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  const handleErrClose = () => {
+    setErrOpen(false);
+  }
+
+  const handleEmptyClose = () => {
+    setEmptyOpen(false);
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -184,7 +205,7 @@ const Graduation = () => {
             className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={addGraduationRequirement}
           >
-            졸업요건 제출
+            졸업요건 리스트에 추가
           </button>
         
         </div>
@@ -223,10 +244,10 @@ const Graduation = () => {
           ))}
           <div className="flex flex-row justify-center items-center">
           <button
-            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-400 to-gray-500 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={submitGraduationRequirements}
           >
-            졸업요건 제출
+            추가된 졸업요건 리스트 전송
           </button>
             </div>
 
@@ -234,6 +255,43 @@ const Graduation = () => {
         </div>
         
       )}
+
+<Dialog open={open} onClose={handleClose}>
+        <DialogTitle>졸업요건추가 성공</DialogTitle>
+        <DialogContent>
+          졸업요건 리스트가 추가되었습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={emptyOpen} onClose={handleEmptyClose}>
+        <DialogTitle>전공 추가 실패</DialogTitle>
+        <DialogContent>
+        학번이나 전공이 선택되어있지않습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEmptyClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={errOpen} onClose={handleErrClose}>
+        <DialogTitle>전공 추가 실패</DialogTitle>
+        <DialogContent>
+        추가된 졸업요건이 없거나 이미 등록된 졸업요건과 동일한 졸업요건이 존재합니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleErrClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </div>
   );
 };

@@ -4,6 +4,11 @@ import AuthContext from "../context/AuthProvider";
 import timeJSON from "../image/time.json";
 import RoomJson from "../image/room.json";
 import { FaTrashAlt,FaPlus,FaMinus } from "react-icons/fa";
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
 
 const Class = () => {
   const { auth } = useContext(AuthContext);
@@ -18,6 +23,9 @@ const Class = () => {
   const [lecturePerPage] = useState(300);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [emptyOpen,setEmptyOpen] = useState(false);
+  const [deleteOpen,setDeleteOpen] = useState(false);
+  const [addOpen,setAddOpen] =useState(false);
 
   const [newLecture, setNewLecture] = useState({
     lectureName: "",
@@ -50,7 +58,7 @@ const Class = () => {
   const addLectureList = () => {
     const newLectureRequirement = { ...newLecture };
     if (newLectureRequirement.lectureName === "") {
-      window.alert("강의명을 입력해주세요");
+      setEmptyOpen(!addOpen);
       return;
     }
     console.log(newLectureList)
@@ -109,7 +117,7 @@ const Class = () => {
     try {
       await axiosPrivate.put(`/admin/lecture/` + lectureId);
       fetchLecture();
-      window.alert("강의 삭제 완료");
+      setDeleteOpen(!deleteOpen);
     } catch (error) {
       console.error("에러", error);
     }
@@ -144,7 +152,7 @@ const Class = () => {
       setNewLectureList([]);
       fetchLecture();
       setShowForm(false);
-      window.alert("추가되었습니다");
+      setAddOpen(!addOpen);
     } catch (error) {
       console.error("에러", error.response ? error.response.data : error.message);
     }
@@ -159,6 +167,20 @@ const Class = () => {
     .slice(indexOfFirstLecture, indexOfLastLecture);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+
+  const handleAddClose = () => {
+    setAddOpen(false);
+  }
+
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  }
+
+  const handleEmptyClose = () => {
+    setEmptyOpen(false);
+  }
+
 
   return (
     <div className="w-4xl mx-auto">
@@ -486,7 +508,7 @@ const Class = () => {
             className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={addLectureList}
           >
-            졸업요건 제출
+            강의리스트에 추가
           </button>
         
         </div>
@@ -582,6 +604,47 @@ const Class = () => {
           )
         )}
       </ul>
+
+
+
+      <Dialog open={addOpen} onClose={handleAddClose}>
+        <DialogTitle>강의추가 성공</DialogTitle>
+        <DialogContent>
+          강의 리스트가 추가되었습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleAddClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={emptyOpen} onClose={handleEmptyClose}>
+        <DialogTitle>강의명 비어있음</DialogTitle>
+        <DialogContent>
+          강의명이 입력되지않았습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEmptyClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+      <Dialog open={deleteOpen} onClose={handleDeleteClose}>
+        <DialogTitle>강의실 배정삭제 완료</DialogTitle>
+        <DialogContent>
+          선택한 강의의 강의실을 비웠습니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
     </div>
   );
 };

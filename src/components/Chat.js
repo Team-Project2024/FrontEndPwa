@@ -528,7 +528,7 @@ const Chat = () => {
                                 );
                               }}
                             >
-                              <span>
+                            <span className="font-bold cursor-pointer">
                                 {idx + 1}.{item[`${message.content.table}Name`]}
                               </span>
                             </li>
