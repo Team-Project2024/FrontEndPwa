@@ -7,6 +7,7 @@ import Major from "./Major";
 import Graduation from "./Graduation";
 import Class from "./Class";
 import useLogout from "../hooks/useLogout";
+import AdminMain from './AdminMain';
 import { Tooltip } from 'react-tooltip';
 import { Link, Navigate } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
@@ -128,6 +129,7 @@ const Admin = () => {
             {selectedMenu === "MajorManagement" && <Major />}
             {selectedMenu === "GraduationManagement" && <Graduation />}
             {selectedMenu === "ClassManagement" && <Class />}
+            {selectedMenu === "" && <AdminMain />}
           </div>
         </div>
       </div>
