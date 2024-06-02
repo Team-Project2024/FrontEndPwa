@@ -4,7 +4,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Tooltip } from 'react-tooltip';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Doughnut } from 'react-chartjs-2';
-import 'chart.js/auto'; // Chart.js 자동 등록
+import 'chart.js/auto'; 
 
 const DetailPage = () => {
   const { itemType, itemId } = useParams();

@@ -77,6 +77,7 @@ const Login = () => {
 
       setUser(""); // auth에 담고나서 id state 초기화
       setPwd(""); // 비밀번호 state 초기화
+      setPersist(prev => !prev);
 
       if (role === 'ROLE_ADMIN') {
         navigate('/admin');
@@ -132,7 +133,7 @@ const Login = () => {
               </div>
               <div>
                 <div className="flex items-center justify-between"></div>
-                <div className="mt-2">
+                <div className="mt-2 mb-8">
                   <input id="password" name="password" type="password" autoComplete="current-password"
                     onChange={(e) => setPwd(e.target.value)}
                     value={password}
@@ -142,22 +143,7 @@ const Login = () => {
                      focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "></input>
                 </div>
               </div>
-              <div className='mb-4 mt-4'>
-                <Switch
-                  checked={persist}
-                  onChange={togglePersist}
-                  inputProps={{ 'aria-label': '로그인 유지' }}
-                  sx={{
-                    '& .MuiSwitch-thumb': {
-                      backgroundColor: '#FFFFFF',
-                    },
-                    '& .MuiSwitch-track': {
-                      backgroundColor: '#2B2B2B',
-                    },
-                  }}
-                />
-                <label className="font-gmarket" htmlFor="persist">로그인 유지</label>
-              </div>
+            
               <div className='items-center flex justify-center mb-6'>
                 <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">로그인</button>
               </div>
