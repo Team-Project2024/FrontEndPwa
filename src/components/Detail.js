@@ -5,6 +5,19 @@ import { Tooltip } from 'react-tooltip';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Doughnut } from 'react-chartjs-2';
 import 'chart.js/auto'; 
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 const DetailPage = () => {
   const { itemType, itemId } = useParams();
@@ -15,6 +28,14 @@ const DetailPage = () => {
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("theme") === "dark"
   );
+  const [open, setOpen] = useState(false);
+
+  const rows = [
+    { week: 1, content: '오리엔테이션' },
+    { week: 2, content: '수업1' },
+    { week: 3, content: '수업2' },
+    // ...더 많은 데이터
+  ];
 
   useEffect(() => {
     const dataString = sessionStorage.getItem("contentData");
@@ -90,9 +111,17 @@ const DetailPage = () => {
     }
   };
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <div className={`min-h-screen flex flex-col items-center p-4 justify-center ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-slate-300 text-black'}`}>
-      <div className={`rounded-lg w-full max-w-6xl  p-8 items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
+      <div className={`rounded-lg w-full max-w-6xl p-8 items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-4xl font-bold">강의세부정보</h1>
           <button 
@@ -150,8 +179,43 @@ const DetailPage = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div>
+        <Button variant="outlined" onClick={handleClickOpen}>
+          수업계획표 보기
+        </Button>
+        <Dialog open={open} onClose={handleClose}>
+          <DialogTitle>수업계획표</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              수업 계획표는 다음과 같습니다:
+            </DialogContentText>
+            <TableContainer component={Paper}>
+              <Table sx={{ minWidth: 650 }} aria-label="schedule table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>주차</TableCell>
+                    <TableCell>수업내용</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {rows.map((row) => (
+                    <TableRow
+                      key={row.week}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell component="th" scope="row">
+                        {row.week}
+                      </TableCell>
+                      <TableCell>{row.content}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose}>닫기</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );
