@@ -9,6 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import CreditChart from './CreditChart'; 
 
 const Class = () => {
   const { auth } = useContext(AuthContext);
@@ -183,9 +184,9 @@ const Class = () => {
 
 
   return (
-    <div className="w-4xl mx-auto">
+    <div className="w-4xl mx-auto mt-8">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">강의 관리</h1>
+        <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">강의 관리</h1>
         <input
           type="text"
           placeholder="강의명 검색"
@@ -505,7 +506,7 @@ const Class = () => {
 
           <div className="flex flex-row justify-center item">
         <button
-            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="w-full md:w-1/2   align-middle  text-sm md:text-md select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={addLectureList}
           >
             강의리스트에 추가
@@ -535,7 +536,7 @@ const Class = () => {
 
 <div className="flex flex-row justify-center item">
 <button
-            className="w-1/3   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="md:w-1/3  w-full    align-middle  text-sm md:text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={handleAddClass}
           >
             추가된 강의리스트 제출

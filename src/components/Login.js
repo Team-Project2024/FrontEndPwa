@@ -112,6 +112,7 @@ const Login = () => {
   }
 
   return (  
+    
     <React.Fragment>
       <section className="h-screen flex flex-col md:flex-row justify-center items-center my-2 mx-5 md:mx-0 md:my-0 bg-blue-200">
         <div className='w-full h-full grid md:grid-cols-10'>
@@ -149,8 +150,8 @@ const Login = () => {
               </div>
             </form>
             <div className='flex justify-start'>
-              <Link to="/findid" className="mr-20 font-gmarket">학번/교번찾기</Link>
-              <Link to="/findpassword" className="font-gmarket">비밀번호찾기</Link>
+              <Link to="/findid" className="mr-16 font-gmarket text-sm sm:text-xl">학번/교번찾기</Link>
+              <Link to="/findpassword" className="font-gmarket text-sm sm:text-xl ">비밀번호찾기</Link>
             </div>
           </div>
         </div>

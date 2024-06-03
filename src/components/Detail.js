@@ -171,11 +171,12 @@ const DetailPage = () => {
             ))}
           </div>
           {/* 강의소개 */}
-          <div className="col-span-1 md:col-span-2"> 
+          <div className="col-span-1 md:col-span-2 overflow-auto" > 
             <h2 className="text-2xl font-bold mb-4">강의소개</h2>
-            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+            <div className={`p-4 rounded-lg w-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
               <div className="relative h-64 w-full">
                <h2>
+                {/* 더미데이터 */}
                                 [교과목 목적]
                   본 교과목의 목적은 대학생활 적응을 돕기 위한 교과목으로, 대학생활에 필요한 기본적이고 다양한 정보와 지식을 학습하고 대학생활의 참된 방향의 모색과 자기개발 및 이를 위한 실천적 방법을 습득하도록 하는 것에 있다.
 

@@ -133,7 +133,7 @@ const Graduation = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">졸업요건 추가</h1>
+      <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">졸업요건 추가</h1>
 
       <div className="flex justify-center mb-6">
         <label className="font-gmarket mr-4 mt-3 rounded-full" htmlFor="year">
@@ -202,10 +202,10 @@ const Graduation = () => {
         </div>
         <div className="flex flex-row justify-center items-center">
         <button
-            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="w-full    align-middle  text-sm select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={addGraduationRequirement}
           >
-            졸업요건 리스트에 추가
+             리스트에 추가
           </button>
         
         </div>
@@ -213,11 +213,11 @@ const Graduation = () => {
 
       {graduationList.length > 0 && (
         <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-4">추가된 졸업요건</h2>
+          <h2 className="text-xl   md:text-2xl font-bold mb-4">추가된 졸업요건</h2>
           {graduationList.map((requirement, index) => (
             <div key={index} className="mb-4 p-4 bg-white rounded-lg shadow-md">
               <div className="flex justify-between items-center">
-                <span className="font-gmarket">추가된 졸업요건: {index + 1}번째</span>
+                <span className=" text-sm md:text-xl font-gmarket font-bold">추가된 졸업요건: {index + 1}번째</span>
                 <button
                         onClick={(e) => {
                           e.stopPropagation();
@@ -244,10 +244,10 @@ const Graduation = () => {
           ))}
           <div className="flex flex-row justify-center items-center">
           <button
-            className="w-1/2   align-middle  text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-400 to-gray-500 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="w-full md:w-1/2  align-middle  text-sm md:text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-400 to-gray-500 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
             onClick={submitGraduationRequirements}
           >
-            추가된 졸업요건 리스트 전송
+             리스트 전송
           </button>
             </div>
 

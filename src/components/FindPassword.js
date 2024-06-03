@@ -193,7 +193,7 @@ function FindPassword() {
             <TextAni />
           </div>
           <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
-            <h2 className='text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
+            <h2 className='text-xl sm:text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
             <form onSubmit={handleFindPassword}>
               <div>
                 <div className="mt-2">
@@ -244,7 +244,7 @@ function FindPassword() {
             <TextAni />
           </div>
           <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
-            <h2 className='text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
+          <h2 className='text-xl sm:text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
             <div>
             <div className='mt-2 justify-center items-center flex flex-row'>
               <p className="text-red-500 justify-center">{Math.floor(count / 60)}:{(count % 60).toString().padStart(2, '0')}</p>
@@ -290,7 +290,7 @@ function FindPassword() {
             <TextAni />
           </div>
           <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
-            <h2 className='text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
+          <h2 className='text-xl sm:text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
             <div className="mt-2">
               <input id="password" type="password" placeholder='비밀번호 입력'
                 ref={userRef}

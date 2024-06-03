@@ -80,7 +80,7 @@ const FindId = () => {
                         <TextAni />
                     </div>
                     <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
-                        <h2 className='text-4xl p-6 mb-6 font-gmarket'>학번/교번 찾기</h2>
+                        <h2 className=' p-6 mb-6 font-gmarket text-md sm:text-xl'>학번/교번 찾기</h2>
                         <form onSubmit={handleFindId}>
                             <div>
                                 <div className="mt-2">

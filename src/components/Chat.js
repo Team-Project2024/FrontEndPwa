@@ -440,11 +440,11 @@ const Chat = () => {
               </div>
             ) : (
               messages.map((message, index) => (
-                <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end lg:ml-6 ml-20" : "justify-start lg:mr-10 mr-20"}`}>
+                <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end lg:ml-6 ml-4" : "justify-start lg:mr-10 mr-4"}`}>
                   {message.type === "bot" && (
                     <img src={chatbotIcon} alt="Chatbot Icon" className="w-10 h-10 mr-4 self-start" />
                   )}
-                  <div className={`inline-block py-2 px-4 rounded ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-white font-gmarket"}`}>
+                  <div className={`inline-block py-2 px-4 rounded-lg max-w-xs md:max-w-md lg:max-w-4xl ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-blue-900 dark:text-white font-gmarket"}`}>
                     {typeof message.content === "string" ? message.content : message.content.content}
 
                     {message.type === "bot" && message.content.content.includes('인성교양') && (
