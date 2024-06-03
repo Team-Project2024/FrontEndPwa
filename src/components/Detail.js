@@ -183,39 +183,38 @@ const DetailPage = () => {
           수업계획표 보기
         </Button>
         <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>수업계획표</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              수업 계획표는 다음과 같습니다:
-            </DialogContentText>
-            <TableContainer component={Paper}>
-              <Table sx={{ minWidth: 650 }} aria-label="schedule table">
-                <TableHead>
-                  <TableRow>
-                    <TableCell>주차</TableCell>
-                    <TableCell>수업내용</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {rows.map((row) => (
-                    <TableRow
-                      key={row.week}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-                      <TableCell component="th" scope="row">
-                        {row.week}
-                      </TableCell>
-                      <TableCell>{row.content}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>닫기</Button>
-          </DialogActions>
-        </Dialog>
+      <DialogTitle className=" text-black text-center font-gmarket">수업계획표</DialogTitle>
+      <DialogContent className="bg-gray-100 p-5">
+        <TableContainer component={Paper}>
+          <Table className="min-w-full" aria-label="schedule table">
+            <TableHead className="bg-gray-300">
+              <TableRow>
+                <TableCell className="text-white font-bold text-center">주차</TableCell>
+                <TableCell className="text-white font-bold text-center">수업내용</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.week} className="last:border-0 text-center font-gmarket">
+                  <TableCell component="th" scope="row">
+                    {row.week}
+                  </TableCell>
+                  <TableCell>{row.content}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </DialogContent>
+      <DialogActions className="bg-gray-100 p-4">
+        <Button 
+          onClick={handleClose}
+          className="bg-blue-600 text-white rounded px-4 py-2"
+        >
+          닫기
+        </Button>
+      </DialogActions>
+    </Dialog>
       </div>
     </div>
   );

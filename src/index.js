@@ -7,7 +7,7 @@ import './index.css';
 import App from './App';
 import SlideMenu from 'react-slide-menu'
 import { AuthProvider } from './context/AuthProvider';
-import { MobileProvider } from './context/UiProvider'; 
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 

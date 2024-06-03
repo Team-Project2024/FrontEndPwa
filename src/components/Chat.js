@@ -468,11 +468,11 @@ const Chat = () => {
 
         <div
           className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200   ${
-            isChatRoomListVisible ? "lg:w-full" : "w-full"
+            isChatRoomListVisible ? "lg:w-full" : "w-full "
           }`}
         >
           <div
-            className="flex-grow mb-4 p-16 lg:p-8 overflow-y-auto  scrollbar-hide  "
+            className="flex-grow mb-4 p-16 lg:p-8 overflow-y-auto  scrollbar-hide   "
             ref={messagesContainerRef}
           >
             {tempChatRoom !== null ? (
@@ -484,7 +484,7 @@ const Chat = () => {
                 <div
                   key={index}
                   className={`mb-6 flex ${
-                    message.type === "user" ? "justify-end" : "justify-start"
+                    message.type === "user" ? "justify-end ml-6" : "justify-start mr-10"
                   }`}
                 >
                   {message.type === "bot" && (
@@ -553,7 +553,7 @@ const Chat = () => {
           <div className="flex">
             <input
               type="text"
-              className="flex-grow border rounded px-4 py-2 dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 "
+              className="flex-grow border rounded px-4 py-2 border-black dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 "
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={activeEnter}

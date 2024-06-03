@@ -11,9 +11,9 @@ import FindPassword from './components/FindPassword';
 import useAuth from "./hooks/useAuth";
 
 import PersistLogin from './components/PersistLogin';
-import Test from './components/UiTest';
+
 import DetailPage from './components/Detail';
-import UII from './components/Uitestw';
+
 
 import SlideMenu from 'react-slide-menu';
 import { Routes, Route } from 'react-router-dom';
@@ -38,8 +38,7 @@ function App() {
           <Route path="findid" element={<FindId />} />
           <Route path="findpassword" element={<FindPassword />} />
           <Route path="unauthorized" element={<Unauthorized />} />
-          <Route path="test" element={<Test />} />
-          <Route path="test2" element={<UII />} />
+      
         
 
       
