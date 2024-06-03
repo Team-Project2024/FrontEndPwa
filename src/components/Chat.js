@@ -1,13 +1,9 @@
-import 'react-tooltip/dist/react-tooltip.css'
-
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import moment from "moment";
-
 import { Tooltip } from 'react-tooltip';
-
 import useLogout from "../hooks/useLogout";
 import {
   FaBars,
@@ -25,6 +21,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
+import CreditChart from './CreditChart'; // Import the CreditChart component
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -41,7 +38,7 @@ const Chat = () => {
   const [isChatRoomListVisible, setIsChatRoomListVisible] = useState(false);
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
   const [tempChatRoom, setTempChatRoom] = useState(null);
-  const [open,setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
@@ -55,7 +52,7 @@ const Chat = () => {
     if (sessionStorage.getItem("selectedChatRoomId")) {
       handleChatRoomSelect(sessionStorage.getItem("selectedChatRoomId"));
 
-    }else {
+    } else {
       handleCreateChatRoom();
     }
   }, []);
@@ -66,7 +63,6 @@ const Chat = () => {
 
       messagesEndRef.current?.scrollIntoView({ block: "end" });
 
-  
     } else if (savedScrollPosition && messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition);
     }
@@ -274,7 +270,7 @@ const Chat = () => {
         setSelectedChatRoomId(null);
         setMessages([]);
       }
-     
+
       fetchChatRooms();
     } catch (error) {
       console.error("Error deleting chat room:", error);
@@ -286,7 +282,7 @@ const Chat = () => {
       await axiosPrivate.delete("/api/all/chat-room");
       setSelectedChatRoomId(null);
       setMessages([]);
-     
+
       fetchChatRooms();
       setOpen(!open);
     } catch (error) {
@@ -317,8 +313,6 @@ const Chat = () => {
     setIsChatRoomListVisible(!isChatRoomListVisible);
   };
 
-
-
   const TruncateText = ({ text, maxLength }) => {
     return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
   };
@@ -338,34 +332,16 @@ const Chat = () => {
   const groupedChatRooms = groupChatRoomsByDate(chatRooms);
 
   return (
-    <div
-      className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}
-    >
-      <div
-        className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${
-          isDarkMode
-            ? "dark:bg-gray-800"
-            : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"
-        }`}
-      >
+    <div className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}>
+      <div className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${isDarkMode ? "dark:bg-gray-800" : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"}`}>
         {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
         <div className="lg:hidden block p-4 absolute top-2 left-4 z-10">
-          <FaBars
-            onClick={toggleChatRoomList}
-            className="text-2xl text-black dark:text-white cursor-pointer"
-          />
+          <FaBars onClick={toggleChatRoomList} className="text-2xl text-black dark:text-white cursor-pointer" />
         </div>
 
-        <div
-          className={`lg:block dark:bg-gray-800 overflow-y-scroll scrollbar-hide bg-white lg:relative absolute inset-0 lg:w-1/4 w-2/5 border-r border-gray-300 dark:border-gray-600 z-20 flex flex-col h-full ${
-            isChatRoomListVisible ? "" : "hidden"
-          }`}
-        >
+        <div className={`lg:block dark:bg-gray-800 overflow-y-scroll scrollbar-hide bg-white lg:relative absolute inset-0 lg:w-1/4 w-2/5 border-r border-gray-300 dark:border-gray-600 z-20 flex flex-col h-full ${isChatRoomListVisible ? "" : "hidden"}`}>
           <div className="lg:hidden pt-2 pr-2 flex justify-end mb-4">
-            <FaTimes
-              onClick={toggleChatRoomList}
-              className="text-2xl text-black dark:text-white cursor-pointer"
-            />
+            <FaTimes onClick={toggleChatRoomList} className="text-2xl text-black dark:text-white cursor-pointer" />
           </div>
           {/* 위에 고정시키고자 하는 부분 */}
           <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
@@ -374,22 +350,14 @@ const Chat = () => {
                 LUMOS
               </div>
               <div className="mt-2 flex justify-between">
-                <button
-                className="bg-blue-400 px-4 py-2 rounded-lg"
-               
-                
-                >
-                <FaComments
-                data-tooltip-id="my-tooltip" data-tooltip-content="새 채팅방 생성"
-                place="bottom"
-            onClick={handleCreateChatRoom}
-            className="text-2xl text-white dark:text-white cursor-pointer"
-            
-          />
-        
+                <button className="bg-blue-400 px-4 py-2 rounded-lg">
+                  <FaComments
+                    data-tooltip-id="my-tooltip" data-tooltip-content="새 채팅방 생성"
+                    place="bottom"
+                    onClick={handleCreateChatRoom}
+                    className="text-2xl text-white dark:text-white cursor-pointer"
+                  />
                 </button>
-   
-           
                 {/* <button
                   className="bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
                   onClick={handleOpenWarning}
@@ -418,8 +386,7 @@ const Chat = () => {
                     <hr className="border-black dark:border-gray-500 my-" />
                     {groupedChatRooms[date]
                       .sort(
-                        (a, b) =>
-                          new Date(b.lastChatDate) - new Date(a.lastChatDate)
+                        (a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)
                       )
                       .map((chatRoom) => (
                         <li
@@ -440,7 +407,7 @@ const Chat = () => {
                               e.stopPropagation();
                               handleDeleteChatRoom(chatRoom.chatRoomId);
                             }}
-                            className="text-xl text-gray-400  cursor-pointer ml-2"
+                            className="text-xl text-gray-400 cursor-pointer ml-2"
                           >
                             <FaTimes className="mr-1" />
                           </button>
@@ -452,13 +419,12 @@ const Chat = () => {
           </div>
           <div className="sticky bottom-0 left-0 p-4 bg-white dark:bg-gray-800 flex justify-between items-center">
             <div>
-              <Switcher 
-              />
+              <Switcher />
             </div>
             {/* 로그아웃 버튼 */}
             <div>
               <FaSignOutAlt
-               data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"
+                data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"
                 onClick={logout}
                 className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
               />
@@ -466,152 +432,80 @@ const Chat = () => {
           </div>
         </div>
 
-        <div
-          className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200   ${
-            isChatRoomListVisible ? "lg:w-full" : "w-full "
-          }`}
-        >
-          <div
-            className="flex-grow mb-4 p-16 lg:p-8 overflow-y-auto  scrollbar-hide   "
-            ref={messagesContainerRef}
-          >
+        <div className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200 ${isChatRoomListVisible ? "lg:w-full" : "w-full "}`}>
+          <div className="flex-grow mb-4 p-16 lg:p-8 overflow-y-auto scrollbar-hide" ref={messagesContainerRef}>
             {tempChatRoom !== null ? (
-              <div className="flex items-center justify-center h-full font-gmarket ">
+              <div className="flex items-center justify-center h-full font-gmarket">
                 <p>챗봇에게 궁금한 정보를 물어보세요!</p>
               </div>
             ) : (
               messages.map((message, index) => (
-                <div
-                  key={index}
-                  className={`mb-6 flex ${
-                    message.type === "user" ? "justify-end ml-6" : "justify-start mr-10"
-                  }`}
-                >
+                <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end ml-6" : "justify-start mr-10"}`}>
                   {message.type === "bot" && (
-                    <img
-                      src={chatbotIcon}
-                      alt="Chatbot Icon"
-                      className="w-10 h-10 mr-4 self-start"
-                    />
+                    <img src={chatbotIcon} alt="Chatbot Icon" className="w-10 h-10 mr-4 self-start" />
                   )}
-                  <p
-                    className={`inline-block py-2 px-4 rounded ${
-                      message.type === "user"
-                        ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-600 dark:text-gray-300 font-gmarket ml-108"
-                        : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-white font-gmarket"
-                    }`}
-                  >
-                    {typeof message.content === "string"
-                      ? message.content
-                      : message.content.content}
-                    {message.type === "bot" &&
-                      (message.content.table === "lecture" ||
-                        message.content.table === "event") &&
-                      message.content.data && (
-                        <ul>
-                          {message.content.data.map((item, idx) => (
-                            <li
-                              key={idx}
-                              onClick={() => {
-                                sessionStorage.setItem(
-                                  "selectedChatRoomId",
-                                  selectedChatRoomId
-                                );
+                  <div className={`inline-block py-2 px-4 rounded ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-600 dark:text-gray-300 font-gmarket ml-108" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-white font-gmarket"}`}>
+                    {typeof message.content === "string" ? message.content : message.content.content}
 
-                                sessionStorage.setItem(
-                                  "y",
-                                  messagesContainerRef.current.scrollTop
-                                );
-                                handleItemClick(
-                                  message.content.table,
-                                  item[`${message.content.table}Id`]
-                                );
-                              }}
-                            >
+                    {message.type === "bot" && message.content.content.includes('인성교양') && (
+                      <CreditChart content={message.content.content} />
+                    )}
+
+                    {message.type === "bot" && (message.content.table === "lecture" || message.content.table === "event") && message.content.data && (
+                      <ul>
+                        {message.content.data.map((item, idx) => (
+                          <li key={idx} onClick={() => {
+                            sessionStorage.setItem("selectedChatRoomId", selectedChatRoomId);
+                            sessionStorage.setItem("y", messagesContainerRef.current.scrollTop);
+                            handleItemClick(message.content.table, item[`${message.content.table}Id`]);
+                          }}>
                             <span className="font-bold cursor-pointer">
-                                {idx + 1}.{item[`${message.content.table}Name`]}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                  </p>
+                              {idx + 1}.{item[`${message.content.table}Name`]}
+                            </span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
                 </div>
               ))
             )}
-            {}
-           
             <div ref={messagesEndRef} />
             {lastUserQuestion && (
               <div className="mb-2 flex justify-end">
-                <p className="inline-block py-2 px-4 rounded bg-gray-100 text-gray-800  break-words whitespace-pre-wrap max-w-full dark:bg-gray-600 dark:text-gray-300">
+                <p className="inline-block py-2 px-4 rounded bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-full dark:bg-gray-600 dark:text-gray-300">
                   {lastUserQuestion}
                 </p>
               </div>
             )}
           </div>
           <div className="flex">
-            <input
-              type="text"
-              className="flex-grow border rounded px-4 py-2 border-black dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600 "
-              value={inputMessage}
-              onChange={(e) => setInputMessage(e.target.value)}
-              onKeyDown={activeEnter}
-              disabled={isSending}
-            />
-            <FaMagic
-              className=" text-black rounded text-4xl mt-2 mr-3 ml-8 cursor-pointer dark:text-white "
-              onClick={handleSendMessage}
-              disabled={isSending}
-            >
+            <input type="text" className="flex-grow border rounded px-4 py-2 border-black dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600" value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} onKeyDown={activeEnter} disabled={isSending} />
+            <FaMagic className=" text-black rounded text-4xl mt-2 mr-3 ml-8 cursor-pointer dark:text-white" onClick={handleSendMessage} disabled={isSending}>
               {isSending ? (
-                <svg
-                  className="animate-spin h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"
-                  ></path>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"></path>
                 </svg>
-              ) : (
-                "전송"
-              )}
+              ) : "전송"}
             </FaMagic>
           </div>
         </div>
       </div>
       <Dialog open={open} onClose={handleClose}>
-      <DialogTitle className="text-xl font-semibold">정말로 모든 대화방을 삭제하시겠습니까?</DialogTitle>
-      <DialogContent className="items-center justify-center flex flex-col space-y-4 p-6">
-        <p className="text-gray-600">이 작업은 되돌릴 수 없습니다.</p>
-        <Button
-          className="border border-gray-400 rounded-md bg-red-500 text-white px-4 py-2 hover:bg-red-600"
-          onClick={handleDeleteAllChatRooms}
-        >
-          삭제하기
-        </Button>
-      </DialogContent>
-      <DialogActions className="flex justify-center p-4">
-        <Button 
-          onClick={handleClose} 
-          className="text-blue-500 hover:text-blue-700"
-        >
-          취소
-        </Button>
-      </DialogActions>
-    </Dialog>
+        <DialogTitle className="text-xl font-semibold">정말로 모든 대화방을 삭제하시겠습니까?</DialogTitle>
+        <DialogContent className="items-center justify-center flex flex-col space-y-4 p-6">
+          <p className="text-gray-600">이 작업은 되돌릴 수 없습니다.</p>
+          <Button className="border border-gray-400 rounded-md bg-red-500 text-white px-4 py-2 hover:bg-red-600" onClick={handleDeleteAllChatRooms}>
+            삭제하기
+          </Button>
+        </DialogContent>
+        <DialogActions className="flex justify-center p-4">
+          <Button onClick={handleClose} className="text-blue-500 hover:text-blue-700">
+            취소
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
