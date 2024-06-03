@@ -170,6 +170,24 @@ const DetailPage = () => {
               </div>
             ))}
           </div>
+          {/* 강의소개 */}
+          <div className="col-span-1 md:col-span-2"> 
+            <h2 className="text-2xl font-bold mb-4">강의소개</h2>
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+              <div className="relative h-64 w-full">
+               <h2>
+                                [교과목 목적]
+                  본 교과목의 목적은 대학생활 적응을 돕기 위한 교과목으로, 대학생활에 필요한 기본적이고 다양한 정보와 지식을 학습하고 대학생활의 참된 방향의 모색과 자기개발 및 이를 위한 실천적 방법을 습득하도록 하는 것에 있다.
+
+                  [수업 운영 방침]
+                  1) 매주 해당 수업시간에 대면 수업으로 진행
+                  2) 학교 이해, 교육과정 이해하기, 자신 이해하기 등의 다양한 주제와 활동지를 활용하여 진행 
+                  3) 1주차는 ‘ICAN WEEK’ 몰입주간‘이므로 총 5번의 출결확인이 이루어지며, 출결결과는 1주차와 12~15주차에 출결 반영됨.
+               </h2>
+              </div>
+            </div>
+          </div>
+          {/* TECH차트 */}
           <div className="col-span-1 md:col-span-2">
             <h2 className="text-2xl font-bold mb-4">T.E.C.H</h2>
             <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
@@ -178,6 +196,7 @@ const DetailPage = () => {
               </div>
             </div>
           </div>
+        
         </div>
         <Button variant="outlined" onClick={handleClickOpen}>
           수업계획표 보기
