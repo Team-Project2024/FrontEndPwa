@@ -433,18 +433,18 @@ const Chat = () => {
         </div>
 
         <div className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200 ${isChatRoomListVisible ? "lg:w-full" : "w-full "}`}>
-          <div className="flex-grow mb-4 p-16 lg:p-8 overflow-y-auto scrollbar-hide" ref={messagesContainerRef}>
+          <div className="flex-grow mb-4 p-4 lg:p-4 overflow-y-auto scrollbar-hide" ref={messagesContainerRef}>
             {tempChatRoom !== null ? (
               <div className="flex items-center justify-center h-full font-gmarket">
                 <p>챗봇에게 궁금한 정보를 물어보세요!</p>
               </div>
             ) : (
               messages.map((message, index) => (
-                <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end ml-6" : "justify-start mr-10"}`}>
+                <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end lg:ml-6 ml-20" : "justify-start lg:mr-10 mr-20"}`}>
                   {message.type === "bot" && (
                     <img src={chatbotIcon} alt="Chatbot Icon" className="w-10 h-10 mr-4 self-start" />
                   )}
-                  <div className={`inline-block py-2 px-4 rounded ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-600 dark:text-gray-300 font-gmarket ml-108" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-white font-gmarket"}`}>
+                  <div className={`inline-block py-2 px-4 rounded ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap max-w-4xl dark:bg-blue-900 dark:text-white font-gmarket"}`}>
                     {typeof message.content === "string" ? message.content : message.content.content}
 
                     {message.type === "bot" && message.content.content.includes('인성교양') && (
@@ -479,9 +479,9 @@ const Chat = () => {
               </div>
             )}
           </div>
-          <div className="flex">
+          <div className="flex items-center w-full">
             <input type="text" className="flex-grow border rounded px-4 py-2 border-black dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600" value={inputMessage} onChange={(e) => setInputMessage(e.target.value)} onKeyDown={activeEnter} disabled={isSending} />
-            <FaMagic className=" text-black rounded text-4xl mt-2 mr-3 ml-8 cursor-pointer dark:text-white" onClick={handleSendMessage} disabled={isSending}>
+            <FaMagic className=" text-black rounded text-4xl ml-4 cursor-pointer dark:text-white" onClick={handleSendMessage} disabled={isSending}>
               {isSending ? (
                 <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>

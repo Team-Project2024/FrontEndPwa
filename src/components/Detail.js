@@ -31,7 +31,7 @@ const DetailPage = () => {
   const [open, setOpen] = useState(false);
 
   const rows = [
-    { week: 1, content: '오리엔테이션' },
+    { week: 1, content: '전력산업 변화(2) : 가격결정발전계획과 함께 계통한계가격 결정, 가격결정발전계획의 정의, 가격결정발전계획의 수요예측, 가격결정발전계획의 수립원칙, 한계비용 및 한계가격' },
     { week: 2, content: '수업1' },
     { week: 3, content: '수업2' },
     // ...더 많은 데이터
