@@ -94,7 +94,7 @@ function FindPassword() {
       if (!err?.response) {
         setErrMsg('No Server Response');
       } else if (err.response?.status === 400) {
-        setErrMsg('실패');
+        setErrMsg('틀리게 입력한요소가있는지 확인해주세요');
       }
       setErrorOpen(true);
     }
@@ -122,7 +122,7 @@ function FindPassword() {
       if (!err?.response) {
         setErrMsg('No Server Response');
       } else if (err.response?.status === 400) {
-        setErrMsg('실패');
+        setErrMsg('인증코드를 다시확인해주세요');
       }
       setErrorOpen(true);
     }
@@ -219,7 +219,7 @@ function FindPassword() {
               <div className='items-center flex justify-center mb-6'>
                 <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드요청</button>
               </div>
-              <div className='flex justify-center'>
+              <div className='flex justify-center font-bold'>
                 <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
               </div>
             </form>
@@ -246,7 +246,7 @@ function FindPassword() {
           <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
             <h2 className='text-4xl p-6 mb-6 font-gmarket'>비밀번호 찾기</h2>
             <div>
-            <div className='mt-2 justify-center items-center'>
+            <div className='mt-2 justify-center items-center flex flex-row'>
               <p className="text-red-500 justify-center">{Math.floor(count / 60)}:{(count % 60).toString().padStart(2, '0')}</p>
             </div>
               <div className="mt-2">
@@ -258,7 +258,7 @@ function FindPassword() {
               </div>
             </div>
            
-            <div className='items-center flex justify-center mb-6'>
+            <div className='items-center flex justify-center mb-6 mt-6'>
               <button onClick={VerifyCation} type="submit" disabled={isVerifyDisabled} className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드인증</button>
             </div>
             {isVerifyDisabled && (
@@ -266,12 +266,12 @@ function FindPassword() {
                 <button onClick={handleResend} className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드 재요청</button>
               </div>
             )}
-            <div className='flex justify-center'>
+            <div className='flex justify-center font-bold'>
               <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
             </div>
           </div>
         </div>
-        <Dialog open={errorOpen} onClose={handleErrorClose}>
+        <Dialog open={errorOpen} onClose={handleErrorClose} className='w-full'>
           <DialogTitle>요청 실패</DialogTitle>
           <DialogContent>{errMsg}</DialogContent>
           <DialogActions>
@@ -308,7 +308,7 @@ function FindPassword() {
             <div className='items-center flex justify-center mb-6'>
               <button onClick={ChangePassword} type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">변경</button>
             </div>
-            <div className='flex justify-center'>
+            <div className='flex justify-center font-bold'>
               <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
             </div>
           </div>

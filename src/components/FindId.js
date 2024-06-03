@@ -57,7 +57,7 @@ const FindId = () => {
             if (!err?.response) {
                 setErrMsg('No Server Response');
             } else if (err.response?.status === 400) {
-                setErrMsg('실패');
+                setErrMsg('이메일/이름을 확인해주세요');
             } else if (err.response?.status === 405) {
                 setErrMsg('클라이언트->서버 권한 없음');
             } else {
@@ -118,7 +118,7 @@ const FindId = () => {
                                 </button>
                             </div>
                         </form>
-                        <div className='flex justify-start'>
+                        <div className='flex justify-start font-bold'>
                             <Link  onClick={logout}to="/login">로그인창으로 돌아가기</Link>
                         </div>
                     </div>
@@ -128,7 +128,7 @@ const FindId = () => {
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>{isSuccess ? '성공' : '실패'}</DialogTitle>
                 <DialogContent>
-                    {isSuccess ? `찾으시는 학번/교번: ${userId}` : errMsg}
+                    {isSuccess ? `찾으시는 학번/교번: ${userId}` : `요청이 실패하였습니다 : ${errMsg}` }
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">

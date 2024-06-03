@@ -111,7 +111,7 @@ const Login = () => {
     setOpen(false);
   }
 
-  return (  // 데스크탑 - 모바일 UI 구분 필요
+  return (  
     <React.Fragment>
       <section className="h-screen flex flex-col md:flex-row justify-center items-center my-2 mx-5 md:mx-0 md:my-0 bg-blue-200">
         <div className='w-full h-full grid md:grid-cols-10'>
