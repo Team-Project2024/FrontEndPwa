@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-gmarket {
+  @apply font-gmarket; /* 예시로 font-sans를 사용, 실제 폰트 패밀리 이름으로 변경 */
+}
+
+.font-bold {
+  @apply font-bold;
+}
+
+.text-center {
+  @apply text-center;
+}
+
+.dark\:text-white {
+  @apply dark:text-white;
+}
+
+.bg-gray-200 {
+  @apply bg-gray-200;
+}
+
+.dark\:bg-gray-500 {
+  @apply dark:bg-gray-500;
+}
+
+.dark\:bg-gray-600 {
+  @apply dark:bg-gray-600;
+}
+
+.bg-gray-100 {
+  @apply bg-gray-100;
+}
+
+.bg-white {
+  @apply bg-white;
+}
+
+.dark\:bg-gray-700 {
+  @apply dark:bg-gray-700;
+}
+
+.text-black {
+  @apply text-black;
+}
+
+.whitespace-nowrap {
+  @apply whitespace-nowrap;
+}
+
+.whitespace-pre-wrap {
+  @apply whitespace-pre-wrap;
+}
+
+.px-4 {
+  @apply px-4;
+}
+
+.py-2 {
+  @apply py-2;
+}
+
+.rounded {
+  @apply rounded;
+}
+
+.bg-green-600 {
+  @apply bg-green-600;
+}

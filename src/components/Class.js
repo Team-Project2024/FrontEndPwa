@@ -95,7 +95,8 @@ const Class = () => {
   const fetchLecture = async () => {
     try {
       const response = await axiosPrivate.get("/admin/lecture");
-      console.log(response)
+      console.log(response.data.responseLectureDTOList)
+      console.log(response.data)
       setLecture(response.data.responseLectureDTOList);
 
     } catch (error) {
@@ -106,8 +107,9 @@ const Class = () => {
   const getProfessor = async () => {
     try {
       const response = await axiosPrivate.get("/admin/member-professor");
-      console.log(response.data);
-      setProfessor(response.data);
+      console.log(response.data.professorDTOList
+      );
+      setProfessor(response.data.professorDTOList);
       console.log(response.data);
     } catch (error) {
       console.error("에러발생", error);
