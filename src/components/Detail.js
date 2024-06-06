@@ -12,7 +12,6 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 
-
 const DetailPage = () => {
   const { itemType, itemId } = useParams();
   const [detailInfo, setDetailInfo] = useState(null);
@@ -27,6 +26,7 @@ const DetailPage = () => {
 
   useEffect(() => {
     const dataString = sessionStorage.getItem("contentData");
+    console.log(dataString)
     if (dataString) {
       try {
         const data = JSON.parse(dataString);
@@ -73,7 +73,7 @@ const DetailPage = () => {
     labels: ['T영역', 'E영역', 'C영역', 'H영역'],
     datasets: [
       {
-        label: 'Score', // label 속성을 추가합니다.
+        label: '점수', // label 속성을 추가합니다.
         data: [
           detailInfo.teamwork,
           detailInfo.entrepreneurship,
@@ -154,6 +154,11 @@ const DetailPage = () => {
     setCheckOpen(false);
   };
 
+  const gradeRatioArray = detailInfo.gradeRatio.split('\n').map((line) => {
+    const [label, value] = line.split(' ');
+    return { label, value: parseInt(value.replace('%', '')) };
+  });
+
 
 
   return (
@@ -215,12 +220,29 @@ const DetailPage = () => {
               </div>
             </div>
           </div>
-          {/* TECH 차트 */}
-          <div className="col-span-1 md:col-span-2">
-            <h2 className="text-2xl font-bold mb-4">T.E.C.H</h2>
-            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
-              <div className="relative h-64 w-full">
-                <Bar data={techData} options={techOptions}  />
+
+          <div className="col-span-1 md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* TECH 차트 */}
+            <div>
+              <h2 className="text-2xl font-bold mb-4 text-center">T.E.C.H</h2>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                <div className="relative h-64 w-full">
+                  <Bar data={techData} options={techOptions}  />
+                </div>
+              </div>
+            </div>
+         
+        {/* 성적 비율 */}
+        <div className=" items-center justify-center">
+              <h2 className="text-2xl font-bold mb-4">성적 비율</h2>
+              <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+                <div className="relative h-64 w-full">
+                  <div className="font-gmarket font-bold text-xl items-center justify-center text-center ">
+                    {detailInfo.gradeRatio.split('\n').map((line, index) => (
+                      <p key={index} className="mb-8">{line}</p>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
