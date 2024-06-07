@@ -247,6 +247,7 @@ const Chat = () => {
       fetchChatRooms();
     } catch (error) {
       console.error("Error sending message:", error);
+      setLastUserQuestion(null);
     } finally {
       setIsSending(false);
     }

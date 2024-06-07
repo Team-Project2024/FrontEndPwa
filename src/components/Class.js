@@ -46,7 +46,8 @@ const Class = () => {
     gradeMethod: "상대평가",
     aiSw: false,
     course_evaluation: 1,
-    memberId: ""
+    memberId: "",
+    introduction: ""
   });
 
   useEffect(() => {
@@ -82,7 +83,8 @@ const Class = () => {
       gradeMethod: "상대평가",
       aiSw: false,
       course_evaluation: 1,
-      memberId: ""
+      memberId: "",
+      introduction: ""
     });
   };
 
@@ -148,7 +150,10 @@ const Class = () => {
           gradeMethod: lecture.gradeMethod,
           aiSw: lecture.aiSw,
           course_evaluation: lecture.course_evaluation,
-          memberId: lecture.memberId
+          memberId: lecture.memberId,
+          introduction: lecture.introduction,
+          gradeRatio: lecture.gradeRatio
+          
         }))
       });
       console.log("Response from server:", response);
@@ -504,6 +509,20 @@ const Class = () => {
                 <option value={1}>1</option>
               </select>
             </label>
+
+
+            <label className="font-gmarket ">
+              강의소개:
+              <input
+                value={newLecture.introduction}
+                onChange={(e) =>
+                  setNewLecture({ ...newLecture, introduction: e.target.value })
+                }
+                className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
+              >
+              
+              </input>
+            </label>
           </div>
 
           <div className="flex flex-row justify-center item">
@@ -571,6 +590,7 @@ const Class = () => {
         { label: "수업방식", value: lecture.classMethod },
         { label: "강의평가", value: lecture.course_evaluation },
         { label: "시험방식", value: lecture.testType },
+        { label: "강의소개", value: lecture.introduction },
       ].map((item) => (
         <div key={item.label} className="flex flex-col">
           <span className="font-semibold text-gray-600 mb-2">{item.label}</span>

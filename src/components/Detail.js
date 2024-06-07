@@ -102,15 +102,25 @@ const DetailPage = () => {
     responsive: true,
     scales: {
       x: {
-        max: 10, // x축 최대값을 10으로 설정합니다.
+        max: 5, // x축 최대값을 10으로 설정합니다.
         ticks: {
-          color: isDarkMode ? '#FFFFFF' : '#000000' // x축 텍스트 색상 설정
-        }
+          color: isDarkMode ? '#FFFFFF' : '#000000' ,
+          stepSize: 1,
+            min: 0
+        },
+        grid: {
+          color: 'transparent',
+        },
       },
       y: {
         ticks: {
-          color: isDarkMode ? '#FFFFFF' : '#000000' // y축 텍스트 색상 설정
-        }
+          color: isDarkMode ? '#FFFFFF' : '#000000',
+          stepSize: 1,
+            min: 0 
+        },
+        grid: {
+          color: 'transparent',
+        },
       }
     },
     plugins: {
