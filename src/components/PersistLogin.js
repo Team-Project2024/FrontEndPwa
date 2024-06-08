@@ -37,7 +37,7 @@ const PersistLogin = () => {
         console.log(`isLoading: ${isLoading}`);
         console.log(`aT: ${JSON.stringify(auth?.accessToken)}`);
         
-    },[isLoading,auth?.accessToken])
+    },[isLoading])
     return (
         <>
             {!persist

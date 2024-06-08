@@ -15,6 +15,9 @@ import useAuth from "./hooks/useAuth";
 import PersistLogin from './components/PersistLogin';
 
 import DetailPage from './components/Detail';
+import Doughnutd from './components/DoughnutChart';
+
+
 
 
 
@@ -62,6 +65,7 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
+        <Route paht="d" element={<Doughnutd/>} />
 
         {/* 로그인 완료, 권한이 있어야 접근 가능 */}
         <Route element={<PersistLogin />}>

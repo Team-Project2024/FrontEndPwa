@@ -15,7 +15,10 @@ import DialogActions from '@mui/material/DialogActions';
 import useLogout from "../hooks/useLogout";
 import Button from '@mui/material/Button';
 
+
+
 const LOGIN_URL = "/login";
+
 
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth();
@@ -78,7 +81,7 @@ const Login = () => {
       setUser(""); // auth에 담고나서 id state 초기화
       setPwd(""); // 비밀번호 state 초기화
       setPersist(prev => !prev);
-
+    
       if (role === 'ROLE_ADMIN') {
         navigate('/admin');
       } else {
@@ -156,6 +159,7 @@ const Login = () => {
           </div>
         </div>
       </section>
+      
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>로그인 실패</DialogTitle>
