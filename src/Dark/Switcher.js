@@ -12,7 +12,9 @@ export default function Switcher() {
   };
   return (
     <div>
-      <DarkModeSwitch checked={darkSide} onChange={toggleDarkMode} size={30}
+      <DarkModeSwitch 
+         className="focus:outline-none"   
+        checked={darkSide} onChange={toggleDarkMode} size={30}
       data-tooltip-id="my-tooltip" data-tooltip-content="다크모드 켜기/끄기"
       
       />

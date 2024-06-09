@@ -356,7 +356,7 @@ const Chat = () => {
                     data-tooltip-id="my-tooltip" data-tooltip-content="새 채팅방 생성"
                     place="bottom"
                     onClick={handleCreateChatRoom}
-                    className="text-2xl text-white dark:text-white cursor-pointer"
+                    className="text-2xl text-white dark:text-white cursor-pointer focus:outline-none"
                   />
                 </button>
                 {/* <button
@@ -408,7 +408,7 @@ const Chat = () => {
                               e.stopPropagation();
                               handleDeleteChatRoom(chatRoom.chatRoomId);
                             }}
-                            className="text-xl text-gray-400 cursor-pointer ml-2"
+                            className="text-xl text-gray-400 cursor-pointer ml-2 focus:outline-none"
                           >
                             <FaTimes className="mr-1" />
                           </button>
@@ -427,7 +427,7 @@ const Chat = () => {
               <FaSignOutAlt
                 data-tooltip-id="my-tooltip" data-tooltip-content="로그아웃"
                 onClick={logout}
-                className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer"
+                className="text-3xl text-gray-500 dark:text-gray-200 cursor-pointer focus:outline-none"
               />
             </div>
           </div>
