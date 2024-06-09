@@ -5,7 +5,7 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 Chart.register(ChartDataLabels);
 
-const DoughnutChart = ({ data, total, title }) => {
+const DoughnutChart = ({ data, total, title, maxTotal }) => {
   const chartData = {
     datasets: [
       {
@@ -21,12 +21,18 @@ const DoughnutChart = ({ data, total, title }) => {
       title: {
         display: true,
         text: title,
+        font: {
+          size: 16,
+        },
+        padding: {
+          top: 10,
+          bottom: 30,
+        },
       },
       datalabels: {
         display: true,
         color: 'black',
         formatter: (value, context) => {
-          const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
           const label = context.chart.data.labels[context.dataIndex];
           if (label === 'Used') {
             return `${value}`;
@@ -49,32 +55,33 @@ const DoughnutChart = ({ data, total, title }) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '200px', height: '200px' }}>
+    <div style={{ position: 'relative', width: '200px', height: '250px' }}>
       <Doughnut data={chartData} options={options} />
+   
       <div
         style={{
           position: 'absolute',
-          top: '50%',
+          top: '65%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
           fontSize: '24px',
           fontWeight: 'bold',
         }}
       >
-        {total}
+        {total} / {maxTotal}
       </div>
     </div>
   );
 };
 
-const Doughnutd = () => {
+const App = () => {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-      <DoughnutChart data={[16, 68]} total={16} title="24시간 열람실" />
-      <DoughnutChart data={[97, 65]} total={97} title="일반열람실 A" />
-      <DoughnutChart data={[80, 88]} total={80} title="일반열람실 B" />
+      <DoughnutChart data={[16, 68]} total={16} maxTotal={84} title="요소1" />
+      <DoughnutChart data={[97, 65]} total={97} maxTotal={162} title="요소2" />
+      <DoughnutChart data={[80, 88]} total={80} maxTotal={168} title="요소3" />
     </div>
   );
 };
 
-export default Doughnutd;
+export default App;

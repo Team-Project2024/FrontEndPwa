@@ -223,7 +223,7 @@ const DetailPage = () => {
           <div className="col-span-1 md:col-span-2 overflow-auto" > 
             <h2 className="text-2xl font-bold mb-4">강의소개</h2>
             <div className={`p-4 rounded-lg w-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
-              <div className="relative h-64 w-full">
+              <div className="relative  w-full">
                <h2 className="font-gmarket">
                {detailInfo.introduction}
                </h2>
@@ -249,7 +249,7 @@ const DetailPage = () => {
                 <div className="relative h-64 w-full">
                   <div className="font-gmarket font-bold text-xl items-center justify-center text-center ">
                     {detailInfo.gradeRatio.split('\n').map((line, index) => (
-                      <p key={index} className="mb-8">{line}</p>
+                      <p key={index} className="mb-12">{line}</p>
                     ))}
                   </div>
                 </div>
