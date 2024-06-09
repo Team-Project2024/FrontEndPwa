@@ -55,33 +55,68 @@ const DoughnutChart = ({ data, total, title, maxTotal }) => {
   };
 
   return (
-    <div style={{ position: 'relative', width: '200px', height: '250px' }}>
+    <div className="relative w-40 h-52">
       <Doughnut data={chartData} options={options} />
-   
-      <div
-        style={{
-          position: 'absolute',
-          top: '65%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          fontSize: '24px',
-          fontWeight: 'bold',
-        }}
-      >
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-xl font-bold">
         {total} / {maxTotal}
       </div>
     </div>
   );
 };
 
-const App = () => {
+const DoughnutCharts = ({ content, graduation }) => {
+  if (!content || !graduation) return null;
+
+ 
+  const contentArray = content.split(', ');
+  const userData = {};
+  contentArray.forEach(item => {
+    const [key, value] = item.split(': ');
+    userData[key.trim()] = parseInt(value, 10);
+  });
+
+  const requiredCredits = {
+    '기초교양': graduation.basicLiberalArts,
+    '인성교양': graduation.characterCulture,
+    '일반교양': graduation.generalLiberalArts,
+    '전공공통': graduation.majorCommon,
+    '전공심화': graduation.majorAdvanced,
+    '자유선택': graduation.freeChoice
+  };
+
+  const charts = Object.keys(requiredCredits).map(key => {
+    const required = requiredCredits[key];
+    const remaining = userData[key] || 0;
+    const completed = required - remaining;
+
+    return (
+      <div key={key} className="p-2 sm:p-4">
+        <DoughnutChart
+          data={[completed, remaining]}
+          total={completed}
+          maxTotal={required}
+          title={key}
+        />
+      </div>
+    );
+  });
+
+  const totalCompletedCredits = userData['완료 학점'] || 0;
+  const totalRemainingCredits = graduation.graduationCredits - totalCompletedCredits;
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-      <DoughnutChart data={[16, 68]} total={16} maxTotal={84} title="요소1" />
-      <DoughnutChart data={[97, 65]} total={97} maxTotal={162} title="요소2" />
-      <DoughnutChart data={[80, 88]} total={80} maxTotal={168} title="요소3" />
+    <div className="flex flex-wrap justify-center">
+      {charts}
+      <div className="p-2 sm:p-4">
+        <DoughnutChart
+          data={[totalCompletedCredits, totalRemainingCredits]}
+          total={totalCompletedCredits}
+          maxTotal={graduation.graduationCredits}
+          title="졸업 총 학점"
+        />
+      </div>
     </div>
   );
 };
 
-export default App;
+export default DoughnutCharts;

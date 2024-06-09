@@ -13,7 +13,7 @@ import {
   FaMagic,
   FaComments
 } from "react-icons/fa";
-import chatbotIcon from "../image/chatbot.png"; // Adjust the path as needed
+import chatbotIcon from "../image/chatbot.png"; 
 import senderIcon from "../image/sender.png";
 import Switcher from "../Dark/Switcher";
 import Dialog from '@mui/material/Dialog';
@@ -21,7 +21,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import CreditChart from './CreditChart'; // Import the CreditChart component
+
+import DoughnutCharts from "./DoughnutChart";
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -39,12 +40,19 @@ const Chat = () => {
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
   const [tempChatRoom, setTempChatRoom] = useState(null);
   const [open, setOpen] = useState(false);
+  const [graduation,setGraduation] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+
+  useEffect(()=> {
+   getGraduation();
+
+  },[]);
+
 
   useEffect(() => {
     fetchChatRooms();
@@ -99,6 +107,22 @@ const Chat = () => {
       console.error("Error fetching chat rooms:", error);
     }
   };
+
+
+  const getGraduation = async () => {
+    try {
+      const response = await axiosPrivate.get("/api/graduation");
+      
+      console.log(response.data)
+    
+      setGraduation(response.data)
+
+     
+    } catch (error) {
+      console.error("졸업요건 받아오기에러:", error);
+    }
+  };
+
 
   const formatDate = (date) => {
     const currentDate = new Date();
@@ -447,11 +471,11 @@ const Chat = () => {
                     <img src={chatbotIcon} alt="Chatbot Icon" className="w-10 h-10 mr-4 self-start" />
                   )}
                   <div className={`inline-block py-2 px-4 rounded-lg max-w-xs md:max-w-md lg:max-w-4xl ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-blue-900 dark:text-white font-gmarket"}`}>
-                    {typeof message.content === "string" ? message.content : message.content.content}
+                  {typeof message.content === "string" ? message.content : message.content.content}
 
-                    {message.type === "bot" && message.content.content.includes('인성교양') && (
-                      <CreditChart content={message.content.content} />
-                    )}
+                      {message.type === "bot" && message.content.content.includes('인성교양') && (
+                        <DoughnutCharts content={message.content.content} graduation={graduation} />
+                      )}
 
                     {message.type === "bot" && (message.content.table === "lecture" || message.content.table === "event") && message.content.data && (
                       <ul>
