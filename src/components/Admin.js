@@ -53,7 +53,7 @@ const Admin = () => {
               className="text-2xl text-red-500 dark:text-red-700 cursor-pointer"
             />
           </div>
-          <div className="flex flex-col justify-between h-full">
+          <div className="flex flex-col  h-full">
             <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4 ">
               <div className="text-xl mb-4 dark:text-gray-200 font-gmarket">
                 LUMOS

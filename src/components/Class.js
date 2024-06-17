@@ -191,7 +191,7 @@ const Class = () => {
 
 
   return (
-    <div className="w-4xl mx-auto mt-8">
+    <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">강의 관리</h1>
         <input
@@ -590,6 +590,7 @@ const Class = () => {
         { label: "수업방식", value: lecture.classMethod },
         { label: "강의평가", value: lecture.course_evaluation },
         { label: "시험방식", value: lecture.testType },
+        { label: "성적비율", value: lecture.gradeRatio },
         { label: "강의소개", value: lecture.introduction },
       ].map((item) => (
         <div key={item.label} className="flex flex-col">
