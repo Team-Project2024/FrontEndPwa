@@ -80,7 +80,7 @@ const Login = () => {
 
       setUser(""); // auth에 담고나서 id state 초기화
       setPwd(""); // 비밀번호 state 초기화
-      setPersist(prev => !prev);
+      togglePersist();
     
       if (role === 'ROLE_ADMIN') {
         navigate('/admin');
@@ -103,8 +103,11 @@ const Login = () => {
   };
 
   const togglePersist = () => {
+   
     setPersist(prev => !prev);
   }
+
+  
 
   useEffect(() => {
     localStorage.setItem("persist", persist); // persist state 상태변화시 로컬스토리지에 persist 추가

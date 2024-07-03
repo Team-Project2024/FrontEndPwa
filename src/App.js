@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 
 import Login from './components/Login';
 import Chat from './components/Chat';
@@ -15,6 +15,8 @@ import useAuth from "./hooks/useAuth";
 import PersistLogin from './components/PersistLogin';
 
 import DetailPage from './components/Detail';
+import Map from './components/map';
+import useRefreshToken from './hooks/useRefreshToken';
 
 
 
@@ -24,18 +26,20 @@ import { Routes, Route } from 'react-router-dom';
 
 
 
+
+
+
+
+//IgnoreResizeObserverError 방지
 const IgnoreResizeObserverError = () => {
   useEffect(() => {
     const originalError = console.error;
 
-    console.error = (msg, ...args) => {
-      if (
-        typeof msg === 'string' &&
-        msg.includes('ResizeObserver loop completed with undelivered notifications')
-      ) {
+    console.error = (...args) => {
+      if (args[0] && typeof args[0] === 'string' && args[0].includes('ResizeObserver')) {
         return;
       }
-      originalError(msg, ...args);
+      originalError(...args);
     };
 
     return () => {
@@ -51,6 +55,45 @@ const IgnoreResizeObserverError = () => {
  
 function App() {
   const { auth } = useAuth(); // useAuth 훅을 사용하여 현재 사용자 정보 가져오기
+  const refresh = useRefreshToken(); // 토큰갱신훅 호출
+  const [lastRefresh, setLastRefresh] = useState(Date.now());
+
+
+  //일정시간마다 자동으로 토큰갱신
+  useEffect(() => {
+    
+    const intervalId = setInterval(async () => {
+      await refresh();
+    }, 3 * 60 * 1000); // 3분
+      console.log('refresh');
+      
+   
+    return () => clearInterval(intervalId);
+  }, [refresh]); 
+
+
+ // 새로고침 연타 방지
+  useEffect(() => {
+    
+    const handleBeforeUnload = (e) => {
+      const now = Date.now();
+      const timeSinceLastRefresh = now - lastRefresh;
+  
+      if (timeSinceLastRefresh < 5000) { // 5초 이내에 새로고침 시도시
+        e.preventDefault();
+        e.returnValue = ''; 
+      } else {
+        setLastRefresh(now);
+      }
+    };
+  
+    window.addEventListener('beforeunload', handleBeforeUnload);
+  
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [lastRefresh]);
+  
 
 
 
@@ -64,6 +107,7 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="map" element={<Map />} />
        
 
         {/* 로그인 완료, 권한이 있어야 접근 가능 */}

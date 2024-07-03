@@ -5,17 +5,25 @@ import { useCookies } from "react-cookie";
 
 
 const useLogout = () => {
-    const {setAuth} = useAuth();
+    const {setAuth,persist, setPersist} = useAuth();
+   
     const [cookies,setCookie,removeCookie] = useCookies(['Refresh_Token']);
 
+    const togglePersist = () => {
+        setPersist('false');
+      }
+    
     const logout = async () => {
         setAuth({}); //auth state를 모두 비움
         
         try {
+            togglePersist();
             const response = await axios.post('/logout',null, {
                 withCredentials: true
             });
             removeCookie('Refresh_Token'); //저장된 쿠키중 RefreshToken 삭제
+           
+            
              window.location.reload(); //삭제 적용을 위해 페이지 강제 새로고침
            
         }catch (err) {

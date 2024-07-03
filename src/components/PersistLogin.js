@@ -9,7 +9,14 @@ import { RotateLoader } from "react-spinners";
 const PersistLogin = () => {
     const [isLoading, setIsLoading] = useState(true);
     const refresh = useRefreshToken();
-    const {auth,persist} = useAuth();
+    const {auth,persist,setPersist} = useAuth();
+
+
+    const mainTain = () => {
+        if(persist === 'false'){
+            setPersist(prev => !prev);
+        }
+    }
 
 
     useEffect(() => {
@@ -28,6 +35,8 @@ const PersistLogin = () => {
         }
 
         !auth?.accessToken &&persist ? verifyRefreshToken() : setIsLoading(false);
+
+        
 
         return () => isMounted = false;
     },[])
