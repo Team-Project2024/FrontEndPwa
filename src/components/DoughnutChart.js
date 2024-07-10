@@ -2,10 +2,14 @@ import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+import { useState } from 'react';
 
 Chart.register(ChartDataLabels);
 
 const DoughnutChart = ({ data, total, title, maxTotal }) => {
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("theme") === "dark"
+  );
   const chartData = {
     datasets: [
       {
@@ -22,6 +26,7 @@ const DoughnutChart = ({ data, total, title, maxTotal }) => {
         display: true,
         text: title,
         font: {
+          
           size: 16,
         },
         padding: {
@@ -41,6 +46,7 @@ const DoughnutChart = ({ data, total, title, maxTotal }) => {
           }
         },
         font: {
+          
           size: 16,
           weight: 'bold',
         },

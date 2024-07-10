@@ -18,7 +18,8 @@ import DetailPage from './components/Detail';
 
 import useRefreshToken from './hooks/useRefreshToken';
 import JsonTest from './components/JsonTest';
-import mapt from './components/mapt';
+import Toast from './components/Toast';
+
 
 
 
@@ -118,7 +119,7 @@ function App() {
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
         <Route path="jsontest" element={<JsonTest />} />
-        <Route path="map" element={<Mapt />} />
+        <Route path="ui" element={<Toast />} />
        
 
         {/* 로그인 완료, 권한이 있어야 접근 가능 */}

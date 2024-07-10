@@ -3,13 +3,13 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import timeJSON from "../image/time.json";
 import RoomJson from "../image/room.json";
-import { FaTrashAlt,FaPlus,FaMinus } from "react-icons/fa";
+import { FaTrashAlt, FaPlus, FaMinus } from "react-icons/fa";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import CreditChart from './CreditChart'; 
+import CreditChart from './CreditChart';
 
 const Class = () => {
   const { auth } = useContext(AuthContext);
@@ -24,9 +24,10 @@ const Class = () => {
   const [lecturePerPage] = useState(300);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [emptyOpen,setEmptyOpen] = useState(false);
-  const [deleteOpen,setDeleteOpen] = useState(false);
-  const [addOpen,setAddOpen] =useState(false);
+  const [emptyOpen, setEmptyOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [addOpen, setAddOpen] = useState(false);
+  const [isAdd,setIsAdd] = useState(false);
 
   const [newLecture, setNewLecture] = useState({
     lectureName: "",
@@ -47,7 +48,8 @@ const Class = () => {
     aiSw: false,
     course_evaluation: 1,
     memberId: "",
-    introduction: ""
+    introduction: "",
+    gradeRatio: [{ name: "", value: 0 }]
   });
 
   useEffect(() => {
@@ -63,7 +65,10 @@ const Class = () => {
       setEmptyOpen(!addOpen);
       return;
     }
-    console.log(newLectureList)
+    if (RatioSum() !== 100) {
+      alert("요소비율의 합은 100%로 맞춰주세요");
+      return;
+    }
     setNewLectureList([...newLectureList, newLectureRequirement]);
     setNewLecture({
       lectureName: "",
@@ -84,7 +89,8 @@ const Class = () => {
       aiSw: false,
       course_evaluation: 1,
       memberId: "",
-      introduction: ""
+      introduction: "",
+      gradeRatio: [{ name: "", value: 0 }]
     });
   };
 
@@ -97,10 +103,7 @@ const Class = () => {
   const fetchLecture = async () => {
     try {
       const response = await axiosPrivate.get("/admin/lecture");
-      console.log(response.data.responseLectureDTOList)
-      console.log(response.data)
       setLecture(response.data.responseLectureDTOList);
-
     } catch (error) {
       console.error("Error fetching lecture:", error);
     }
@@ -109,10 +112,7 @@ const Class = () => {
   const getProfessor = async () => {
     try {
       const response = await axiosPrivate.get("/admin/member-professor");
-      console.log(response.data.professorDTOList
-      );
       setProfessor(response.data.professorDTOList);
-      console.log(response.data);
     } catch (error) {
       console.error("에러발생", error);
     }
@@ -130,7 +130,6 @@ const Class = () => {
 
   const handleAddClass = async () => {
     try {
-      console.log("Sending new lecture list:", newLectureList);
       const response = await axiosPrivate.post("/admin/lecture", {
         requestLectureDTOList: newLectureList.map(lecture => ({
           lectureName: lecture.lectureName,
@@ -152,11 +151,9 @@ const Class = () => {
           course_evaluation: lecture.course_evaluation,
           memberId: lecture.memberId,
           introduction: lecture.introduction,
-          gradeRatio: lecture.gradeRatio
-          
+          gradeRatio: lecture.gradeRatio.map(ratio => `${ratio.name} ${ratio.value}%`).join(' ')
         }))
       });
-      console.log("Response from server:", response);
       setNewLectureList([]);
       fetchLecture();
       setShowForm(false);
@@ -164,6 +161,30 @@ const Class = () => {
     } catch (error) {
       console.error("에러", error.response ? error.response.data : error.message);
     }
+  };
+
+  const handleAddGradeRatio = () => {
+    setNewLecture(prevState => ({
+      ...prevState,
+      gradeRatio: [...prevState.gradeRatio, { name: "", value: 0 }]
+    }));
+  };
+
+  const handleRemoveGradeRatio = (index) => {
+    setNewLecture(prevState => ({
+      ...prevState,
+      gradeRatio: prevState.gradeRatio.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleGradeRatioChange = (index, field, value) => {
+    const updatedGradeRatio = [...newLecture.gradeRatio];
+    updatedGradeRatio[index][field] = field === "value" ? parseInt(value) : value;
+    setNewLecture(prevState => ({ ...prevState, gradeRatio: updatedGradeRatio }));
+  };
+
+  const RatioSum = () => {
+    return newLecture.gradeRatio.reduce((total, ratio) => total + ratio.value, 0);
   };
 
   const indexOfLastLecture = currentPage * lecturePerPage;
@@ -176,27 +197,22 @@ const Class = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-
   const handleAddClose = () => {
     setAddOpen(false);
-  }
+  };
 
   const handleDeleteClose = () => {
     setDeleteOpen(false);
-  }
+  };
 
   const handleEmptyClose = () => {
     setEmptyOpen(false);
-  }
-
+  };
 
   return (
     <div className="container mx-auto p-4">
-
-<h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">강의 관리</h1>
-      <div className="flex  items-center mb-4 justify-end ">
-       
-        
+      <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">강의 관리</h1>
+      <div className="flex items-center mb-4 justify-end">
         <input
           type="text"
           placeholder="강의명 검색"
@@ -205,17 +221,14 @@ const Class = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-
+     
       <div className="flex justify-end mb-4">
-      <button
-                        onClick={() => {
-                        
-                          setShowForm(!showForm);
-                        }}
-                        className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-2"
-                      >
-                       {showForm ? <FaMinus className="mr-1 text-red-500" /> : <FaPlus className="mr-1 text-blue-600"  />}
-                      </button>
+        <button
+          onClick={() => {setShowForm(!showForm); setIsAdd(!isAdd);}}
+          className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-2"
+        >
+          {showForm ? <FaMinus className="mr-1 text-red-500" /> : <FaPlus className="mr-1 text-blue-600" />}
+        </button>
       </div>
 
       {showForm && (
@@ -228,9 +241,7 @@ const Class = () => {
                 type="text"
                 placeholder="강의명"
                 value={newLecture.lectureName}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, lectureName: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, lectureName: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-md w-full"
               />
             </label>
@@ -239,9 +250,7 @@ const Class = () => {
               담당교수:
               <select
                 value={newLecture.memberId}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, memberId: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, memberId: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value="">교수 선택</option>
@@ -257,9 +266,7 @@ const Class = () => {
               강의실:
               <select
                 value={newLecture.room}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, room: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, room: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value="">강의실 선택</option>
@@ -275,9 +282,7 @@ const Class = () => {
               강의시간:
               <select
                 value={newLecture.lectureTime}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, lectureTime: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, lectureTime: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value="">강의시간 선택</option>
@@ -293,9 +298,7 @@ const Class = () => {
               학점:
               <select
                 value={newLecture.credit}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, credit: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, credit: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -309,9 +312,7 @@ const Class = () => {
               분류:
               <select
                 value={newLecture.classification}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, classification: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, classification: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value="전공공통">전공공통</option>
@@ -327,9 +328,7 @@ const Class = () => {
               분반:
               <select
                 value={newLecture.division}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, division: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, division: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -347,9 +346,7 @@ const Class = () => {
               학년:
               <select
                 value={newLecture.grade}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, grade: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, grade: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -363,12 +360,9 @@ const Class = () => {
               수업방식:
               <select
                 value={newLecture.classMethod}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, classMethod: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, classMethod: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
-
                 <option value="대면">대면</option>
                 <option value="사이버">사이버</option>
                 <option value="하이브리드">하이브리드</option>
@@ -380,9 +374,7 @@ const Class = () => {
               시험방식:
               <select
                 value={newLecture.gradeMethod}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, gradeMethod: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, gradeMethod: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value="과제 대체">과제 대체</option>
@@ -396,9 +388,7 @@ const Class = () => {
               팀워크:
               <select
                 value={newLecture.teamwork}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, teamwork: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, teamwork: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -412,9 +402,7 @@ const Class = () => {
               기업가정신:
               <select
                 value={newLecture.entrepreneurship}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, entrepreneurship: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, entrepreneurship: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -428,9 +416,7 @@ const Class = () => {
               창의적 사고:
               <select
                 value={newLecture.creativeThinking}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, creativeThinking: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, creativeThinking: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -444,9 +430,7 @@ const Class = () => {
               자원활용:
               <select
                 value={newLecture.harnessingResource}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, harnessingResource: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, harnessingResource: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={1}>1</option>
@@ -460,9 +444,7 @@ const Class = () => {
               조별과제:
               <select
                 value={newLecture.teamPlay}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, teamPlay: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, teamPlay: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={false}>없음</option>
@@ -474,9 +456,7 @@ const Class = () => {
               채점방식:
               <select
                 value={newLecture.gradeMethod}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, gradeMethod: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, gradeMethod: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value="상대평가">상대평가</option>
@@ -489,9 +469,7 @@ const Class = () => {
               AISW:
               <select
                 value={newLecture.aiSw}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, aiSw: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, aiSw: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={false}>해당없음</option>
@@ -503,9 +481,7 @@ const Class = () => {
               강의평가:
               <select
                 value={newLecture.course_evaluation}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, course_evaluation: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, course_evaluation: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
               >
                 <option value={0}>0</option>
@@ -513,132 +489,155 @@ const Class = () => {
               </select>
             </label>
 
-
-            <label className="font-gmarket ">
+            <label className="font-gmarket">
               강의소개:
               <input
                 value={newLecture.introduction}
-                onChange={(e) =>
-                  setNewLecture({ ...newLecture, introduction: e.target.value })
-                }
+                onChange={(e) => setNewLecture({ ...newLecture, introduction: e.target.value })}
                 className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
-              >
-              
-              </input>
+              />
             </label>
           </div>
 
-          <div className="flex flex-row justify-center item">
-        <button
-            className="w-full md:w-1/2   align-middle  text-sm md:text-md select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
-            onClick={addLectureList}
-          >
-            강의리스트에 추가
-          </button>
-        
-        </div>
+          <div className="bg-gray-200 p-4 rounded-lg mt-4">
+            <h3 className="text-xl font-bold mb-2">성적 비율</h3>
+            {newLecture.gradeRatio.map((ratio, index) => (
+              <div key={index} className="flex items-center mb-2">
+                <input
+                  type="text"
+                  placeholder="항목"
+                  value={ratio.name}
+                  onChange={(e) => handleGradeRatioChange(index, "name", e.target.value)}
+                  className="mr-2 p-2 border border-gray-300 rounded-md w-1/3"
+                />
+                <input
+                  type="number"
+                  placeholder="비율(%)"
+                  value={ratio.value}
+                  onChange={(e) => handleGradeRatioChange(index, "value", e.target.value)}
+                  className="mr-2 p-2 border border-gray-300 rounded-md w-1/3"
+                />
+                <button onClick={() => handleRemoveGradeRatio(index)} className="text-red-500">
+                  <FaTrashAlt />
+                </button>
+              </div>
+            ))}
+            <button
+              onClick={handleAddGradeRatio}
+              className="text-blue-500 flex items-center mt-2"
+            >
+              <FaPlus className="mr-1" /> 항목 추가
+            </button>
+          </div>
+
+          <div className="flex flex-row justify-center item mt-4">
+            <button
+              className="w-full md:w-1/2 align-middle text-sm md:text-md select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+              onClick={addLectureList}
+            >
+              강의리스트에 추가
+            </button>
+          </div>
         </div>
       )}
+
       {newLectureList.length > 0 && (
-  <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-    <h2 className="text-2xl font-bold mb-4">추가된 강의 목록</h2>
-    <ul className="list-disc pl-5">
-      {newLectureList.map((lecture, index) => (
-        <li key={index} className="font-gmarket flex justify-between items-center">
-          <span>{lecture.lectureName}</span>
-          <button
-            onClick={() => removeLectureList(index)}
-            className="text-red-500 ml-4"
-          >
-            <FaTrashAlt />
-          </button>
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-2xl font-bold mb-4">추가된 강의 목록</h2>
+          <ul className="list-disc pl-5">
+            {newLectureList.map((lecture, index) => (
+              <li key={index} className="font-gmarket flex justify-between items-center">
+                <span>{lecture.lectureName}</span>
+                <button onClick={() => removeLectureList(index)} className="text-red-500 ml-4">
+                  <FaTrashAlt />
+                </button>
+              </li>
+            ))}
+          </ul>
 
-          
-        </li>
-      ))}
-    </ul>
-
-<div className="flex flex-row justify-center item">
-<button
-            className="md:w-1/3  w-full    align-middle  text-sm md:text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
-            onClick={handleAddClass}
-          >
-            추가된 강의리스트 제출
-          </button>
-  </div>
-   
-  </div>
-)}
-
-<div className="grid grid-cols-1 gap-4">
-{currentLecture.map((lecture) => (
-  <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-    <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
-      {[
-        { label: "교수명", value: lecture.memberName },
-        { label: "팀워크", value: lecture.teamwork },
-        { label: "분류", value: lecture.classification },
-        { label: "기업가정신", value: lecture.entrepreneurship },
-        { label: "강의실", value: lecture.room },
-        { label: "창의적 사고", value: lecture.creativeThinking },
-        { label: "학점", value: lecture.credit },
-        { label: "자원활용", value: lecture.harnessingResource },
-        { label: "분반", value: lecture.division },
-        { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
-        { label: "학년", value: lecture.grade },
-        { label: "채점방식", value: lecture.gradeMethod },
-        { label: "강의시간", value: lecture.lectureTime },
-        { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
-        { label: "수업방식", value: lecture.classMethod },
-        { label: "강의평가", value: lecture.course_evaluation },
-        { label: "시험방식", value: lecture.testType },
-        { label: "성적비율", value: lecture.gradeRatio },
-        { label: "강의소개", value: lecture.introduction },
-      ].map((item) => (
-        <div key={item.label} className="flex flex-col">
-          <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
-          <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
-            {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
-          </span>
-        </div>
-      ))}
-    </div>
-    <div className="flex justify-center mt-4">
-      <button
-        onClick={() => handleDeleteClass(lecture.lectureId)}
-        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
-      >
-        <FaTrashAlt className="mr-1" />
-      </button>
-    </div>
-  </div>
-))}
-</div>
-
-      <ul className="flex justify-center mt-6">
-        {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
-          (_, index) => (
-            <li
-              key={index}
-              onClick={() => paginate(index + 1)}
-              className={`cursor-pointer mx-1 ${
-                currentPage === index + 1 ? "font-bold" : ""
-              }`}
+          <div className="flex flex-row justify-center item mt-4">
+            <button
+              className="md:w-1/3 w-full align-middle text-sm md:text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+              onClick={handleAddClass}
             >
-              {index + 1}
-            </li>
-          )
-        )}
-      </ul>
+              추가된 강의리스트 제출
+            </button>
+          </div>
+        </div>
+      )}
+           {/* 강의추가폼 열린상태면 비활성 */}
+              {isAdd === false &&(
+              <>
+              <div className="grid grid-cols-1 gap-4">
+              {currentLecture.map((lecture) => (
+                <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+                  <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
+                    {[
+                      { label: "교수명", value: lecture.memberName },
+                      { label: "팀워크", value: lecture.teamwork },
+                      { label: "분류", value: lecture.classification },
+                      { label: "기업가정신", value: lecture.entrepreneurship },
+                      { label: "강의실", value: lecture.room },
+                      { label: "창의적 사고", value: lecture.creativeThinking },
+                      { label: "학점", value: lecture.credit },
+                      { label: "자원활용", value: lecture.harnessingResource },
+                      { label: "분반", value: lecture.division },
+                      { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
+                      { label: "학년", value: lecture.grade },
+                      { label: "채점방식", value: lecture.gradeMethod },
+                      { label: "강의시간", value: lecture.lectureTime },
+                      { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
+                      { label: "수업방식", value: lecture.classMethod },
+                      { label: "강의평가", value: lecture.course_evaluation },
+                      { label: "시험방식", value: lecture.testType },
+                      { label: "성적비율", value: lecture.gradeRatio },
+                      { label: "강의소개", value: lecture.introduction },
+                    ].map((item) => (
+                      <div key={item.label} className="flex flex-col">
+                        <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
+                        <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
+                          {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-center mt-4">
+                    <button
+                      onClick={() => handleDeleteClass(lecture.lectureId)}
+                      className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
+                    >
+                      <FaTrashAlt className="mr-1" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+              </div>
+
+              <ul className="flex justify-center mt-6">
+              {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
+                (_, index) => (
+                  <li
+                    key={index}
+                    onClick={() => paginate(index + 1)}
+                    className={`cursor-pointer mx-1 ${
+                      currentPage === index + 1 ? "font-bold" : ""
+                    }`}
+                  >
+                    {index + 1}
+                  </li>
+                )
+              )}
+              </ul>
 
 
-
+              </>
+              )}
+           
+  
       <Dialog open={addOpen} onClose={handleAddClose}>
         <DialogTitle>강의추가 성공</DialogTitle>
-        <DialogContent>
-          강의 리스트가 추가되었습니다.
-        </DialogContent>
+        <DialogContent>강의 리스트가 추가되었습니다.</DialogContent>
         <DialogActions>
           <Button onClick={handleAddClose} color="primary">
             닫기
@@ -648,9 +647,7 @@ const Class = () => {
 
       <Dialog open={emptyOpen} onClose={handleEmptyClose}>
         <DialogTitle>강의명 비어있음</DialogTitle>
-        <DialogContent>
-          강의명이 입력되지않았습니다.
-        </DialogContent>
+        <DialogContent>강의명이 입력되지않았습니다.</DialogContent>
         <DialogActions>
           <Button onClick={handleEmptyClose} color="primary">
             닫기
@@ -658,20 +655,15 @@ const Class = () => {
         </DialogActions>
       </Dialog>
 
-
       <Dialog open={deleteOpen} onClose={handleDeleteClose}>
         <DialogTitle>강의실 배정삭제 완료</DialogTitle>
-        <DialogContent>
-          선택한 강의의 강의실을 비웠습니다.
-        </DialogContent>
+        <DialogContent>선택한 강의의 강의실을 비웠습니다.</DialogContent>
         <DialogActions>
           <Button onClick={handleDeleteClose} color="primary">
             닫기
           </Button>
         </DialogActions>
       </Dialog>
-
-
     </div>
   );
 };

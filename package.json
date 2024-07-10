@@ -10,6 +10,8 @@
     "@fortawesome/react-fontawesome": "^0.1.16",
     "@mui/material": "^5.15.19",
     "@react-google-maps/api": "^2.19.3",
+    "@toast-ui/editor-plugin-color-syntax": "^3.1.0",
+    "@toast-ui/react-editor": "^3.2.3",
     "axios": "^0.24.0",
     "base-64": "^1.0.0",
     "chart.js": "^4.4.3",

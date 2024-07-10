@@ -19,7 +19,7 @@ function MapComponent({ coordinates, onClose }) {
 
   useEffect(() => {
     if (!coordinates || coordinates.length === 0) {
-      console.error('No coordinates provided');
+      console.error('좌표정보 없음');
       return;
     }
 
@@ -29,9 +29,8 @@ function MapComponent({ coordinates, onClose }) {
     document.head.appendChild(script);
 
     script.onload = () => {
-      console.log('Kakao Maps script loaded.');
+  
       window.kakao.maps.load(() => {
-        console.log('Kakao Maps library loaded.');
         initializeMap();
       });
     };
@@ -44,7 +43,7 @@ function MapComponent({ coordinates, onClose }) {
   const initializeMap = () => {
     const mapContainer = mapContainerRef.current;
     if (!mapContainer) {
-      console.error('Map container not found');
+      console.error('컨테이너 로드안됨');
       return;
     }
 
@@ -100,7 +99,7 @@ function MapComponent({ coordinates, onClose }) {
           });
         },
         () => {
-          console.error("Error fetching current location");
+          console.error("사용자위치 오류");
         }
       );
     }
@@ -134,7 +133,7 @@ function MapComponent({ coordinates, onClose }) {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
+        throw new Error(`HTTP에러 Status: ${response.status}`);
       }
 
       const data = await response.json();
@@ -158,7 +157,7 @@ function MapComponent({ coordinates, onClose }) {
 
         polyline.setMap(mapRef.current);
         polylineRef.current = polyline;
-        console.log('Polyline set on map:', polyline);
+        
       } else {
         throw new Error("No routes found");
       }
@@ -169,15 +168,15 @@ function MapComponent({ coordinates, onClose }) {
 
   return (
     <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>위치 보기</DialogTitle>
+      <DialogTitle>위치 보기  마커클릭시 경로안내</DialogTitle>
       <DialogContent>
         <div>
           <div id="map" ref={mapContainerRef} style={containerStyle}></div>
-          <h2>마커를 클릭시 경로안내를 확인할 수 있습니다</h2>
+         
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose}>닫기</Button>
+        <Button  onClick={onClose}>닫기</Button>
       </DialogActions>
     </Dialog>
   );
