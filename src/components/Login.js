@@ -156,8 +156,8 @@ const Login = () => {
               </div>
             </form>
             <div className='flex justify-start'>
-              <Link to="/findid" className="mr-16 font-gmarket text-sm sm:text-xl">학번/교번찾기</Link>
-              <Link to="/findpassword" className="font-gmarket text-sm sm:text-xl ">비밀번호찾기</Link>
+              <Link to="/findid" className="mr-16 font-gmarket text-sm sm:text-xl font-bold">학번/교번찾기</Link>
+              <Link to="/findpassword" className="font-gmarket text-sm sm:text-xl font-bold ">비밀번호찾기</Link>
             </div>
           </div>
         </div>

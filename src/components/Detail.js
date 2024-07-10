@@ -131,11 +131,11 @@ const DetailPage = () => {
        
       },
       datalabels: {
-        color: isDarkMode ? '#FFFFFF' : '#000000', // Change this to the desired color based on the theme
+        color: isDarkMode ? '#FFFFFF' : '#000000', 
         font: {
-          family: 'GmarketSans', // Set the font family
-          weight: 'bold', // Set the font weight to bold
-          size: 20 // Set the font size, adjust as needed
+          family: 'GmarketSans', 
+          weight: 'bold', 
+          size: 15
         },
         formatter: (value, context) => {
           return value;

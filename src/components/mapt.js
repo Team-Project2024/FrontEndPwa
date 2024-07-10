@@ -17,54 +17,59 @@ const center = {
 };
 
 const shops = [
-  {
-    name: '곱창일번지',
-    location: { lat: 36.74109403387714 ,lng: 127.0759635548942 }
-  },
-  {
-    name: '역전할머니맥주',
-    location: { lat: 36.74118199668762 ,lng: 127.07580129024419 }
-  },
-  {
-    name: '동막골',
-    location: { lat: 36.741499844634966 ,lng: 127.07548249714063 }
-  },
-  {
-    name: '호아성',
-    location: { lat: 36.741437457070454 ,lng: 127.07438516132859 }
-  },
-  {
-    name: '브로시스비어카페',
-    location: { lat: 36.74158059090505 ,lng: 127.07603961211161}
-  },
-  {
-    name: '에브리24',
-    location: { lat: 36.741242868683855 ,lng: 127.07572857186122 }
-  },
-  {
-    name: '알콜사무소',
-    location: { lat: 36.741287962120744,lng: 127.0756698337012}
-  },
-  {
-    name: '디퍼플',
-    location: { lat: 36.74046764746469, lng: 127.07613088573125 }
-  },
-  {
-    name: '태주호프',
-    location: { lat:36.74014516790239, lng: 127.07664280680994  }
-  },
-  {
-    name: '촌댁맥주',
-    location: { lat: 36.73978941936338 ,lng: 127.07634014920303 }
-  },
-];
 
-function MapComponent() {
+    {
+      name: '곱창일번지',
+      location: { lat: 36.74109403387714 ,lng: 127.0759635548942 }
+    },
+    {
+      name: '역전할머니맥주',
+      location: { lat: 36.74118199668762 ,lng: 127.07580129024419 }
+    },
+    {
+      name: '동막골',
+      location: { lat: 36.741499844634966 ,lng: 127.07548249714063 }
+    },
+    {
+      name: '호아성',
+      location: { lat: 36.741437457070454 ,lng: 127.07438516132859 }
+    },
+  {
+      name: '브로시스비어카페',
+      location: { lat: 36.74158059090505 ,lng: 127.07603961211161}
+    },
+  {
+      name: '에브리24',
+      location: { lat: 36.741242868683855 ,lng: 127.07572857186122 }
+    },
+  {
+      name: '알콜사무소',
+      location: { lat: 36.741287962120744,lng: 127.0756698337012}
+    },
+  {
+      name: '디퍼플',
+      location: { lat: 36.74046764746469, lng: 127.07613088573125 }
+    },
+  
+  {
+      name: '태주호프',
+      location: { lat:36.74014516790239, lng: 127.07664280680994  }
+    },
+  
+  {
+      name: '촌댁맥주',
+      location: { lat: 36.73978941936338 ,lng: 127.07634014920303 }
+    },
+  
+  ];
+
+
+function Mapt() {
   const [currentPosition, setCurrentPosition] = useState(null);
   const [selectedShop, setSelectedShop] = useState(null);
   const [open, setOpen] = useState(false);
   const [duration, setDuration] = useState(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const mapRef = useRef(null);
   const polylineRef = useRef(null);
 
@@ -112,28 +117,24 @@ function MapComponent() {
             title: '현재위치'
           });
 
-          const currentCustomOverlay = new window.kakao.maps.CustomOverlay({
-            map: map,
-            position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
-            content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center; padding:0px 10px;">현재 위치</div>',
-            xAnchor: 0.46,
-            yAnchor: 2.7
+          const currentInfoWindow = new window.kakao.maps.InfoWindow({
+            content: '<div style="padding:5px;">현재 위치</div>',
+            removable: true
           });
+          currentInfoWindow.open(map, currentMarker);
 
           shops.forEach(shop => {
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: new window.kakao.maps.LatLng(shop.location.lat, shop.location.lng),
-              title: shop.name
+              content: shop.name,
+             
             });
-
-            const customOverlay = new window.kakao.maps.CustomOverlay({
-              map: map,
-              position: new window.kakao.maps.LatLng(shop.location.lat, shop.location.lng),
-              content: `<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">${shop.name}</div>`,
-              xAnchor: 0.46,
-              yAnchor: 2.7
+            const infoWindow = new window.kakao.maps.InfoWindow({
+              content: `<div style="padding:5px;">${shop.name}</div>`,
+              removable: false
             });
+            infoWindow.open(map, marker);
 
             window.kakao.maps.event.addListener(marker, 'click', () => {
               setSelectedShop(shop.location);
@@ -151,13 +152,6 @@ function MapComponent() {
           map: map,
           position: new window.kakao.maps.LatLng(shop.location.lat, shop.location.lng),
           title: shop.name
-        });
-
-        const customOverlay = new window.kakao.maps.CustomOverlay({
-          map: map,
-          position: new window.kakao.maps.LatLng(shop.location.lat, shop.location.lng),
-          content: `<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">${shop.name}</div>`,
-          yAnchor: 1
         });
 
         window.kakao.maps.event.addListener(marker, 'click', () => {
@@ -263,7 +257,7 @@ function MapComponent() {
           {open && (
             <div>
               <div id="map" style={containerStyle}></div>
-              <h2>마커를 클릭시 경로안내를 확인할수있습니다</h2>
+             <h2>마커를 클릭시 경로안내를 확인할수있습니다</h2>
             </div>
           )}
         </DialogContent>
@@ -275,4 +269,4 @@ function MapComponent() {
   );
 }
 
-export default React.memo(MapComponent);
+export default React.memo(Mapt);

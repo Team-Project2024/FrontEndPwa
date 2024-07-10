@@ -266,7 +266,7 @@ function FindPassword() {
                 <button onClick={handleResend} className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">코드 재요청</button>
               </div>
             )}
-            <div className='flex justify-center font-bold'>
+            <div className='flex justify-center font-bold font-gmarket'>
               <Link onClick={logout} to="/login">로그인창으로돌아가기</Link>
             </div>
           </div>

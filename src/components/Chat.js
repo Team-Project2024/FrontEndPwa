@@ -23,6 +23,7 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 
 import DoughnutCharts from "./DoughnutChart";
+import MapComponent from "./MapComponent";
 
 const Chat = () => {
   const axiosPrivate = useAxiosPrivate();
@@ -40,7 +41,8 @@ const Chat = () => {
   const [lastUserQuestion, setLastUserQuestion] = useState(null);
   const [tempChatRoom, setTempChatRoom] = useState(null);
   const [open, setOpen] = useState(false);
-  const [graduation,setGraduation] = useState([]);
+  const [graduation, setGraduation] = useState([]);
+  const [maps, setMaps] = useState([]); // Updated to `setMaps`
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
@@ -48,18 +50,15 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
-  useEffect(()=> {
-   getGraduation();
-
-  },[]);
-
+  useEffect(() => {
+    getGraduation();
+  }, []);
 
   useEffect(() => {
     fetchChatRooms();
 
     if (sessionStorage.getItem("selectedChatRoomId")) {
       handleChatRoomSelect(sessionStorage.getItem("selectedChatRoomId"));
-
     } else {
       handleCreateChatRoom();
     }
@@ -68,9 +67,7 @@ const Chat = () => {
   useEffect(() => {
     const savedScrollPosition = sessionStorage.getItem("y");
     if (!sessionStorage.getItem("selectedChatRoomId")) {
-
       messagesEndRef.current?.scrollIntoView({ block: "end" });
-
     } else if (savedScrollPosition && messagesContainerRef.current) {
       messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition);
     }
@@ -78,7 +75,6 @@ const Chat = () => {
 
   const handleOpenWarning = () => {
     setOpen(!open);
-
   }
 
   const fetchChatRooms = async () => {
@@ -88,8 +84,6 @@ const Chat = () => {
         setChatRooms([]);
         return;
       }
-
-      console.log(response);
 
       const chatRooms = response.data.repsonseChatRoomDTOList.map((room) => {
         room.lastChatDate = moment
@@ -108,21 +102,14 @@ const Chat = () => {
     }
   };
 
-
   const getGraduation = async () => {
     try {
       const response = await axiosPrivate.get("/api/graduation");
-      
-      console.log(response.data)
-    
-      setGraduation(response.data)
-
-     
+      setGraduation(response.data);
     } catch (error) {
       console.error("졸업요건 받아오기에러:", error);
     }
   };
-
 
   const formatDate = (date) => {
     const currentDate = new Date();
@@ -296,7 +283,6 @@ const Chat = () => {
         setSelectedChatRoomId(null);
         setMessages([]);
       }
-
       fetchChatRooms();
     } catch (error) {
       console.error("Error deleting chat room:", error);
@@ -308,7 +294,6 @@ const Chat = () => {
       await axiosPrivate.delete("/api/all/chat-room");
       setSelectedChatRoomId(null);
       setMessages([]);
-
       fetchChatRooms();
       setOpen(!open);
     } catch (error) {
@@ -357,6 +342,46 @@ const Chat = () => {
 
   const groupedChatRooms = groupChatRoomsByDate(chatRooms);
 
+  const handleMapOpen = (data) => {
+    try {
+      // Check if data is already an object
+      const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+      console.log('Parsed Data:', parsedData);
+      
+      // Extract and clean the 'data' string if it is a string
+      const cleanedData = typeof parsedData.data === 'string' 
+        ? parsedData.data.replace(/\\/g, '') 
+        : JSON.stringify(parsedData.data);
+      console.log('Cleaned Data:', cleanedData);
+      
+      // Remove surrounding quotes and wrap in square brackets
+      const validData = `[${cleanedData.substring(1, cleanedData.length - 1)}]`;
+      console.log('Valid Data:', validData);
+      
+      // Second parsing
+      const locations = JSON.parse(validData);
+      console.log('Locations:', locations);
+
+      // Extract coordinates
+      const coordinates = locations.map(item => ({
+        name: item.locationName,
+        lat: parseFloat(item.lat),
+        lng: parseFloat(item.lon)
+      }));
+      
+      console.log('Coordinates:', coordinates); // Log the coordinates
+      
+      setMaps(coordinates); 
+      console.log('Updated Maps State:', maps); // Log the updated state
+    } catch (error) {
+      console.error('Error parsing map data:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log('Maps state updated:', maps);
+  }, [maps]);
+ 
   return (
     <div className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}>
       <div className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${isDarkMode ? "dark:bg-gray-800" : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"}`}>
@@ -365,7 +390,7 @@ const Chat = () => {
           <FaBars onClick={toggleChatRoomList} className="text-2xl text-black dark:text-white cursor-pointer" />
         </div>
 
-        <div className={`lg:block dark:bg-gray-800 overflow-y-scroll scrollbar-hide bg-white lg:relative absolute inset-0 lg:w-1/4 w-2/5 border-r border-gray-300 dark:border-gray-600 z-20 flex flex-col h-full ${isChatRoomListVisible ? "" : "hidden"}`}>
+        <div className={`lg:block dark:bg-gray-800 overflow-y-scroll scrollbar-hide bg-white lg:relative absolute inset-0 lg:w-1/4 w-3/5  border-r border-gray-300 dark:border-gray-600 z-20 flex flex-col h-full ${isChatRoomListVisible ? "" : "hidden"}`}>
           <div className="lg:hidden pt-2 pr-2 flex justify-end mb-4">
             <FaTimes onClick={toggleChatRoomList} className="text-2xl text-black dark:text-white cursor-pointer" />
           </div>
@@ -461,7 +486,7 @@ const Chat = () => {
         <div className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200 ${isChatRoomListVisible ? "lg:w-full" : "w-full "}`}>
           <div className="flex-grow mb-4 p-4 lg:p-4 overflow-y-auto scrollbar-hide" ref={messagesContainerRef}>
             {tempChatRoom !== null ? (
-              <div className="flex items-center justify-center h-full font-gmarket">
+              <div className="flex items-center justify-center h-full font-gmarket text-sm sm:text-xl">
                 <p>챗봇에게 궁금한 정보를 물어보세요!</p>
               </div>
             ) : (
@@ -471,11 +496,26 @@ const Chat = () => {
                     <img src={chatbotIcon} alt="Chatbot Icon" className="w-10 h-10 mr-4 self-start" />
                   )}
                   <div className={`inline-block py-2 px-4 rounded-lg max-w-xs md:max-w-md lg:max-w-4xl ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-blue-900 dark:text-white font-gmarket"}`}>
-                  {typeof message.content === "string" ? message.content : message.content.content}
+                    {typeof message.content === "string" ? message.content : message.content.content}
 
-                      {message.type === "bot" && message.content.content.includes('인성교양') && (
-                        <DoughnutCharts content={message.content.content} graduation={graduation} />
-                      )}
+                    {message.type === "bot" && message.content.content.includes('인성교양') && (
+                      <DoughnutCharts content={message.content.content} graduation={graduation} />
+                    )}
+
+                    
+                    {message.type === "bot" && message.content.table === "school_location" && message.content.data && (
+              
+
+                  
+                      <div>
+                        <button onClick={() => handleMapOpen(message.content)}>
+                          지도 열기
+                        </button>
+
+                      
+                      </div>
+                    )}
+                    {maps.length > 0 && <MapComponent coordinates={maps} onClose={() => setMaps([])} />}
 
                     {message.type === "bot" && (message.content.table === "lecture" || message.content.table === "event") && message.content.data && (
                       <ul>
@@ -505,30 +545,30 @@ const Chat = () => {
               </div>
             )}
           </div>
-    <div className="flex items-center w-full">
-      <input
-        type="text"
-        className="flex-grow border rounded px-4 py-2 border-black dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
-        value={inputMessage}
-        onChange={(e) => setInputMessage(e.target.value)}
-        onKeyDown={activeEnter}
-        disabled={isSending}
-      />
-      <button
-        className={`text-black rounded text-4xl ml-4 cursor-pointer dark:text-white ${isSending ? 'cursor-not-allowed' : ''}`}
-        onClick={handleSendMessage}
-        disabled={isSending}
-      >
-        {isSending ? (
-          <svg className="animate-spin h-6 w-6 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"></path>
-          </svg>
-        ) : (
-          <FaMagic />
-        )}
-      </button>
-    </div>
+          <div className="flex items-center w-full">
+            <input
+              type="text"
+              className="flex-grow border rounded px-4 py-2 border-black dark:bg-gray-800 dark:text-gray-200 dark:border-gray-600"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              onKeyDown={activeEnter}
+              disabled={isSending}
+            />
+            <button
+              className={`text-black rounded text-4xl ml-4 cursor-pointer dark:text-white ${isSending ? 'cursor-not-allowed' : ''}`}
+              onClick={handleSendMessage}
+              disabled={isSending}
+            >
+              {isSending ? (
+                <svg className="animate-spin h-6 w-6 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"></path>
+                </svg>
+              ) : (
+                <FaMagic />
+              )}
+            </button>
+          </div>
         </div>
       </div>
       <Dialog open={open} onClose={handleClose}>

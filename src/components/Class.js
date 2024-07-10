@@ -192,8 +192,11 @@ const Class = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">강의 관리</h1>
+
+<h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">강의 관리</h1>
+      <div className="flex  items-center mb-4 justify-end ">
+       
+        
         <input
           type="text"
           placeholder="강의명 검색"

@@ -15,14 +15,17 @@ import useAuth from "./hooks/useAuth";
 import PersistLogin from './components/PersistLogin';
 
 import DetailPage from './components/Detail';
-import Map from './components/map';
+
 import useRefreshToken from './hooks/useRefreshToken';
+import JsonTest from './components/JsonTest';
+import mapt from './components/mapt';
 
 
 
 
 
 import { Routes, Route } from 'react-router-dom';
+import Mapt from './components/mapt';
 
 
 
@@ -62,20 +65,27 @@ function App() {
   //일정시간마다 자동으로 토큰갱신
   useEffect(() => {
     
-    const intervalId = setInterval(async () => {
-      await refresh();
-    }, 3 * 60 * 1000); // 3분
-      console.log('refresh');
+
+   
+
+      const intervalId = setInterval(async () => {
+        await refresh();
+      }, 3 * 60 * 1000); // 3분
+        console.log('refresh');
+        return () => clearInterval(intervalId);
+
+ 
+   
       
    
-    return () => clearInterval(intervalId);
+    
   }, [refresh]); 
 
 
  // 새로고침 연타 방지
   useEffect(() => {
     
-    const handleBeforeUnload = (e) => {
+    const preventContinuousF5 = (e) => {
       const now = Date.now();
       const timeSinceLastRefresh = now - lastRefresh;
   
@@ -87,10 +97,10 @@ function App() {
       }
     };
   
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('beforeunload', preventContinuousF5);
   
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('beforeunload', preventContinuousF5);
     };
   }, [lastRefresh]);
   
@@ -107,7 +117,8 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
-        <Route path="map" element={<Map />} />
+        <Route path="jsontest" element={<JsonTest />} />
+        <Route path="map" element={<Mapt />} />
        
 
         {/* 로그인 완료, 권한이 있어야 접근 가능 */}
