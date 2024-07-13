@@ -131,9 +131,9 @@ const Graduation = () => {
     setEmptyOpen(false);
   }
 
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl md:text-4xl font-bold mb-4 md:mb-8 text-center">졸업요건 추가</h1>
+  return (//!!!!!!!!!!!!!!!!!!! lg:bg-gray-600
+    <div className="container   mx-auto p-4 md:p-8">
+      <h1 className="font-gmarket text-3xl md:text-6xl font-bold mt-8 sm:mt-0 mb-4 sm:mb-8 text-center">졸업요건 추가</h1>
 
       <div className="flex justify-center mb-6">
         <label className="font-gmarket mr-4 mt-3 rounded-full" htmlFor="year">
@@ -155,7 +155,7 @@ const Graduation = () => {
       </div>
 
       <div className="bg-gray-100 p-6 rounded-lg shadow-md max-w-4xl mx-auto mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="font-gmarket grid grid-cols-1 md:grid-cols-2 gap-4">
           {[
             { label: "인성교양", name: "characterCulture" },
             { label: "기초교양", name: "basicLiberalArts" },
@@ -202,10 +202,10 @@ const Graduation = () => {
         </div>
         <div className="flex flex-row justify-center items-center">
         <button
-            className="w-full    align-middle  text-sm select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-700 to-gray-600 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="w-full md:w-1/2 text-l md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
             onClick={addGraduationRequirement}
           >
-             리스트에 추가
+             추가
           </button>
         
         </div>
@@ -213,17 +213,17 @@ const Graduation = () => {
 
       {graduationList.length > 0 && (
         <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
-          <h2 className="text-xl   md:text-2xl font-bold mb-4">추가된 졸업요건</h2>
+          <h2 className="font-gmarket text-xl md:text-3xl font-bold mb-4 md:mb-6 text-center">리스트</h2>
           {graduationList.map((requirement, index) => (
-            <div key={index} className="mb-4 p-4 bg-white rounded-lg shadow-md">
+             <div key={index} className="mb-4 md:mb-6 p-4 md:p-6   hover:scale-105     bg-white border-2 rounded-lg shadow-[0_3px_6px_rgba(0,0,0,0.23)] border-dashed border-gray-400">
               <div className="flex justify-between items-center">
-                <span className=" text-sm md:text-xl font-gmarket font-bold">추가된 졸업요건: {index + 1}번째</span>
+                <span className=" text-xl md:text-2xl font-gmarket font-bold"> {index + 1}번</span>
                 <button
                         onClick={(e) => {
                           e.stopPropagation();
                           removeGraduationRequirement(index);
                         }}
-                        className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
+                        className="text-xl md:text-2xl text-red-500 hover:text-red-600 cursor-pointer ml-2"
                       >
                         <FaTrashAlt className="mr-1" />
                       </button>
@@ -244,7 +244,7 @@ const Graduation = () => {
           ))}
           <div className="flex flex-row justify-center items-center">
           <button
-            className="w-full md:w-1/2  align-middle  text-sm md:text-xl select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none  py-3 px-6 rounded-lg bg-gradient-to-tr from-gray-400 to-gray-500 text-white shadow-md shadow-gray-900/10 hover:shadow-lg hover:shadow-gray-900/20 active:opacity-[0.85]"
+            className="w-full md:w-1/2 text-l md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
             onClick={submitGraduationRequirements}
           >
              리스트 전송

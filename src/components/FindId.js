@@ -80,7 +80,8 @@ const FindId = () => {
                         <TextAni />
                     </div>
                     <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90">
-                        <h2 className=' p-6 mb-6 font-gmarket text-md sm:text-xl'>학번/교번 찾기</h2>
+                        <h2 className='text-3xl lg:text-4xl p-6 font-gmarket mb-3 font-bold'>학번/교번 찾기</h2>
+                        
                         <form onSubmit={handleFindId}>
                             <div>
                                 <div className="mt-2">
@@ -99,7 +100,7 @@ const FindId = () => {
                             </div>
                             <div>
                                 <div className="flex items-center justify-between"></div>
-                                <div className="mt-2 mb-5">
+                                <div className="mt-2 mb-8">
                                     <input
                                         id="name"
                                         name="name"
@@ -112,14 +113,16 @@ const FindId = () => {
                                     />
                                 </div>
                             </div>
-                            <div className='items-center flex justify-center mb-6'>
-                                <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                    찾기
-                                </button>
+                            <div className='items-center flex justify-center mb-4'>
+                            <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                찾기
+                            </button>
                             </div>
                         </form>
-                        <div className='flex justify-start font-bold'>
-                            <Link  onClick={logout}to="/login">로그인창으로 돌아가기</Link>
+                    
+                        <div className='flex justify-start'>
+                            <Link  onClick={logout}to="/login" className=" font-gmarket text-sm sm:text-sm hover:text-gray-500">
+                                로그인창으로 돌아가기</Link>
                         </div>
                     </div>
                 </div>

@@ -161,7 +161,7 @@ const Class = () => {
           gradeRatio: lecture.gradeRatio.map(ratio => `${ratio.name} ${ratio.value}%`).join(' ')
         }))
       });
-      console.log("Response from server:", response);
+      //console.log("Response from server:", response);
       setNewLectureList([]);
       fetchLecture();
       setShowForm(false);
@@ -553,9 +553,10 @@ const RatioSum = () => {
             </label>
             </div>
 
-            <div className="bg-gray-200 p-4 rounded-lg mt-4"//추가
+           
+            <h3 className="font-gmarket mb-2">성적비율:</h3>
+            <div className="bg-white p-4 rounded-lg mt-4 mb-4 border border border-gray-300"//추가
             > 
-            <h3 className="text-xl font-bold mb-2">성적 비율</h3>
             {newLecture.gradeRatio.map((ratio, index) => (
               <div key={index} className="flex items-center mb-2">
                 <input
@@ -563,23 +564,23 @@ const RatioSum = () => {
                   placeholder="항목"
                   value={ratio.name}
                   onChange={(e) => handleGradeRatioChange(index, "name", e.target.value)}
-                  className="mr-2 p-2 border border-gray-300 rounded-md w-1/3"
+                  className="font-gmarket mr-2 p-2 border border-gray-300 rounded-md w-1/3"
                 />
                 <input
                   type="number"
                   placeholder="비율(%)"
                   value={ratio.value}
                   onChange={(e) => handleGradeRatioChange(index, "value", e.target.value)}
-                  className="mr-2 p-2 border border-gray-300 rounded-md w-1/3"
+                  className="font-gmarket mr-2 p-2 border border-gray-300 rounded-md w-1/3"
                 />
-                <button onClick={() => handleRemoveGradeRatio(index)} className="text-red-500">
+                <button onClick={() => handleRemoveGradeRatio(index)} className="text-red-500 hover:text-red-600">
                   <FaTrashAlt />
                 </button>
               </div>
             ))}
             <button
               onClick={handleAddGradeRatio}
-              className="text-blue-500 flex items-center mt-2"
+              className="text-blue-500 hover:text-blue-600 flex items-center mt-2"
             >
               <FaPlus className="mr-1" /> 항목 추가
             </button>
@@ -587,7 +588,7 @@ const RatioSum = () => {
 
             <div className="flex flex-row justify-center item">
               <button //w-full md:w-1/2 text-sm md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85
-                className="w-full md:w-1/2 text-sm md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
+                className="w-full md:w-1/2 text-l md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
                 onClick={addLectureList}
               >
                 추가
@@ -619,7 +620,7 @@ const RatioSum = () => {
 
               <div className="flex flex-row justify-center item">
                 <button //w-full md:w-1/2 text-sm md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85
-                  className="w-full md:w-1/2 text-sm md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
+                  className="w-full md:w-1/2 text-l md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
                   onClick={handleAddClass}
                 >
                   리스트 전송
@@ -668,7 +669,7 @@ const RatioSum = () => {
                       </div>
                     ))}
                   </div>
-                  <div className="flex justify-center mt-4">
+                  <div className="flex justify-end mt-4">
                     <button
                       onClick={() => handleDeleteClass(lecture.lectureId)}
                       className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"

@@ -15,10 +15,7 @@ import DialogActions from '@mui/material/DialogActions';
 import useLogout from "../hooks/useLogout";
 import Button from '@mui/material/Button';
 
-
-
 const LOGIN_URL = "/login";
-
 
 const Login = () => {
   const { setAuth, persist, setPersist } = useAuth();
@@ -29,18 +26,18 @@ const Login = () => {
   const [id, setUser] = useState("");  //학번/교번 state
   const [password, setPwd] = useState(""); // 비밀번호 state
   const [errMsg, setErrMsg] = useState(""); // 에러메세지 state
-  const [open, setOpen] = useState(false); 
+  const [open, setOpen] = useState(false);
   const logout = useLogout();
   const { auth } = useContext(AuthContext);
 
-  
+
   useEffect(() => {
-   
+
     sessionStorage.clear();
-  
-    setAuth(null); 
+
+    setAuth(null);
   }, [setAuth]);
-  
+
 
   useEffect(() => {
     userReff.current.focus();
@@ -81,7 +78,7 @@ const Login = () => {
       setUser(""); // auth에 담고나서 id state 초기화
       setPwd(""); // 비밀번호 state 초기화
       togglePersist();
-    
+
       if (role === 'ROLE_ADMIN') {
         navigate('/admin');
       } else {
@@ -103,11 +100,8 @@ const Login = () => {
   };
 
   const togglePersist = () => {
-   
     setPersist(prev => !prev);
   }
-
-  
 
   useEffect(() => {
     localStorage.setItem("persist", persist); // persist state 상태변화시 로컬스토리지에 persist 추가
@@ -117,16 +111,16 @@ const Login = () => {
     setOpen(false);
   }
 
-  return (  
-    
+  return (
+
     <React.Fragment>
       <section className="h-screen flex flex-col md:flex-row justify-center items-center my-2 mx-5 md:mx-0 md:my-0 bg-blue-200">
         <div className='w-full h-full grid md:grid-cols-10'>
-          <div className='bg-left-main md:h-screen flex flex-col justify-center items-center p-6 col-span-6 hidden md:flex'> {/* Hidden on small screens */}
+          <div className='bg-left-main  md:h-screen flex flex-col justify-center items-center  p-6 col-span-6 hidden md:flex'> {/* Hidden on small screens */}
             <TextAni />
           </div>
-          <div className="flex flex-col justify-center items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90"> {/* Full width on small screens */}
-            <h2 className='text-4xl p-6 font-gmarket'>LUMOS</h2>
+          <div className="flex flex-col justify-center md:shadow-[-4px_0px_15px_0px_rgba(0,0,0,0.3)] items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90"> {/* Full width on small screens */}
+            <h2 className='text-4xl p-6 font-gmarket mb-3 font-bold'>LUMOS</h2>
             <form onSubmit={handleSubmit}>
               <div>
                 <div className="mt-2">
@@ -150,19 +144,20 @@ const Login = () => {
                      focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 "></input>
                 </div>
               </div>
-            
-              <div className='items-center flex justify-center mb-6'>
-                <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">로그인</button>
+
+              <div className='items-center flex justify-center mb-4'>
+                <button type="submit" className="flex w-60 justify-center rounded-md bg-gray-600 px-3 py-3 sm:w-80 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                  로그인</button>
               </div>
             </form>
-            <div className='flex justify-start'>
-              <Link to="/findid" className="mr-16 font-gmarket text-sm sm:text-xl font-bold">학번/교번찾기</Link>
-              <Link to="/findpassword" className="font-gmarket text-sm sm:text-xl font-bold ">비밀번호찾기</Link>
+            <div className='flex justify-between'>
+              <Link to="/findid" className="sm:mr-16 mr-8 font-gmarket text-sm sm:text-sm hover:text-gray-500">학번/교번찾기</Link>
+              <h2 className="sm:mr-16 mr-8 text-gray-500 font-gmarket text-sm sm:text-sm">|</h2>
+              <Link to="/findpassword" className="font-gmarket text-sm sm:text-sm hover:text-gray-500">비밀번호찾기</Link>
             </div>
           </div>
         </div>
       </section>
-      
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>로그인 실패</DialogTitle>

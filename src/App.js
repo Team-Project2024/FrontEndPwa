@@ -17,7 +17,7 @@ import PersistLogin from './components/PersistLogin';
 import DetailPage from './components/Detail';
 
 import useRefreshToken from './hooks/useRefreshToken';
-import JsonTest from './components/JsonTest';
+
 import Toast from './components/Toast';
 
 
@@ -26,7 +26,7 @@ import Toast from './components/Toast';
 
 
 import { Routes, Route } from 'react-router-dom';
-import Mapt from './components/mapt';
+
 
 
 
@@ -118,7 +118,6 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
-        <Route path="jsontest" element={<JsonTest />} />
         <Route path="ui" element={<Toast />} />
        
 
