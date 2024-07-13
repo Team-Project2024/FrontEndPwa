@@ -27,7 +27,7 @@ const Class = () => {
   const [emptyOpen, setEmptyOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
-  const [isAdd,setIsAdd] = useState(false); //강의추가폼 열리면 강의리스트 숨김용
+  const [isAdd, setIsAdd] = useState(false); //강의추가폼 열리면 강의리스트 숨김용
 
   const [newLecture, setNewLecture] = useState({
     lectureName: "",
@@ -65,7 +65,7 @@ const Class = () => {
       setEmptyOpen(!addOpen);
       return;
     }
-    
+
     if (RatioSum() !== 100) {
       alert("요소비율의 합은 100%로 맞춰주세요");
       return;
@@ -105,7 +105,7 @@ const Class = () => {
   const fetchLecture = async () => {
     try {
       const response = await axiosPrivate.get("/admin/lecture");
-      
+
       setLecture(response.data.responseLectureDTOList);
 
     } catch (error) {
@@ -172,30 +172,30 @@ const Class = () => {
     }
   };
 
-//  비율관련 함수들 추가
-const handleAddGradeRatio = () => {
-  setNewLecture(prevState => ({
-    ...prevState,
-    gradeRatio: [...prevState.gradeRatio, { name: "", value: 0 }]
-  }));
-};
+  // 비율관련 함수들 추가
+  const handleAddGradeRatio = () => {
+    setNewLecture(prevState => ({
+      ...prevState,
+      gradeRatio: [...prevState.gradeRatio, { name: "", value: 0 }]
+    }));
+  };
 
-const handleRemoveGradeRatio = (index) => {
-  setNewLecture(prevState => ({
-    ...prevState,
-    gradeRatio: prevState.gradeRatio.filter((_, i) => i !== index)
-  }));
-};
+  const handleRemoveGradeRatio = (index) => {
+    setNewLecture(prevState => ({
+      ...prevState,
+      gradeRatio: prevState.gradeRatio.filter((_, i) => i !== index)
+    }));
+  };
 
-const handleGradeRatioChange = (index, field, value) => {
-  const updatedGradeRatio = [...newLecture.gradeRatio];
-  updatedGradeRatio[index][field] = field === "value" ? parseInt(value) : value;
-  setNewLecture(prevState => ({ ...prevState, gradeRatio: updatedGradeRatio }));
-};
+  const handleGradeRatioChange = (index, field, value) => {
+    const updatedGradeRatio = [...newLecture.gradeRatio];
+    updatedGradeRatio[index][field] = field === "value" ? parseInt(value) : value;
+    setNewLecture(prevState => ({ ...prevState, gradeRatio: updatedGradeRatio }));
+  };
 
-const RatioSum = () => {
-  return newLecture.gradeRatio.reduce((total, ratio) => total + ratio.value, 0);
-};
+  const RatioSum = () => {
+    return newLecture.gradeRatio.reduce((total, ratio) => total + ratio.value, 0);
+  };
 
   const indexOfLastLecture = currentPage * lecturePerPage;
   const indexOfFirstLecture = indexOfLastLecture - lecturePerPage;
@@ -222,9 +222,9 @@ const RatioSum = () => {
 
 
   return (//!!!!!!!!!!!!!!!!!!!! lg:bg-gray-600 font-gmarket text-xl md:text-3xl font-bold mb-4 md:mb-6 text-center
-    
+
     <div className="container mx-auto p-4">
-      <div className="flex justify-center items-center"> 
+      <div className="flex justify-center items-center">
         <h1 className="font-gmarket text-4xl md:text-6xl font-bold mt-8 sm:mt-0 mb-4 sm:mb-8 text-center">강의 관리</h1>
       </div>
 
@@ -240,10 +240,11 @@ const RatioSum = () => {
           onClick={() => {
 
             setShowForm(!showForm);
-            setIsAdd(!isAdd);}} //추가
+            setIsAdd(!isAdd);
+          }} //추가
           className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-2"
         >
-          {showForm ? <FaMinus className="mr-1 text-red-500 hover:text-red-600" /> : <FaPlus className="mr-1 text-blue-500 hover:text-blue-600"  />}
+          {showForm ? <FaMinus className="mr-1 text-red-500 hover:text-red-600" /> : <FaPlus className="mr-1 text-blue-500 hover:text-blue-600" />}
         </button>
       </div>
 
@@ -543,48 +544,48 @@ const RatioSum = () => {
                 </select>
               </label>
 
-              <label className="font-gmarket">
-              강의소개:
-              <input
-                value={newLecture.introduction}
-                onChange={(e) => setNewLecture({ ...newLecture, introduction: e.target.value })}
-                className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
-              />
-            </label>
+            
             </div>
+            <label className="font-gmarket">
+                강의소개:
+                <textarea
+                  value={newLecture.introduction}
+                  onChange={(e) => setNewLecture({ ...newLecture, introduction: e.target.value })}
+                  className="ml-3 mb-4 p-2 border border-gray-300 rounded-md w-full h-32 resize-none "
+                />
+              </label>
 
-           
-            <h3 className="font-gmarket mb-2">성적비율:</h3>
-            <div className="bg-white p-4 rounded-lg mt-4 mb-4 border border border-gray-300"//추가
-            > 
-            {newLecture.gradeRatio.map((ratio, index) => (
-              <div key={index} className="flex items-center mb-2">
-                <input
-                  type="text"
-                  placeholder="항목"
-                  value={ratio.name}
-                  onChange={(e) => handleGradeRatioChange(index, "name", e.target.value)}
-                  className="font-gmarket mr-2 p-2 border border-gray-300 rounded-md w-1/3"
-                />
-                <input
-                  type="number"
-                  placeholder="비율(%)"
-                  value={ratio.value}
-                  onChange={(e) => handleGradeRatioChange(index, "value", e.target.value)}
-                  className="font-gmarket mr-2 p-2 border border-gray-300 rounded-md w-1/3"
-                />
-                <button onClick={() => handleRemoveGradeRatio(index)} className="text-red-500 hover:text-red-600">
-                  <FaTrashAlt />
-                </button>
-              </div>
-            ))}
-            <button
-              onClick={handleAddGradeRatio}
-              className="text-blue-500 hover:text-blue-600 flex items-center mt-2"
+            <h3 className="font-gmarket mb-2 text-left">성적비율:</h3>
+            <div className="bg-white p-4 rounded-lg mt-4 mb-4 border border border-gray-300 text-center" //추가
             >
-              <FaPlus className="mr-1" /> 항목 추가
-            </button>
-          </div> 
+              {newLecture.gradeRatio.map((ratio, index) => (
+                <div key={index} className="flex items-center justify-center mb-2">
+                  <input
+                    type="text"
+                    placeholder="항목"
+                    value={ratio.name}
+                    onChange={(e) => handleGradeRatioChange(index, "name", e.target.value)}
+                    className="font-gmarket mr-2 p-2 border border-gray-300 rounded-md w-1/3"
+                  />
+                  <input
+                    type="number"
+                    placeholder="비율(%)"
+                    value={ratio.value}
+                    onChange={(e) => handleGradeRatioChange(index, "value", e.target.value)}
+                    className="font-gmarket mr-2 p-2 border border-gray-300 rounded-md w-1/3"
+                  />
+                  <button onClick={() => handleRemoveGradeRatio(index)} className="text-red-500 hover:text-red-600">
+                    <FaTrashAlt />
+                  </button>
+                </div>
+              ))}
+              <button
+                onClick={handleAddGradeRatio}
+                className="text-blue-500 hover:text-blue-600 flex items-center mt-2 justify-center"
+              >
+                <FaPlus className="mr-1" /> 항목 추가
+              </button>
+            </div>
 
             <div className="flex flex-row justify-center item">
               <button //w-full md:w-1/2 text-sm md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85
@@ -604,14 +605,14 @@ const RatioSum = () => {
                 {newLectureList.map((lecture, index) => (
                   <div key={index} className="mb-4 md:mb-6 p-4 md:p-6   hover:scale-105     bg-white border-2 rounded-lg shadow-[0_3px_6px_rgba(0,0,0,0.23)] border-dashed border-gray-400">
                     <div className="flex flex-row justify-between ml-2">
-                    <span className="text-md md:text-xl font-gmarket">{lecture.lectureName}</span>
-                    
-                    <button
-                      onClick={() => removeLectureList(index)}
-                      className="text-xl md:text-2xl text-red-500 hover:text-red-600 cursor-pointer ml-2"
-                    >
-                      <FaTrashAlt />
-                    </button>
+                      <span className="text-md md:text-xl font-gmarket">{lecture.lectureName}</span>
+
+                      <button
+                        onClick={() => removeLectureList(index)}
+                        className="text-xl md:text-2xl text-red-500 hover:text-red-600 cursor-pointer ml-2"
+                      >
+                        <FaTrashAlt />
+                      </button>
                     </div>
 
                   </div>
@@ -628,80 +629,80 @@ const RatioSum = () => {
               </div>
             </div>
           )}
-          
+
         </>
       )}
-      
-           {/* 강의추가폼 열린상태면 비활성 */}
-           {isAdd === false &&(
-              <>
-              <div className="grid grid-cols-1 gap-4">
-              {currentLecture.map((lecture) => (
-                <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-                  <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
-                    {[
-                      { label: "교수명", value: lecture.memberName },
-                      { label: "팀워크", value: lecture.teamwork },
-                      { label: "분류", value: lecture.classification },
-                      { label: "기업가정신", value: lecture.entrepreneurship },
-                      { label: "강의실", value: lecture.room },
-                      { label: "창의적 사고", value: lecture.creativeThinking },
-                      { label: "학점", value: lecture.credit },
-                      { label: "자원활용", value: lecture.harnessingResource },
-                      { label: "분반", value: lecture.division },
-                      { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
-                      { label: "학년", value: lecture.grade },
-                      { label: "채점방식", value: lecture.gradeMethod },
-                      { label: "강의시간", value: lecture.lectureTime },
-                      { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
-                      { label: "수업방식", value: lecture.classMethod },
-                      { label: "강의평가", value: lecture.course_evaluation },
-                      { label: "시험방식", value: lecture.testType },
-                      { label: "성적비율", value: lecture.gradeRatio },
-                      { label: "강의소개", value: lecture.introduction },
-                    ].map((item) => (
-                      <div key={item.label} className="flex flex-col">
-                        <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
-                        <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
-                          {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex justify-end mt-4">
-                    <button
-                      onClick={() => handleDeleteClass(lecture.lectureId)}
-                      className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
-                    >
-                      <FaTrashAlt className="mr-1" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-              </div>
 
-              <ul className="flex justify-center mt-6">
-              {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
-                (_, index) => (
-                  <li
-                    key={index}
-                    onClick={() => paginate(index + 1)}
-                    className={`cursor-pointer mx-1 ${
-                      currentPage === index + 1 ? "font-bold" : ""
-                    }`}
-                  >
-                    {index + 1}
-                  </li>
-                )
-              )}
-              </ul>
+      {/* 강의추가폼 열린상태면 비활성 */}
+      {isAdd === false && (
+        <>
+        <div className="grid grid-cols-1 gap-4">
+  {currentLecture.map((lecture) => (
+    <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+      <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
+        {[
+          { label: "교수명", value: lecture.memberName },
+          { label: "팀워크", value: lecture.teamwork },
+          { label: "분류", value: lecture.classification },
+          { label: "기업가정신", value: lecture.entrepreneurship },
+          { label: "강의실", value: lecture.room },
+          { label: "창의적 사고", value: lecture.creativeThinking },
+          { label: "학점", value: lecture.credit },
+          { label: "자원활용", value: lecture.harnessingResource },
+          { label: "분반", value: lecture.division },
+          { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
+          { label: "학년", value: lecture.grade },
+          { label: "채점방식", value: lecture.gradeMethod },
+          { label: "강의시간", value: lecture.lectureTime },
+          { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
+          { label: "수업방식", value: lecture.classMethod },
+          { label: "강의평가", value: lecture.course_evaluation },
+          { label: "시험방식", value: lecture.testType },
+          { label: "성적비율", value: lecture.gradeRatio },
+        ].map((item) => (
+          <div key={item.label} className="flex flex-col">
+            <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
+            <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
+              {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="mt-4">
+        <span className="font-semibold text-gray-600 mb-2 block">강의소개</span>
+        <div className="p-2 border border-gray-300 rounded bg-white text-left h-32 overflow-auto font-gmarket">
+          {lecture.introduction === null || lecture.introduction === undefined || lecture.introduction === "null" || lecture.introduction === "" ? '입력안됨' : lecture.introduction}
+        </div>
+      </div>
+      <div className="flex justify-end mt-4">
+        <button
+          onClick={() => handleDeleteClass(lecture.lectureId)}
+          className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
+        >
+          <FaTrashAlt className="mr-1" />
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
 
 
-              </>
-              )}
-
-
+          <ul className="flex justify-center mt-6">
+            {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
+              (_, index) => (
+                <li
+                  key={index}
+                  onClick={() => paginate(index + 1)}
+                  className={`cursor-pointer mx-1 ${currentPage === index + 1 ? "font-bold" : ""}`}
+                >
+                  {index + 1}
+                </li>
+              )
+            )}
+          </ul>
+        </>
+      )}
 
       <Dialog open={addOpen} onClose={handleAddClose}>
         <DialogTitle>강의추가 성공</DialogTitle>
@@ -727,7 +728,6 @@ const RatioSum = () => {
         </DialogActions>
       </Dialog>
 
-
       <Dialog open={deleteOpen} onClose={handleDeleteClose}>
         <DialogTitle>강의실 배정삭제 완료</DialogTitle>
         <DialogContent>
@@ -739,7 +739,6 @@ const RatioSum = () => {
           </Button>
         </DialogActions>
       </Dialog>
-
 
     </div>
   );
