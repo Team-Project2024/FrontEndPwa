@@ -495,7 +495,7 @@ const Chat = () => {
                   {message.type === "bot" && (
                     <img src={chatbotIcon} alt="Chatbot Icon" className="w-10 h-10 mr-4 self-start" />
                   )}
-                  <div className={`inline-block py-2 px-4 rounded-lg max-w-xs md:max-w-md lg:max-w-4xl ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-blue-900 dark:text-white font-gmarket"}`}>
+                  <div className={`inline-block py-2 px-4 rounded-lg max-w-xs md:max-w-md lg:max-w-4xl ${message.type === "user" ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-600 dark:text-gray-300 font-gmarket" : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-800 dark:text-white font-gmarket"}`}>
                     {typeof message.content === "string" ? message.content : message.content.content}
 
                     {message.type === "bot" && message.content.content.includes('인성교양') && (

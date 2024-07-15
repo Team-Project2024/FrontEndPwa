@@ -13,10 +13,10 @@ const AdminMain = () => {
   const axiosPrivate = useAxiosPrivate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen overflow-hidden ">
+    <div className="flex flex-col items-center justify-center min-h-screen overflow-hidden scrollbar-hide ">
       <div className="flex flex-col items-center">
-        <h2 className="font-gmarket text-3xl mb-8">관리자 페이지</h2>
-        <div className="font-gmarket text-2xl">
+        <h2 className="font-gmarket text-xl md:text-3xl mb-8">관리자 페이지</h2>
+        <div className="font-gmarket text-sm md:text-2xl">
           <h2>메뉴에서 추가/관리하고싶은 부분을 선택해주세요!</h2>
         </div>
       </div>

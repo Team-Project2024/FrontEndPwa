@@ -556,7 +556,7 @@ const Class = () => {
               </label>
 
             <h3 className="font-gmarket mb-2 text-left">성적비율:</h3>
-            <div className="bg-white p-4 rounded-lg mt-4 mb-4 border border border-gray-300 text-center" //추가
+            <div className="bg-white ml-3 p-4 rounded-lg mt-4 mb-4 border border border-gray-300 text-center" //추가
             >
               {newLecture.gradeRatio.map((ratio, index) => (
                 <div key={index} className="flex items-center justify-center mb-2">
@@ -686,7 +686,7 @@ const Class = () => {
     </div>
   ))}
 </div>
-
+{/*     className={`cursor-pointer mx-2 px-3 py-1  rounded-full  ${currentPage === index + 1 ? "bg-blue-500 hover:bg-blue-500 text-white" : "bg-gray-200 hover:bg-blue-200" */}
 
           <ul className="flex justify-center mt-6">
             {Array.from({ length: Math.ceil(lecture.length / lecturePerPage) }).map(
@@ -694,7 +694,7 @@ const Class = () => {
                 <li
                   key={index}
                   onClick={() => paginate(index + 1)}
-                  className={`cursor-pointer mx-1 ${currentPage === index + 1 ? "font-bold" : ""}`}
+                  className={`cursor-pointer mx-2 px-3 py-1  rounded-full ${currentPage === index + 1 ? "bg-blue-500 hover:bg-blue-500 text-white" : "bg-gray-200 hover:bg-blue-200"}`}
                 >
                   {index + 1}
                 </li>

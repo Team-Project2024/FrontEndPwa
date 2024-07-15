@@ -25,6 +25,7 @@ const DoughnutChart = ({ data, total, title, maxTotal }) => {
       title: {
         display: true,
         text: title,
+        color: isDarkMode ? 'white' : 'black',
         font: {
           
           size: 16,

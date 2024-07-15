@@ -125,7 +125,7 @@ const Admin = () => {
             }`} 
         >  
           <div  // lg:bg-gray-500
-          className="flex-grow mb-4 p-2 lg:p-8 overflow-y-auto  items-center justify-center crollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
+          className="flex-grow mb-4 p-2 lg:p-8 overflow-y-auto  items-center justify-center crollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-hide scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300">
             {/* 선택된 메뉴에 따라 다른 컴포넌트 표시 */}
             {selectedMenu === "MajorManagement" && <Major />}
             {selectedMenu === "GraduationManagement" && <Graduation />}
