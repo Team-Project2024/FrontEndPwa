@@ -25,7 +25,7 @@ function FindPassword() {
   const [open, setOpen] = useState(false);
   const [trimOpen, settrimOpen] = useState(false);
   const [errorOpen, setErrorOpen] = useState(false);
-  const [count, setCount] = useState(60); // 3 minutes countdown
+  const [count, setCount] = useState(60); 
   const [isVerifyDisabled, setIsVerifyDisabled] = useState(false);
   const [isResendVisible, setIsResendVisible] = useState(false);
   const logout = useLogout();

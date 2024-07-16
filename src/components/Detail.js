@@ -73,7 +73,7 @@ const DetailPage = () => {
     labels: ['T영역', 'E영역', 'C영역', 'H영역'],
     datasets: [
       {
-        label: '점수', // label 속성을 추가합니다.
+        label: '점수', 
         data: [
           detailInfo.teamwork,
           detailInfo.entrepreneurship,
@@ -97,12 +97,12 @@ const DetailPage = () => {
   };
 
   const techOptions = {
-    indexAxis: 'y', // 가로막대그래프를 위해 추가합니다.
+    indexAxis: 'y', 
     maintainAspectRatio: false,
     responsive: true,
     scales: {
       x: {
-        max: 5, // x축 최대값을 10으로 설정합니다.
+        max: 5, 
         ticks: {
           color: isDarkMode ? '#FFFFFF' : '#000000' ,
           stepSize: 1,
@@ -125,7 +125,7 @@ const DetailPage = () => {
     },
     plugins: {
       legend: {
-        display: false, // 레전드를 표시하지 않음
+        display: false, 
         position: 'top',
       
        
@@ -174,8 +174,8 @@ const DetailPage = () => {
   return (
     <div className={`min-h-screen flex flex-col items-center p-4 justify-center ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-slate-300 text-black'}`}>
       <div className={`rounded-lg w-full max-w-6xl p-8 items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
-        <div className="flex justify-between items-center mb-8">
-          <h1 className="sm:text-4xl font-gmarket  font-bold">{detailInfo.lectureName}</h1>
+        <div className="flex justify-between items-center mb-8 flex-col">
+          <h1 className="sm:text-4xl  text-4xl font-gmarket  font-bold mb-3">{detailInfo.lectureName}</h1>
           <button  
           onClick={handleClickOpen}
           className="py-2.5 px-5 me-2 mb-2 sm:mt-5 text-gray-900 focus:outline-none bg-slate-300 rounded-full border
@@ -185,7 +185,7 @@ const DetailPage = () => {
              dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold">수업계획표 보기</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4 font-gmarket text-center ">
+          <div className="space-y-4 font-gmarket text-center  ">
             {[
               { label: "이수구분", value: detailInfo.classification },
               { label: "강의실", value: detailInfo.room },
@@ -194,9 +194,9 @@ const DetailPage = () => {
               { label: "개설 학년", value: detailInfo.grade },
               { label: "교수", value: detailInfo.memberName },
             ].map((item) => (
-              <div key={item.label} className="flex justify-between items-center ">
-                <span className="font-semibold ">{item.label}</span>
-                <span className={`p-2 rounded-md w-2/3 font-semibold ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+              <div key={item.label} className="flex md:justify-between items-center flex-col ">
+                <span className="font-semibold text-sm mb-3">{item.label}</span>
+                <span className={`p-2 rounded-md w-3/4 font-semibold ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
                   {item.value}
                 </span>
               </div>
@@ -211,9 +211,9 @@ const DetailPage = () => {
               { label: "성적산출", value: detailInfo.gradeMethod },
               { label: "강의 시간", value: detailInfo.lectureTime },
             ].map((item) => (
-              <div key={item.label} className="flex justify-between items-center">
-                <span className="font-semibold">{item.label}</span>
-                <span className={`p-2 rounded-md w-2/3  font-semibold ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
+              <div key={item.label} className="flex justify-between items-center flex-col">
+                <span className="font-semibold text-sm mb-3">{item.label}</span>
+                <span className={`p-2 rounded-md w-3/4 font-semibold ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
                   {item.value}
                 </span>
               </div>
@@ -271,7 +271,7 @@ const DetailPage = () => {
         <Dialog open={open} onClose={handleClose}>
          
           <DialogContent className="p-5 flex flex-col items-center justify-center dark:bg-gray-600 dark:text-white bg-gray-100 text-black">
-            <div className="overflow-x-auto w-full">
+            <div className="overflow-x-auto w-full scrollbar-hide text-sm md:text-md">
               <table className="min-w-full  divide-y divide-gray-200">
                 <thead className="bg-gray-50 dark:bg-gray-700">
                   <tr>

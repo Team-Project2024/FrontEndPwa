@@ -17,8 +17,8 @@ const FindId = () => {
     const [name, setName] = useState("");
     const [errMsg, setErrMsg] = useState(""); 
     const [userId, setUserId] = useState("");
-    const [open, setOpen] = useState(false); // Modal open state
-    const [isSuccess, setIsSuccess] = useState(false); // Success state
+    const [open, setOpen] = useState(false); 
+    const [isSuccess, setIsSuccess] = useState(false); 
     const userReff = useRef();
 
     const logout = useLogout();
@@ -47,11 +47,11 @@ const FindId = () => {
                 console.log(JSON.stringify(response?.data));
                 setUserId(response?.data);
                 setIsSuccess(true);
-                setOpen(true); // Show success modal
+                setOpen(true); 
             } else {
                 setErrMsg('요청이 실패했습니다.');
                 setIsSuccess(false);
-                setOpen(true); // Show error modal
+                setOpen(true); 
             }
         } catch (err) {
             if (!err?.response) {
@@ -64,7 +64,7 @@ const FindId = () => {
                 setErrMsg('요청이 실패했습니다.');
             }
             setIsSuccess(false);
-            setOpen(true); // Show error modal
+            setOpen(true); 
         }
     };
 

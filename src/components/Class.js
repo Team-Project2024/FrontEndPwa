@@ -21,7 +21,7 @@ const Class = () => {
   const [time, setTime] = useState([]);
   const [newLectureList, setNewLectureList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [lecturePerPage] = useState(300);
+  const [lecturePerPage] = useState(100);
   const [showForm, setShowForm] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [emptyOpen, setEmptyOpen] = useState(false);
@@ -410,9 +410,9 @@ const Class = () => {
               <label className="font-gmarket">
                 시험방식:
                 <select
-                  value={newLecture.gradeMethod}
+                  value={newLecture.testType}
                   onChange={(e) =>
-                    setNewLecture({ ...newLecture, gradeMethod: e.target.value })
+                    setNewLecture({ ...newLecture, testType: e.target.value })
                   }
                   className="ml-3 mb-4 p-2 border border-gray-300 rounded-full w-full"
                 >

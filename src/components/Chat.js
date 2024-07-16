@@ -344,43 +344,41 @@ const Chat = () => {
 
   const handleMapOpen = (data) => {
     try {
-      // Check if data is already an object
-      const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-      console.log('Parsed Data:', parsedData);
       
-      // Extract and clean the 'data' string if it is a string
+      const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+     
+      
+      
       const cleanedData = typeof parsedData.data === 'string' 
         ? parsedData.data.replace(/\\/g, '') 
         : JSON.stringify(parsedData.data);
-      console.log('Cleaned Data:', cleanedData);
       
-      // Remove surrounding quotes and wrap in square brackets
+      
+     
       const validData = `[${cleanedData.substring(1, cleanedData.length - 1)}]`;
-      console.log('Valid Data:', validData);
+     
       
-      // Second parsing
+     
       const locations = JSON.parse(validData);
-      console.log('Locations:', locations);
+    
 
-      // Extract coordinates
+      
       const coordinates = locations.map(item => ({
         name: item.locationName,
         lat: parseFloat(item.lat),
         lng: parseFloat(item.lon)
       }));
       
-      console.log('Coordinates:', coordinates); // Log the coordinates
+     
       
       setMaps(coordinates); 
-      console.log('Updated Maps State:', maps); // Log the updated state
+      
     } catch (error) {
-      console.error('Error parsing map data:', error);
+     
     }
   };
 
-  useEffect(() => {
-    console.log('Maps state updated:', maps);
-  }, [maps]);
+ 
  
   return (
     <div className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}>
