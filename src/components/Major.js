@@ -253,7 +253,7 @@ const Major = () => {
         PaperProps={{ className: "bg-white w-auto" }}>
         <DialogTitle as="h3" className="text-xl text-bold bg-gray-200 font-gmarket text-start mb-2">입력되지않음</DialogTitle>
         <DialogContent className="text-start font-gmarket  mb-4">
-          입력해주세요
+          학과/트랙이 입력되지않았습니다
         </DialogContent>
         <DialogActions>
           <Button onClick={handleEmptyClose} color="primary">

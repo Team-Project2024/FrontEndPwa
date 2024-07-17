@@ -168,16 +168,24 @@ function MapComponent({ coordinates, onClose }) {
 
   return (
     <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>위치 보기  마커클릭시 경로안내</DialogTitle>
+      <DialogTitle>마커클릭시 경로안내</DialogTitle>
       <DialogContent>
         <div>
           <div id="map" ref={mapContainerRef} style={containerStyle}></div>
          
         </div>
       </DialogContent>
-      <DialogActions>
-        <Button  onClick={onClose}>닫기</Button>
-      </DialogActions>
+      <DialogActions className="p-4 dark:bg-gray-800 bg-gray-100">
+          <button 
+          onClick={onClose}
+          className="py-2.5 px-5 me-2 mb-2 text-sm  text-gray-900 focus:outline-none bg-gray-200 rounded-full border
+           border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
+           dark:focus:ring-gray-700 dark:bg-gray-800
+            dark:text-white dark:border-gray-600
+             dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold justify-end ">닫기</button>
+      
+
+          </DialogActions>
     </Dialog>
   );
 }

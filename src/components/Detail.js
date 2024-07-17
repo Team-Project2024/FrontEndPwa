@@ -175,14 +175,14 @@ const DetailPage = () => {
     <div className={`min-h-screen flex flex-col items-center p-4 justify-center ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-slate-300 text-black'}`}>
       <div className={`rounded-lg w-full max-w-6xl p-8 items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
         <div className="flex justify-between items-center mb-8 flex-col">
-          <h1 className="sm:text-4xl  text-4xl font-gmarket  font-bold mb-3">{detailInfo.lectureName}</h1>
+          <h1 className="sm:text-4xl  text-sm font-gmarket  font-bold mb-3">{detailInfo.lectureName}</h1>
           <button  
           onClick={handleClickOpen}
           className="py-2.5 px-5 me-2 mb-2 sm:mt-5 text-gray-900 focus:outline-none bg-slate-300 rounded-full border
            border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
            dark:focus:ring-gray-700 dark:bg-gray-800
             dark:text-white dark:border-gray-600
-             dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold">수업계획표 보기</button>
+             dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold text-sm md:text-md">수업계획표 보기</button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-4 font-gmarket text-center  ">
@@ -246,10 +246,10 @@ const DetailPage = () => {
         <div className=" items-center justify-center">
               <h2 className="text-2xl font-bold mb-4 text-center">성적 비율</h2>
               <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700' : 'bg-gray-300'}`}>
-                <div className="relative h-64  w-full">
-                  <div className="font-gmarket font-bold text-md items-center justify-center text-center ">
+                <div className=" h-64  w-full">
+                  <div className="font-gmarket font-bold text-md items-center justify-center text-center overflow-scroll scrollbar-hide ">
                     {detailInfo.gradeRatio.split('\n').map((line, index) => (
-                      <p key={index} className="mb-8">{line}</p>
+                      <p key={index} className="mb-8 ">{line}</p>
                     ))}
                   </div>
                 </div>
