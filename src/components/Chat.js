@@ -42,7 +42,7 @@ const Chat = () => {
   const [tempChatRoom, setTempChatRoom] = useState(null);
   const [open, setOpen] = useState(false);
   const [graduation, setGraduation] = useState([]);
-  const [maps, setMaps] = useState([]); // Updated to `setMaps`
+  const [maps, setMaps] = useState([]); 
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
@@ -501,12 +501,18 @@ const Chat = () => {
                     )}
 
                     
-                    {message.type === "bot" && message.content.table === "school_location" && message.content.data && (
+                   
+                    {message.type === "bot" && message.content.table === "school_location" && message.content.data && !message.content.content.includes('위치 정보를 찾을 수 없습니다')&& (
               
 
                   
                       <div>
-                        <button onClick={() => handleMapOpen(message.content)}>
+                        <button  className=" relative max-w-40 py-2.5 px-5 me-2 mb-2 text-md  text-gray-900 focus:outline-none bg-white rounded-full border
+                          border-gray-200 hover:bg-gray-100  focus:z-10 focus:ring-4 focus:ring-gray-100
+                          dark:focus:ring-gray-700 dark:bg-gray-800
+                            dark:text-white dark:border-gray-600
+                            dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold justify-end"
+                        onClick={() => handleMapOpen(message.content)}>
                           지도 열기
                         </button>
 

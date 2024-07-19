@@ -168,7 +168,11 @@ function MapComponent({ coordinates, onClose }) {
 
   return (
     <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>마커클릭시 경로안내</DialogTitle>
+      <DialogTitle>
+        <div className='  font-gmarket font-bold'>
+        마커클릭시 경로안내
+        </div>
+        </DialogTitle>
       <DialogContent>
         <div>
           <div id="map" ref={mapContainerRef} style={containerStyle}></div>
