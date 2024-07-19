@@ -43,7 +43,7 @@ const Graduation = () => {
       const response = await axiosPrivate.get("/admin/major");
       setMajor(response.data.responseMajorDTOList);
     } catch (error) {
-      console.error("Error fetching majors:", error);
+      console.error("전공 받아오기실패:", error);
     }
   };
 

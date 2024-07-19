@@ -46,7 +46,7 @@ const DetailPage = () => {
         
         
       } catch (error) {
-        console.error("Error parsing contentData:", error);
+        console.error("ContentData 파싱에러:", error);
       }
     }
   }, [itemType, itemId]);
@@ -58,7 +58,7 @@ const DetailPage = () => {
        
         setWeekInfo(response.data.responseLectureDetailDTOS || []); 
       } catch (error) {
-        console.error("Error fetching lecture detail:", error);
+        console.error("강의세부정보 get 에러:", error);
       }
     };
 

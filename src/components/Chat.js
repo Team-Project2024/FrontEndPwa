@@ -98,7 +98,7 @@ const Chat = () => {
       );
       setChatRooms(sortedChatRooms);
     } catch (error) {
-      console.error("Error fetching chat rooms:", error);
+      console.error("채팅방 정렬에러:", error);
     }
   };
 
@@ -185,7 +185,7 @@ const Chat = () => {
             parsedContent.data = JSON.parse(parsedContent.data);
           }
         } catch (error) {
-          console.error("Error parsing chat bot message content:", error);
+          console.error("챗봇메세지 파싱에러:", error);
           parsedContent = { content: message.content };
         }
         return { ...message, content: parsedContent, type: "bot" };
@@ -202,7 +202,7 @@ const Chat = () => {
       }
       setMessages(combinedMessages);
     } catch (error) {
-      console.error("Error fetching messages:", error);
+      console.error("대화내역 받아오기에러:", error);
     }
   };
 
@@ -213,7 +213,7 @@ const Chat = () => {
       );
       return response.data;
     } catch (error) {
-      console.error("Error creating new chat room:", error);
+      console.error("채팅방생성 에러:", error);
       throw error;
     }
   };
@@ -228,7 +228,7 @@ const Chat = () => {
         `/api/chat?message=${message}&chatRoomId=${chatRoomId}`
       );
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("메시지전송에러:", error);
       throw error;
     }
   };
@@ -257,7 +257,7 @@ const Chat = () => {
       setLastUserQuestion(null);
       fetchChatRooms();
     } catch (error) {
-      console.error("Error sending message:", error);
+      console.error("메세지 전송 에러:", error);
       setLastUserQuestion(null);
       console.log('메시지를 전송하는과정에서 에러가 발생하였습니다.')
     } finally {
@@ -285,7 +285,7 @@ const Chat = () => {
       }
       fetchChatRooms();
     } catch (error) {
-      console.error("Error deleting chat room:", error);
+      console.error("채팅방삭제 실패:", error);
     }
   };
 
@@ -297,7 +297,7 @@ const Chat = () => {
       fetchChatRooms();
       setOpen(!open);
     } catch (error) {
-      console.error("Error deleting all chat rooms:", error);
+      console.error("모든채팅방삭제 실패:", error);
     }
   };
 

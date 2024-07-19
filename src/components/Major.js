@@ -77,7 +77,7 @@ const Major = () => {
       const response = await axiosPrivate.get("/admin/major");
       setMajors(response.data.responseMajorDTOList);
     } catch (error) {
-      console.error("Error fetching majors:", error);
+      console.error("전공 받아오기실패:", error);
     }
   };
 
@@ -133,7 +133,7 @@ const Major = () => {
       setAddOpen(!addOpen);
 
     } catch (error) {
-      console.error("Error adding majors:", error);
+      console.error("전공추가실패:", error);
     }
   };
 

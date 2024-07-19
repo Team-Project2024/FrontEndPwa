@@ -9,7 +9,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
-import CreditChart from './CreditChart';
+
 
 const Class = () => {
   const { auth } = useContext(AuthContext);
@@ -49,7 +49,7 @@ const Class = () => {
     course_evaluation: 1,
     memberId: "",
     introduction: "",
-    gradeRatio: [{ name: "", value: 0 }] //추가
+    gradeRatio: [{ name: "", value: 0 }] 
   });
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const Class = () => {
 
   const handleAddClass = async () => {
     try {
-      //console.log("Sending new lecture list:", newLectureList);
+     
       const response = await axiosPrivate.post("/admin/lecture", {
         requestLectureDTOList: newLectureList.map(lecture => ({
           lectureName: lecture.lectureName,
@@ -161,7 +161,7 @@ const Class = () => {
           gradeRatio: lecture.gradeRatio.map(ratio => `${ratio.name} ${ratio.value}%`).join(' ')
         }))
       });
-      //console.log("Response from server:", response);
+     
       setNewLectureList([]);
       fetchLecture();
       setShowForm(false);

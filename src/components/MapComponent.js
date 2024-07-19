@@ -159,7 +159,7 @@ function MapComponent({ coordinates, onClose }) {
         polylineRef.current = polyline;
         
       } else {
-        throw new Error("No routes found");
+        throw new Error("경로를 찾지못하였습니다.");
       }
     } catch (error) {
       console.error('Error:', error);

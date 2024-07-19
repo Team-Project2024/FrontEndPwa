@@ -55,7 +55,7 @@ const FindId = () => {
             }
         } catch (err) {
             if (!err?.response) {
-                setErrMsg('No Server Response');
+                setErrMsg('서버응답없음');
             } else if (err.response?.status === 400) {
                 setErrMsg('이메일/이름을 확인해주세요');
             } else if (err.response?.status === 405) {

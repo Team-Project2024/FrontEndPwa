@@ -18,7 +18,7 @@ import DetailPage from './components/Detail';
 
 import useRefreshToken from './hooks/useRefreshToken';
 
-import Toast from './components/Toast';
+
 
 
 
@@ -118,7 +118,7 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
-        <Route path="ui" element={<Toast />} />
+    
        
 
         {/* 로그인 완료, 권한이 있어야 접근 가능 */}
