@@ -113,7 +113,7 @@ const Graduation = () => {
 
       setErrOpen(!errOpen);
       console.error("Error adding graduation requirements:", error);
-      window.alert("추가된 졸업요건이 없거나 \n이미 등록된 졸업요건과 동일한 졸업요건이 존재합니다.");
+     
 
       console.log(graduationList);
     }
@@ -256,9 +256,13 @@ const Graduation = () => {
         
       )}
 
-<Dialog open={open} onClose={handleClose}>
-        <DialogTitle>졸업요건추가 성공</DialogTitle>
-        <DialogContent>
+
+
+
+<Dialog open={open} onClose={handleClose}maxWidth="sm"
+        PaperProps={{ className: "bg-white w-auto" }}>
+        <DialogTitle as="h3" className="text-xl text-bold bg-gray-200 font-gmarket text-start mb-2">졸업요건추가 성공</DialogTitle>
+        <DialogContent className="text-start font-gmarket  mb-4">
           졸업요건 리스트가 추가되었습니다.
         </DialogContent>
         <DialogActions>

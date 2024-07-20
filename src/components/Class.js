@@ -223,7 +223,7 @@ const Class = () => {
 
   return (//!!!!!!!!!!!!!!!!!!!! lg:bg-gray-600 font-gmarket text-xl md:text-3xl font-bold mb-4 md:mb-6 text-center
 
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 items-center">
       <div className="flex justify-center items-center">
         <h1 className="font-gmarket text-4xl md:text-6xl font-bold mt-8 sm:mt-0 mb-4 sm:mb-8 text-center">강의 관리</h1>
       </div>
@@ -636,7 +636,7 @@ const Class = () => {
       {/* 강의추가폼 열린상태면 비활성 */}
       {isAdd === false && (
         <>
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 ">
   {currentLecture.map((lecture) => (
     <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
       <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
