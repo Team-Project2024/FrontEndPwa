@@ -132,7 +132,7 @@ const Graduation = () => {
   }
 
   return (//!!!!!!!!!!!!!!!!!!! lg:bg-gray-600
-    <div className="container   mx-auto p-4 md:p-8">
+    <div className="container mx-auto p-4 md:p-8">
       <h1 className="font-gmarket text-3xl md:text-6xl font-bold mt-8 sm:mt-0 mb-4 sm:mb-8 text-center">졸업요건 추가</h1>
 
       <div className="flex justify-center mb-6">
