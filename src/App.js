@@ -19,19 +19,7 @@ import DetailPage from './components/Detail';
 import useRefreshToken from './hooks/useRefreshToken';
 
 
-
-
-
-
-
-
 import { Routes, Route } from 'react-router-dom';
-
-
-
-
-
-
 
 
 //IgnoreResizeObserverError 방지
@@ -137,7 +125,7 @@ function App() {
           </Route>
         </Route>
 
-        {/* catch all */}
+        
         <Route path="*" element={<Missing />} />
       </Route>
     </Routes>

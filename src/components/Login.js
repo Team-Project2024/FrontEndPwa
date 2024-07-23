@@ -116,10 +116,10 @@ const Login = () => {
     <React.Fragment>
       <section className="h-screen flex flex-col md:flex-row justify-center items-center my-2 mx-5 md:mx-0 md:my-0 bg-blue-200">
         <div className='w-full h-full grid md:grid-cols-10'>
-          <div className='bg-left-main  md:h-screen flex flex-col justify-center items-center  p-6 col-span-6 hidden md:flex'> {/* Hidden on small screens */}
+          <div className='bg-left-main  md:h-screen flex flex-col justify-center items-center  p-6 col-span-6 hidden md:flex'> 
             <TextAni />
           </div>
-          <div className="flex flex-col justify-center md:shadow-[-4px_0px_15px_0px_rgba(0,0,0,0.3)] items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90"> {/* Full width on small screens */}
+          <div className="flex flex-col justify-center md:shadow-[-4px_0px_15px_0px_rgba(0,0,0,0.3)] items-center bg-right-main col-span-10 md:col-span-4 w-full md:w-90"> 
             <h2 className='text-4xl p-6 font-gmarket mb-3 font-bold'>LUMOS</h2>
             <form onSubmit={handleSubmit}>
               <div>

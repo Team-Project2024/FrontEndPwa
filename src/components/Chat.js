@@ -11,8 +11,10 @@ import {
   FaSignOutAlt,
   FaTrashAlt,
   FaMagic,
-  FaComments
+  FaComments,
+ 
 } from "react-icons/fa";
+import { GrUserAdmin } from "react-icons/gr";
 import chatbotIcon from "../image/chatbot.png"; 
 import senderIcon from "../image/sender.png";
 import Switcher from "../Dark/Switcher";
@@ -49,6 +51,7 @@ const Chat = () => {
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
+  
 
   useEffect(() => {
     getGraduation();
@@ -378,6 +381,11 @@ const Chat = () => {
     }
   };
 
+  const handleNavigateAdmin = () => {
+    navigate('/admin');
+
+  }
+
  
  
   return (
@@ -407,6 +415,17 @@ const Chat = () => {
                     className="text-2xl text-white dark:text-white cursor-pointer focus:outline-none"
                   />
                 </button>
+                {auth.role === 'ROLE_ADMIN' &&(
+                   <button className="bg-blue-400 px-4 py-2 rounded-lg">
+                   <GrUserAdmin
+                     data-tooltip-id="my-tooltip" data-tooltip-content="관리자페이지 이동"
+                     place="bottom"
+                     onClick={handleNavigateAdmin}
+                     className="text-2xl text-white dark:text-white cursor-pointer focus:outline-none"
+                   />
+                 </button>
+                )}
+             
                 {/* <button
                   className="bg-red-500 text-white px-4 py-2 rounded dark:bg-red-700"
                   onClick={handleOpenWarning}
@@ -501,22 +520,16 @@ const Chat = () => {
                     )}
 
                     
-                   
-                    {message.type === "bot" && message.content.table === "school_location" && message.content.data && !message.content.content.includes('위치 정보를 찾을 수 없습니다')&& (
-              
-
-                  
-                      <div>
-                        <button  className=" relative max-w-40 py-2.5 px-5 me-2 mb-2 text-md  text-gray-900 focus:outline-none bg-white rounded-full border
-                          border-gray-200 hover:bg-gray-100  focus:z-10 focus:ring-4 focus:ring-gray-100
-                          dark:focus:ring-gray-700 dark:bg-gray-800
-                            dark:text-white dark:border-gray-600
-                            dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold justify-end"
-                        onClick={() => handleMapOpen(message.content)}>
+                    {message.type === "bot" && message.content.table === "school_location" && message.content.data && !message.content.content.includes('위치 정보를 찾을 수 없습니다') && (
+                      <div className="flex justify-center">
+                        <button
+                          className="relative max-w-50 py-2.5 px-5 me-2 ml-2 text-md text-gray-900 focus:outline-none bg-white rounded-full border
+                                    border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100
+                                    dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600
+                                    dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold text-center"
+                          onClick={() => handleMapOpen(message.content)}>
                           지도 열기
                         </button>
-
-                      
                       </div>
                     )}
                     {maps.length > 0 && <MapComponent coordinates={maps} onClose={() => setMaps([])} />}

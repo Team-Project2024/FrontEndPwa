@@ -172,10 +172,10 @@ const DetailPage = () => {
 
 
   return (
-    <div className={`min-h-screen flex flex-col items-center p-4 justify-center ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-slate-300 text-black'}`}>
+    <div className={`min-h-screen flex flex-col items-center p-4 justify-center scrollbar-hide ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-slate-300 text-black'}`}>
       <div className={`rounded-lg w-full max-w-6xl p-8 items-center justify-center ${isDarkMode ? 'bg-gray-800 text-white' : 'bg-gray-200 text-black'}`}>
         <div className="flex justify-between items-center mb-8 flex-col">
-          <h1 className="sm:text-4xl  text-sm font-gmarket  font-bold mb-3">{detailInfo.lectureName}</h1>
+          <h1 className="sm:text-4xl  text-xl font-gmarket  font-bold mb-3">{detailInfo.lectureName}</h1>
           <button  
           onClick={handleClickOpen}
           className="py-2.5 px-5 me-2 mb-2 sm:mt-5 text-gray-900 focus:outline-none bg-slate-300 rounded-full border
