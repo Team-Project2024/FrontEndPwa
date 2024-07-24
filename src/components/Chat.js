@@ -5,6 +5,7 @@ import AuthContext from "../context/AuthProvider";
 import moment from "moment";
 import { Tooltip } from 'react-tooltip';
 import useLogout from "../hooks/useLogout";
+
 import {
   FaBars,
   FaTimes,
@@ -48,10 +49,23 @@ const Chat = () => {
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
+  const [getTheme, setGetTheme] = useState(false);
+
+
+
+  const DetectTheme = () => {
+    setTimeout(() => {
+      setGetTheme(!getTheme)
+    }, 100); 
+  };
+
+
+
 
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
-  
+
+ 
 
   useEffect(() => {
     getGraduation();
@@ -486,8 +500,9 @@ const Chat = () => {
             </ul>
           </div>
           <div className="sticky bottom-0 left-0 p-4 bg-white dark:bg-gray-800 flex justify-between items-center">
-            <div>
-              <Switcher />
+            {/* 다크모드 */}
+            <div onClick={DetectTheme}>
+              <Switcher  />   
             </div>
             {/* 로그아웃 버튼 */}
             <div>
@@ -516,7 +531,7 @@ const Chat = () => {
                     {typeof message.content === "string" ? message.content : message.content.content}
 
                     {message.type === "bot" && message.content.content.includes('인성교양') && (
-                      <DoughnutCharts content={message.content.content} graduation={graduation} />
+                      <DoughnutCharts content={message.content.content} graduation={graduation}  key={getTheme} />
                     )}
 
                     

@@ -16,7 +16,11 @@ import PersistLogin from './components/PersistLogin';
 
 import DetailPage from './components/Detail';
 
+import Location from './components/Location';
+
 import useRefreshToken from './hooks/useRefreshToken';
+
+
 
 
 import { Routes, Route } from 'react-router-dom';
@@ -51,24 +55,20 @@ function App() {
   const [lastRefresh, setLastRefresh] = useState(Date.now());
 
 
+  
+
+
   //일정시간마다 자동으로 토큰갱신
   useEffect(() => {
-    
+    if (auth?.id) { // 로그인된 상태일 때만 실행
+        const intervalId = setInterval(async () => {
+            await refresh();
+        }, 1 * 60 * 1000); // 3분
 
-   
-
-      const intervalId = setInterval(async () => {
-        await refresh();
-      }, 3 * 60 * 1000); // 3분
         console.log('refresh');
         return () => clearInterval(intervalId);
-
- 
-   
-      
-   
-    
-  }, [refresh]); 
+    }
+}, [auth, refresh]);
 
 
  // 새로고침 연타 방지
@@ -106,6 +106,8 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
+        <Route path="location" element={<Location />} />
+       
     
        
 

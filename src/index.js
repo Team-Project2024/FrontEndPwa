@@ -7,6 +7,7 @@ import './index.css';
 import App from './App';
 import { AuthProvider } from './context/AuthProvider';
 
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 
@@ -17,6 +18,9 @@ ReactDOM.render(
    
     <BrowserRouter>
   
+
+
+ 
       <AuthProvider>
      
         <Routes>
@@ -24,6 +28,8 @@ ReactDOM.render(
         </Routes>
         
       </AuthProvider>
+
+     
      
     </BrowserRouter>
     

@@ -10,11 +10,15 @@ export default function Switcher() {
     setTheme(colorTheme);
     setDarkSide(checked);
   };
+ 
+
+
   return (
     <div>
       <DarkModeSwitch 
          className="focus:outline-none"   
-        checked={darkSide} onChange={toggleDarkMode} size={30}
+        checked={darkSide} 
+        onChange={toggleDarkMode} size={30}
       data-tooltip-id="my-tooltip" data-tooltip-content="다크모드 켜기/끄기"
       
       />
