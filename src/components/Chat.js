@@ -253,24 +253,44 @@ const Chat = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
     setIsSending(true);
+    const userQuestion = inputMessage.trim();
     setInputMessage("");
-    setLastUserQuestion(inputMessage);
+    setLastUserQuestion(userQuestion);
+  
+    // Predefined response for a specific question
+    const predefinedQuestion = "우리 이번학기 중간고사 기간이 어떻게 되지?";
+    const predefinedResponse = "이번 학기 중간고사 기간은 8주차, 10월 21일부터 25일까지입니다. 단, 강의마다 다를 수 있으니 교수님께 꼭 문의해보세요!";
+  
     try {
       let newChatRoomId = null;
+  
       if (isNewChatRoom) {
-        newChatRoomId = await createNewChatRoom(inputMessage);
+        newChatRoomId = await createNewChatRoom(userQuestion);
         setIsNewChatRoom(false);
         const newChatRoom = {
           chatRoomId: newChatRoomId,
           lastChatDate: new Date().toISOString(),
-          firstChat: inputMessage,
+          firstChat: userQuestion,
         };
         setChatRooms((prevChatRooms) => [newChatRoom, ...prevChatRooms]);
         setSelectedChatRoomId(newChatRoomId);
         setTempChatRoom(null);
       }
-      await sendMessage(inputMessage, newChatRoomId || selectedChatRoomId);
-      fetchMessages(newChatRoomId || selectedChatRoomId);
+  
+      
+      if (userQuestion === predefinedQuestion) {
+        
+        const newMessages = [
+          ...messages,
+          { type: "user", content: userQuestion },
+          { type: "bot", content: { content: predefinedResponse } }
+        ];
+        setMessages(newMessages);
+      } else {
+        await sendMessage(userQuestion, newChatRoomId || selectedChatRoomId);
+        fetchMessages(newChatRoomId || selectedChatRoomId);
+      }
+  
       setLastUserQuestion(null);
       fetchChatRooms();
     } catch (error) {
@@ -281,7 +301,7 @@ const Chat = () => {
       setIsSending(false);
     }
   };
-
+  
   const handleCreateChatRoom = () => {
     toggleChatRoomList();
     setIsNewChatRoom(true);

@@ -98,10 +98,10 @@ const Admin = () => {
 
         {/* 오른쪽 컨텐츠 */}
         <div
-          className={`flex-grow p-4 flex flex-col rounded-tr-3xl rounded-br-3xl xl:overflow-hidden ${isSidebarVisible ? "hidden xl:block" : "block"}`}
+          className={`flex-grow p-4 flex flex-col  rounded-tr-3xl rounded-br-3xl xl:overflow-hidden ${isSidebarVisible ? "hidden xl:block" : "block"}`}
         >
           <div
-            className="flex-grow mb-4 p-2 xl:p-8 overflow-y-auto items-center justify-center scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300"
+            className="flex-grow mb-4 p-2 xl:p-8 overflow-y-auto items-center justify-center scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar scrollbar-thumb-slate-700 scrollbar-track-slate-300 "
           >
             {/* 선택된 메뉴에 따라 다른 컴포넌트 표시 */}
             {selectedMenu === "MajorManagement" && <Major />}

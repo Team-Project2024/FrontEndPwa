@@ -40,7 +40,8 @@ const Graduation = () => {
 
   const fetchMajors = async () => {
     try {
-      const response = await axiosPrivate.get("/admin/major");
+      const response = await axiosPrivate.get("/admin/major/all");
+      console.log(response.data)
       setMajor(response.data.responseMajorDTOList);
     } catch (error) {
       console.error("전공 받아오기실패:", error);
@@ -202,7 +203,7 @@ const Graduation = () => {
         </div>
         <div className="flex flex-row justify-center items-center">
         <button
-            className="w-full md:w-1/2 text-l md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
+            className="w-full md:w-1/2 text-l md:text-lg font-bold py-2 md:py-3 px-3 md:px-0 rounded-lg ml-5 bg-gray-600 hover:bg-blue-500 hover:shadow-lg text-white shadow-md hover:shadow-lg active:opacity-85"
             onClick={addGraduationRequirement}
           >
              추가
