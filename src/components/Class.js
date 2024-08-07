@@ -3,7 +3,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import AuthContext from "../context/AuthProvider";
 import timeJSON from "../image/time.json";
 import RoomJson from "../image/room.json";
-import { FaTrashAlt, FaPlus, FaMinus } from "react-icons/fa";
+import { FaTrashAlt, FaPlus, FaMinus ,FaSearch , FaUndo } from "react-icons/fa";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
@@ -244,7 +244,7 @@ const Class = () => {
         <li
           key={i}
           onClick={() => paginate(i)}
-          className={`cursor-pointer mx-2 px-3 py-1 rounded-full ${currentPage === i ? "bg-blue-500 hover:bg-blue-500 text-white" : "bg-gray-200 hover:bg-blue-200"}`}
+          className={`cursor-pointer mx-1 px-2 py-1 rounded-full ${currentPage === i ? "bg-blue-500 hover:bg-blue-500 text-white" : "bg-gray-200 hover:bg-blue-200"} text-xs sm:text-sm`}
         >
           {i}
         </li>
@@ -260,7 +260,7 @@ const Class = () => {
         <h1 className="font-gmarket text-4xl md:text-6xl font-bold mt-8 sm:mt-0 mb-4 sm:mb-8 text-center">강의 관리</h1>
       </div>
 
-      <div className="flex  flex-row  mb-4">
+      <div className="flex flex-wrap mb-4">
         <input
           type="text"
           placeholder="강의명 검색"
@@ -268,19 +268,23 @@ const Class = () => {
           value={searchWord}
           onChange={(e) => setSearchWord(e.target.value)}
         />
+
+
         <button
           onClick={() => searchLecture(1)}
-          className="ml-3 text-md text-blue-500 dark:text-gray-200 cursor-pointer mr-4 "
+          className="ml-3 text-md text-blue-500 dark:text-gray-200 cursor-pointer mr-4"
+          
         >
-          검색
+        <FaSearch/>
+          
         </button>
         <button
           onClick={resetSearch}
-          className="text-md text-blue-500 dark:text-gray-200 cursor-pointer "
+          className="text-md text-blue-500 dark:text-gray-200 cursor-pointer"
         >
-          초기화
+           <FaUndo/>
+          
         </button>
-
         <button
           onClick={() => {
             setShowForm(!showForm);
@@ -288,14 +292,9 @@ const Class = () => {
           }}
           className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-auto"
         >
-          {showForm ? <FaMinus className="ml-auto text-red-500 hover:text-red-600" /> : <FaPlus className="ml-auto text-blue-500 hover:text-blue-600" />}
+          {showForm ? <FaMinus className="text-red-500 hover:text-red-600" /> : <FaPlus className="text-blue-500 hover:text-blue-600" />}
         </button>
-      
       </div>
-
-      
-
-  
 
       {showForm && (
         <>
@@ -314,7 +313,6 @@ const Class = () => {
                   className="ml-3 mb-4 p-2 border border-gray-300 rounded-md w-full"
                 />
               </label>
-
               <label className="font-gmarket">
                 담당교수:
                 <select
@@ -332,7 +330,6 @@ const Class = () => {
                   ))}
                 </select>
               </label>
-
               <label className="font-gmarket">
                 강의실:
                 <select
@@ -350,7 +347,6 @@ const Class = () => {
                   ))}
                 </select>
               </label>
-
               <label className="font-gmarket">
                 강의시간:
                 <select
@@ -368,7 +364,6 @@ const Class = () => {
                   ))}
                 </select>
               </label>
-
               <label className="font-gmarket">
                 학점:
                 <select
@@ -384,7 +379,6 @@ const Class = () => {
                   <option value={4}>4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 분류:
                 <select
@@ -402,7 +396,6 @@ const Class = () => {
                   <option value="일반교양4">일반교양4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 분반:
                 <select
@@ -422,7 +415,6 @@ const Class = () => {
                   <option value={8}>8</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 학년:
                 <select
@@ -438,7 +430,6 @@ const Class = () => {
                   <option value={4}>4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 수업방식:
                 <select
@@ -454,7 +445,6 @@ const Class = () => {
                   <option value="비대면">비대면</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 시험방식:
                 <select
@@ -470,7 +460,6 @@ const Class = () => {
                   <option value="시험1번, 레포트1번">시험 1번, 레포트 1번</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 팀워크:
                 <select
@@ -486,7 +475,6 @@ const Class = () => {
                   <option value={4}>4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 기업가정신:
                 <select
@@ -502,7 +490,6 @@ const Class = () => {
                   <option value={4}>4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 창의적 사고:
                 <select
@@ -518,7 +505,6 @@ const Class = () => {
                   <option value={4}>4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 자원활용:
                 <select
@@ -534,7 +520,6 @@ const Class = () => {
                   <option value={4}>4</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 조별과제:
                 <select
@@ -548,7 +533,6 @@ const Class = () => {
                   <option value={true}>있음</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 채점방식:
                 <select
@@ -563,7 +547,6 @@ const Class = () => {
                   <option value="PF">PF</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 AISW:
                 <select
@@ -577,7 +560,6 @@ const Class = () => {
                   <option value={true}>해당됨</option>
                 </select>
               </label>
-
               <label className="font-gmarket">
                 강의평가:
                 <select
@@ -693,80 +675,85 @@ const Class = () => {
         </>
       )}
 
-      {isAdd === false && (
-        <>
-          <div className="grid grid-cols-1 gap-4">
-            {lecture.map((lecture) => (
-              <div key={lecture.lectureId} className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-                <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
-                  {[
-                    { label: "교수명", value: lecture.memberName },
-                    { label: "팀워크", value: lecture.teamwork },
-                    { label: "분류", value: lecture.classification },
-                    { label: "기업가정신", value: lecture.entrepreneurship },
-                    { label: "강의실", value: lecture.room },
-                    { label: "창의적 사고", value: lecture.creativeThinking },
-                    { label: "학점", value: lecture.credit },
-                    { label: "자원활용", value: lecture.harnessingResource },
-                    { label: "분반", value: lecture.division },
-                    { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
-                    { label: "학년", value: lecture.grade },
-                    { label: "채점방식", value: lecture.gradeMethod },
-                    { label: "강의시간", value: lecture.lectureTime },
-                    { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
-                    { label: "수업방식", value: lecture.classMethod },
-                    { label: "강의평가", value: lecture.course_evaluation },
-                    { label: "시험방식", value: lecture.testType },
-                    { label: "성적비율", value: lecture.gradeRatio },
-                  ].map((item) => (
-                    <div key={item.label} className="flex flex-col">
-                      <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
-                      <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
-                        {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
-                      </span>
-                    </div>
-                  ))}
+{isAdd === false && (
+  <>
+    <div className="grid grid-cols-1 gap-4">
+      {lecture && lecture.length > 0 ? (
+        lecture.map((lecture) => (
+          <div key={lecture.lectureId} className="bg-gray-200 p-6 rounded-lg shadow-md mb-6">
+            <h3 className="text-2xl font-bold mb-4 text-center font-gmarket">{lecture.lectureName}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-gmarket">
+              {[
+                { label: "교수명", value: lecture.memberName },
+                { label: "팀워크", value: lecture.teamwork },
+                { label: "분류", value: lecture.classification },
+                { label: "기업가정신", value: lecture.entrepreneurship },
+                { label: "강의실", value: lecture.room },
+                { label: "창의적 사고", value: lecture.creativeThinking },
+                { label: "학점", value: lecture.credit },
+                { label: "자원활용", value: lecture.harnessingResource },
+                { label: "분반", value: lecture.division },
+                { label: "조별과제", value: lecture.teamPlay ? "있음" : "없음" },
+                { label: "학년", value: lecture.grade },
+                { label: "채점방식", value: lecture.gradeMethod },
+                { label: "강의시간", value: lecture.lectureTime },
+                { label: "AISW", value: lecture.aiSw ? "있음" : "없음" },
+                { label: "수업방식", value: lecture.classMethod },
+                { label: "강의평가", value: lecture.course_evaluation },
+                { label: "시험방식", value: lecture.testType },
+                { label: "성적비율", value: lecture.gradeRatio },
+              ].map((item) => (
+                <div key={item.label} className="flex flex-col">
+                  <span className="font-semibold text-gray-600 mb-2">{item.label}</span>
+                  <span className="p-2 border border-gray-300 rounded-full bg-white text-center">
+                    {item.value === null || item.value === undefined || item.value === "null" || item.value === "" ? '입력안됨' : item.value}
+                  </span>
                 </div>
-                <div className="mt-4">
-                  <span className="font-semibold text-gray-600 mb-2 block">강의소개</span>
-                  <div className="p-2 border border-gray-300 rounded bg-white text-left h-auto max-h-32 overflow-auto font-gmarket">
-                    {lecture.introduction === null || lecture.introduction === undefined || lecture.introduction === "null" || lecture.introduction === "" ? '입력안됨' : lecture.introduction}
-                  </div>
-                </div>
-                <div className="flex justify-end mt-4">
-                  <button
-                    onClick={() => handleDeleteClass(lecture.lectureId)}
-                    className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
-                  >
-                    <FaTrashAlt className="mr-1" />
-                  </button>
-                </div>
+              ))}
+            </div>
+            <div className="mt-4">
+              <span className="font-semibold text-gray-600 mb-2 block">강의소개</span>
+              <div className="p-2 border border-gray-300 rounded bg-white text-left h-auto max-h-32 overflow-auto font-gmarket">
+                {lecture.introduction === null || lecture.introduction === undefined || lecture.introduction === "null" || lecture.introduction === "" ? '입력안됨' : lecture.introduction}
               </div>
-            ))}
+            </div>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => handleDeleteClass(lecture.lectureId)}
+                className="text-2xl text-red-500 dark:text-gray-200 cursor-pointer ml-2"
+              >
+                <FaTrashAlt className="mr-1" />
+              </button>
+            </div>
           </div>
-
-              <ul className="flex justify-center mt-6">
-              {currentPage > 1 && (
-                <li
-                  onClick={() => paginate(currentPage - 1)}
-                  className="cursor-pointer mx-2 px-3 py-1 rounded-full bg-gray-200 hover:bg-blue-200 text-sm sm:text-base"
-                >
-                  &lt;
-                </li>
-              )}
-              {renderPageNumbers()}
-              {currentPage < totalPages && (
-                <li
-                  onClick={() => paginate(currentPage + 1)}
-                  className="cursor-pointer mx-2 px-3 py-1 rounded-full bg-gray-200 hover:bg-blue-200 text-sm sm:text-base"
-                >
-                  &gt;
-                </li>
-              )}
-            </ul>
-        </>
+        ))
+      ) : (
+        <p className="text-center font-gmarket text-gray-600">검색요건에 충족하는 강의가 없습니다.</p>
       )}
+    </div>
+
+    <ul className="flex justify-center mt-6">
+      {currentPage > 1 && (
+        <li
+          onClick={() => paginate(currentPage - 1)}
+          className="cursor-pointer mx-1 px-2 py-1 rounded-full bg-gray-200 hover:bg-blue-200 text-xs sm:text-sm"
+        >
+          &lt;
+        </li>
+      )}
+      {renderPageNumbers()}
+      {currentPage < totalPages && (
+        <li
+          onClick={() => paginate(currentPage + 1)}
+          className="cursor-pointer mx-1 px-2 py-1 rounded-full bg-gray-200 hover:bg-blue-200 text-xs sm:text-sm"
+        >
+          &gt;
+        </li>
+      )}
+    </ul>
+  </>
+)}
+
 
       <Dialog open={addOpen} onClose={handleAddClose} maxWidth="sm"
         PaperProps={{ className: "bg-white w-auto" }}>
