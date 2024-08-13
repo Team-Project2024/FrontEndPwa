@@ -40,7 +40,7 @@ export default function Location() {
 
   const setLocation = () => {
     setPlaceB([...placeB, { lat: position.lat, lng: position.lng, name: placeName }]);
-    setPlaceName(""); // 장소명을 등록한 후 입력란을 비웁니다.
+    setPlaceName(""); 
   };
 
   const deleteLocation = (index) => {
