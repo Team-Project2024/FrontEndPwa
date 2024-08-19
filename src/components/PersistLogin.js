@@ -12,11 +12,11 @@ const PersistLogin = () => {
     const {auth,persist,setPersist} = useAuth();
 
 
-    const mainTain = () => {
-        if(persist === 'false'){
-            setPersist(prev => !prev);
-        }
-    }
+    // const mainTain = () => {
+    //     if(persist === 'false'){
+    //         setPersist(prev => !prev);
+    //     }
+    // }
 
 
     useEffect(() => {

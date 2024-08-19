@@ -38,18 +38,18 @@ const Admin = () => {
 
         {/* 사이드바 */}
         <div
-          className={`xl:block bg-white shadow-[4px_0px_10px_0px_rgba(0,0,0,0.3)] dark:bg-gray-800 overflow-y-scroll scrollbar-hide xl:relative absolute inset-0 w-72 min-w-72 max-w-72 border-r border-gray-300 dark:border-gray-600 z-20 flex flex-col justify-between h-full ${isSidebarVisible ? "w-full" : "hidden"}`}
+          className={`xl:block bg-white shadow-[4px_0px_10px_0px_rgba(0,0,0,0.3)] : overflow-y-scroll scrollbar-hide xl:relative absolute inset-0 w-72 min-w-72 max-w-72 border-r border-gray-300  z-20 flex flex-col justify-between h-full ${isSidebarVisible ? "w-full" : "hidden"}`}
         >
           <div className="xl:hidden pt-2 pr-2 flex justify-end mb-4">
             <FaTimes
               onClick={() => setIsSidebarVisible(false)}
-              className="text-2xl text-red-500 hover:text-red-600 dark:text-red-700 cursor-pointer"
+              className="text-2xl text-red-500 hover:text-red-600  cursor-pointer"
             />
           </div>
           <div className="flex flex-col justify-between h-full">
-            <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
+            <div className="sticky top-0 bg-white  z-10 p-4">
               <div className="flex justify-between items-center">
-                <div className="text-4xl mb-10 dark:text-gray-200 font-gmarket">
+                <div className="text-4xl mb-10  font-gmarket">
                   LUMOS
                 </div>
               </div>

@@ -135,7 +135,7 @@ function MapComponent({ coordinates, onClose }) {
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP에러 Status: ${response.status}`);
+        throw new Error(`HTTP에러 : ${response.status}`);
       }
 
       const data = await response.json();
