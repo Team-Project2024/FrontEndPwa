@@ -545,6 +545,7 @@ const Chat = () => {
                           onClick={() => handleMapOpen(message.content)}>
                           지도 열기
                         </button>
+                        <p>ios사용자이신경우, 설정 - 개인정보 보호 및 보안 - 위치서비스 - Safari 웹 사이트에서 앱을 사용하는 동안에 체크해주세요</p>
                       </div>
                     )}
                     {maps.length > 0 && <MapComponent coordinates={maps} onClose={() => setMaps([])} />}
