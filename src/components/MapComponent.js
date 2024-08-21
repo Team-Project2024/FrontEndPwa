@@ -28,7 +28,7 @@ function MapComponent({ coordinates, onClose }) {
 
     const script = document.createElement('script');
     script.async = true;
-    script.src = `https://dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APPKEY}&autoload=false&libraries=services,clusterer,drawing`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APPKEY}&autoload=false&libraries=services,clusterer,drawing`;
     document.head.appendChild(script);
    
     script.onload = () => {
