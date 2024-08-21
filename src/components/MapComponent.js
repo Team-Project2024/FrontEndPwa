@@ -9,7 +9,8 @@ import Button from '@mui/material/Button';
 
 const containerStyle = {
   width: '100%',
-  height: '500px',
+  height: '100vh',
+  height: '-webkit-fill-available',
   touchAction: 'none',
   position: 'relative'
 };
@@ -34,6 +35,7 @@ function MapComponent({ coordinates, onClose }) {
   
       window.kakao.maps.load(() => {
         initializeMap();
+        
       });
     };
 
