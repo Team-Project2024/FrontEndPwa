@@ -9,8 +9,7 @@ import Button from '@mui/material/Button';
 
 const containerStyle = {
   width: '100%',
-  height: '100vh',
-  height: '-webkit-fill-available',
+  height: '500px',
   touchAction: 'none',
   position: 'relative'
 };
@@ -30,12 +29,11 @@ function MapComponent({ coordinates, onClose }) {
     script.async = true;
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APPKEY}&autoload=false&libraries=services,clusterer,drawing`;
     document.head.appendChild(script);
-   
+
     script.onload = () => {
   
       window.kakao.maps.load(() => {
         initializeMap();
-        
       });
     };
 
