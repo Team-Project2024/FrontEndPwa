@@ -51,6 +51,8 @@ const Chat = () => {
   );
   const [getTheme, setGetTheme] = useState(false);
 
+  const [IosAlert,setIosAlert] = useState(false);
+
 
 
   const DetectTheme = () => {
@@ -65,8 +67,17 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
 
- 
+  const [hasShown, setHasShown] = useState(false); 
 
+  useEffect(() => {
+    if (!hasShown) {  
+      setIosAlert(true);
+      setHasShown(true); 
+      setTimeout(() => {
+        setIosAlert(false); 
+      }, 3000); 
+    }
+  }, [hasShown]);
   useEffect(() => {
     getGraduation();
   }, []);
@@ -237,6 +248,10 @@ const Chat = () => {
 
   const handleClose = () => {
     setOpen(false);
+  }
+
+  const IosAlertClose = () => {
+    setIosAlert(false);
   }
 
   const sendMessage = async (message, chatRoomId) => {
@@ -545,7 +560,6 @@ const Chat = () => {
                           onClick={() => handleMapOpen(message.content)}>
                           지도 열기
                         </button>
-                        <p>ios사용자이신경우, 설정 - 개인정보 보호 및 보안 - 위치서비스 - Safari 웹 사이트에서 앱을 사용하는 동안에 체크해주세요</p>
                       </div>
                     )}
                     {maps.length > 0 && <MapComponent coordinates={maps} onClose={() => setMaps([])} />}
@@ -615,6 +629,20 @@ const Chat = () => {
         <DialogActions className="flex justify-center p-4">
           <Button onClick={handleClose} className="text-blue-500 hover:text-blue-700">
             취소
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+      <Dialog open={IosAlert} onClose={IosAlertClose} maxWidth="sm"
+        PaperProps={{ className: "bg-white w-auto" }}>
+     
+        <DialogContent className="text-start font-gmarket mb-4">
+          ios사용자이신경우, 설정-개인정보 보호 및 보안- 위치 서비스- safari 웹 사이트에서 위치접근을 허용해주시기바랍니다.
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={IosAlertClose} color="primary">
+            닫기
           </Button>
         </DialogActions>
       </Dialog>
