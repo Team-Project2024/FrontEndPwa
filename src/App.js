@@ -16,7 +16,7 @@ import PersistLogin from './components/PersistLogin';
 
 import DetailPage from './components/Detail';
 
-import Location from './components/Location';
+
 
 import useRefreshToken from './hooks/useRefreshToken';
 
@@ -106,7 +106,7 @@ function App() {
         <Route path="findid" element={<FindId />} />
         <Route path="findpassword" element={<FindPassword />} />
         <Route path="unauthorized" element={<Unauthorized />} />
-        <Route path="location" element={<Location />} />
+   
        
     
        

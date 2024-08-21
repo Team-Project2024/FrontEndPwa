@@ -27,7 +27,7 @@ function MapComponent({ coordinates, onClose }) {
 
     const script = document.createElement('script');
     script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=be141563e112c338388bddf4c91021a0&autoload=false&libraries=services,clusterer,drawing`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APPKEY}&autoload=false&libraries=services,clusterer,drawing`;
     document.head.appendChild(script);
 
     script.onload = () => {
@@ -113,7 +113,7 @@ function MapComponent({ coordinates, onClose }) {
       polylineRef.current = null;
     }
 
-    const REST_API_KEY = '433206fe20fb2209acb47d181e711602';
+    const REST_API_KEY = process.env.REACT_APP_KAKAO_RESTAPIKEY;
     const url = 'https://apis-navi.kakaomobility.com/v1/directions';
     const headers = {
       Authorization: `KakaoAK ${REST_API_KEY}`,
