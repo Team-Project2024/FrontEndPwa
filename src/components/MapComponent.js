@@ -5,11 +5,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 
+
+
 const containerStyle = {
   width: '100%',
   height: '500px',
   touchAction: 'none',
-  position: 'relative',
+  position: 'relative'
 };
 
 function MapComponent({ coordinates, onClose }) {
@@ -23,27 +25,21 @@ function MapComponent({ coordinates, onClose }) {
       return;
     }
 
-    // Script 중복 로드 방지
-    if (!window.kakao || !window.kakao.maps) {
-      const script = document.createElement('script');
-      script.async = true;
-      script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APPKEY}&autoload=false&libraries=services,clusterer,drawing`;
-      document.head.appendChild(script);
+    const script = document.createElement('script');
+    script.async = true;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.REACT_APP_KAKAO_APPKEY}&autoload=false&libraries=services,clusterer,drawing`;
+    document.head.appendChild(script);
 
-      script.onload = () => {
-        window.kakao.maps.load(() => {
-          initializeMap();
-        });
-      };
-
-      return () => {
-        document.head.removeChild(script);
-      };
-    } else {
+    script.onload = () => {
+  
       window.kakao.maps.load(() => {
         initializeMap();
       });
-    }
+    };
+
+    return () => {
+      document.head.removeChild(script);
+    };
   }, [coordinates]);
 
   const initializeMap = () => {
@@ -53,14 +49,9 @@ function MapComponent({ coordinates, onClose }) {
       return;
     }
 
-    // 기존 지도가 존재하면 제거
-    if (mapRef.current) {
-      mapRef.current.destroy();
-    }
-
     const mapOption = {
       center: new window.kakao.maps.LatLng(coordinates[0].lat, coordinates[0].lng),
-      level: 4,
+      level: 4
     };
 
     const map = new window.kakao.maps.Map(mapContainer, mapOption);
@@ -78,7 +69,7 @@ function MapComponent({ coordinates, onClose }) {
           new window.kakao.maps.Marker({
             map: map,
             position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
-            title: '현재위치',
+            title: '현재위치'
           });
 
           new window.kakao.maps.CustomOverlay({
@@ -86,14 +77,14 @@ function MapComponent({ coordinates, onClose }) {
             position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
             content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center; padding:0px 10px;">현재 위치</div>',
             xAnchor: 0.46,
-            yAnchor: 2.7,
+            yAnchor: 2.7
           });
 
-          coordinates.forEach((location) => {
+          coordinates.forEach(location => {
             const marker = new window.kakao.maps.Marker({
               map: map,
               position: new window.kakao.maps.LatLng(location.lat, location.lng),
-              title: location.locationName,
+              title: location.locationName
             });
 
             new window.kakao.maps.CustomOverlay({
@@ -101,7 +92,7 @@ function MapComponent({ coordinates, onClose }) {
               position: new window.kakao.maps.LatLng(location.lat, location.lng),
               content: `<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">${location.name}</div>`,
               xAnchor: 0.46,
-              yAnchor: 2.7,
+              yAnchor: 2.7
             });
 
             window.kakao.maps.event.addListener(marker, 'click', () => {
@@ -110,7 +101,7 @@ function MapComponent({ coordinates, onClose }) {
           });
         },
         () => {
-          console.error('사용자위치 오류');
+          console.error("사용자위치 오류");
         }
       );
     }
@@ -126,13 +117,13 @@ function MapComponent({ coordinates, onClose }) {
     const url = 'https://apis-navi.kakaomobility.com/v1/directions';
     const headers = {
       Authorization: `KakaoAK ${REST_API_KEY}`,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     };
 
     const queryParams = new URLSearchParams({
       origin: `${start.lng},${start.lat}`,
       destination: `${end.lng},${end.lat}`,
-      travelMode: 'WALKING',
+      travelMode: 'WALKING'
     });
 
     const requestUrl = `${url}?${queryParams}`;
@@ -140,7 +131,7 @@ function MapComponent({ coordinates, onClose }) {
     try {
       const response = await fetch(requestUrl, {
         method: 'GET',
-        headers: headers,
+        headers: headers
       });
 
       if (!response.ok) {
@@ -150,15 +141,10 @@ function MapComponent({ coordinates, onClose }) {
       const data = await response.json();
       if (data.routes && data.routes.length > 0) {
         const linePath = [];
-        data.routes[0].sections[0].roads.forEach((router) => {
+        data.routes[0].sections[0].roads.forEach(router => {
           router.vertexes.forEach((vertex, index) => {
             if (index % 2 === 0) {
-              linePath.push(
-                new window.kakao.maps.LatLng(
-                  router.vertexes[index + 1],
-                  router.vertexes[index]
-                )
-              );
+              linePath.push(new window.kakao.maps.LatLng(router.vertexes[index + 1], router.vertexes[index]));
             }
           });
         });
@@ -168,13 +154,14 @@ function MapComponent({ coordinates, onClose }) {
           strokeWeight: 5,
           strokeColor: '#FFAE00',
           strokeOpacity: 0.7,
-          strokeStyle: 'solid',
+          strokeStyle: 'solid'
         });
 
         polyline.setMap(mapRef.current);
         polylineRef.current = polyline;
+        
       } else {
-        throw new Error('경로를 찾지못하였습니다.');
+        throw new Error("경로를 찾지못하였습니다.");
       }
     } catch (error) {
       console.error('Error:', error);
@@ -184,21 +171,27 @@ function MapComponent({ coordinates, onClose }) {
   return (
     <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>
-        <div className="font-gmarket font-bold">마커클릭시 경로안내</div>
-      </DialogTitle>
+        <div className='  font-gmarket font-bold'>
+        마커클릭시 경로안내
+        </div>
+        </DialogTitle>
       <DialogContent>
         <div>
           <div id="map" ref={mapContainerRef} style={containerStyle}></div>
+         
         </div>
       </DialogContent>
       <DialogActions className="p-4 dark:bg-gray-800 bg-gray-100">
-        <button
+          <button 
           onClick={onClose}
-          className="py-2.5 px-5 me-2 mb-2 text-sm text-gray-900 focus:outline-none bg-gray-200 rounded-full border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold justify-end"
-        >
-          닫기
-        </button>
-      </DialogActions>
+          className="py-2.5 px-5 me-2 mb-2 text-sm  text-gray-900 focus:outline-none bg-gray-200 rounded-full border
+           border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100
+           dark:focus:ring-gray-700 dark:bg-gray-800
+            dark:text-white dark:border-gray-600
+             dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold justify-end ">닫기</button>
+      
+
+          </DialogActions>
     </Dialog>
   );
 }
