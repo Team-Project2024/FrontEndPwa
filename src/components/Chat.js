@@ -69,15 +69,9 @@ const Chat = () => {
 
   const [hasShown, setHasShown] = useState(false); 
 
-  useEffect(() => {
-    if (!hasShown) {  
-      setIosAlert(true);
-      setHasShown(true); 
-      setTimeout(() => {
-        setIosAlert(false); 
-      }, 3000); 
-    }
-  }, [hasShown]);
+ 
+
+
   useEffect(() => {
     getGraduation();
   }, []);
@@ -535,6 +529,7 @@ const Chat = () => {
             {tempChatRoom !== null ? (
               <div className="flex items-center justify-center h-full font-gmarket text-sm sm:text-xl">
                 <p>챗봇에게 궁금한 정보를 물어보세요!</p>
+                <p>*ios사용자이신경우, 설정-개인정보 보호 및 보안- 위치 서비스- Safari 웹 사이트의 위치접근을 허용해주세요*</p>
               </div>
             ) : (
               messages.map((message, index) => (
@@ -633,19 +628,7 @@ const Chat = () => {
         </DialogActions>
       </Dialog>
 
-
-      <Dialog open={IosAlert} onClose={IosAlertClose} maxWidth="sm"
-        PaperProps={{ className: "bg-white w-auto" }}>
-     
-        <DialogContent className="text-start font-gmarket mb-4">
-          ios사용자이신경우, 설정-개인정보 보호 및 보안- 위치 서비스- safari 웹 사이트에서 위치접근을 허용해주시기바랍니다.
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={IosAlertClose} color="primary">
-            닫기
-          </Button>
-        </DialogActions>
-      </Dialog>
+    
     </div>
   );
 };
