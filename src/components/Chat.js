@@ -527,10 +527,17 @@ const Chat = () => {
         <div className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200 ${isChatRoomListVisible ? "lg:w-full" : "w-full "}`}>
           <div className="flex-grow mb-4 p-4 lg:p-4 overflow-y-auto scrollbar-hide" ref={messagesContainerRef}>
             {tempChatRoom !== null ? (
+              <>
               <div className="flex items-center justify-center h-full font-gmarket text-sm sm:text-xl">
                 <p>챗봇에게 궁금한 정보를 물어보세요!</p>
                 <p>*ios사용자이신경우, 설정-개인정보 보호 및 보안- 위치 서비스- Safari 웹 사이트의 위치접근을 허용해주세요*</p>
               </div>
+               <div className="flex items-center justify-center h-full font-gmarket text-sm sm:text-xl">
+               <p>*ios사용자이신경우, 설정-개인정보 보호 및 보안- 위치 서비스- Safari 웹 사이트의 위치접근을 허용해주세요*</p>
+             </div>
+              
+              </>
+         
             ) : (
               messages.map((message, index) => (
                 <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end lg:ml-6 ml-4" : "justify-start lg:mr-10 mr-4"}`}>
