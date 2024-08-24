@@ -14,7 +14,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 serviceWorkerRegistration.register();
 
 ReactDOM.render(
-  <React.StrictMode>
+  
    
     <BrowserRouter>
   
@@ -31,9 +31,9 @@ ReactDOM.render(
 
      
      
-    </BrowserRouter>
+    </BrowserRouter>,
     
    
-  </React.StrictMode>,
+ 
   document.getElementById('root')
 );
