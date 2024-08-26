@@ -264,7 +264,7 @@ const Class = () => {
           <input
             type="text"
             placeholder="강의명 검색"
-            className="p-2 border border-gray-300 rounded-md flex-shrink-0 w-60 ml-3"
+            className="p-2 border border-gray-300 rounded-md flex-shrink-0 w-50 ml-3"
             value={searchWord}
             onChange={(e) => setSearchWord(e.target.value)}
           />
