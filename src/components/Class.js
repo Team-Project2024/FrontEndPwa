@@ -261,40 +261,42 @@ const Class = () => {
       </div>
 
       <div className="flex flex-wrap mb-4">
-        <input
-          type="text"
-          placeholder="강의명 검색"
-          className="p-2 border border-gray-300 rounded-md w-60 ml-3"
-          value={searchWord}
-          onChange={(e) => setSearchWord(e.target.value)}
-        />
+          <input
+            type="text"
+            placeholder="강의명 검색"
+            className="p-2 border border-gray-300 rounded-md flex-shrink-0 w-60 ml-3"
+            value={searchWord}
+            onChange={(e) => setSearchWord(e.target.value)}
+          />
 
-
-        <button
-          onClick={() => searchLecture(1)}
-          className="ml-3 text-md text-blue-500 dark:text-gray-200 cursor-pointer mr-4"
-          
-        >
-        <FaSearch/>
-          
-        </button>
-        <button
-          onClick={resetSearch}
-          className="text-md text-blue-500 dark:text-gray-200 cursor-pointer"
-        >
-           <FaUndo/>
-          
-        </button>
-        <button
-          onClick={() => {
-            setShowForm(!showForm);
-            setIsAdd(!isAdd);
-          }}
-          className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-auto"
-        >
-          {showForm ? <FaMinus className="text-red-500 hover:text-red-600" /> : <FaPlus className="text-blue-500 hover:text-blue-600" />}
-        </button>
-      </div>
+          <div className="flex items-center ml-3 space-x-4">
+            <button
+              onClick={() => searchLecture(1)}
+              className="text-md text-blue-500 dark:text-gray-200 cursor-pointer"
+            >
+              <FaSearch />
+            </button>
+            <button
+              onClick={resetSearch}
+              className="text-md text-blue-500 dark:text-gray-200 cursor-pointer"
+            >
+              <FaUndo />
+            </button>
+            <button
+              onClick={() => {
+                setShowForm(!showForm);
+                setIsAdd(!isAdd);
+              }}
+              className="text-2xl text-blue-500 dark:text-gray-200 cursor-pointer ml-auto"
+            >
+              {showForm ? (
+                <FaMinus className="text-red-500 hover:text-red-600" />
+              ) : (
+                <FaPlus className="text-blue-500 hover:text-blue-600" />
+              )}
+            </button>
+          </div>
+        </div>
 
       {showForm && (
         <>
