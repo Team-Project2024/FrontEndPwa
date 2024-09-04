@@ -10,20 +10,20 @@ const useRefreshToken = () => {
         });
         setAuth(prev => {
            //성공시 새로운 RefreshToken(쿠키에저장)과 AccessToken 수신
-            console.log(response.data.Access_Token);
+            
             const accessToken = response?.data?.Access_Token;
-            console.log(JSON.stringify(prev));
+          
            
             let payload = accessToken.substring(
              accessToken.indexOf(".") + 1,
                  accessToken.lastIndexOf(".")
                );
                let dec = base64.decode(payload);
-               console.log(dec);
+              
               
             
                const obj = JSON.parse(dec);
-               console.log(obj)
+               
                const roles = obj.role;
                const Refreshid = obj.username;
             return { ...prev,

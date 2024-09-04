@@ -51,7 +51,7 @@ const Chat = () => {
   );
   const [getTheme, setGetTheme] = useState(false);
 
-  const [IosAlert,setIosAlert] = useState(false);
+
 
 
 
@@ -70,7 +70,7 @@ const Chat = () => {
   const [hasShown, setHasShown] = useState(false); 
 
  
-
+  const [IosMessage, setIosMessage] = useState(false);
 
   useEffect(() => {
     getGraduation();
@@ -97,6 +97,14 @@ const Chat = () => {
 
   const handleOpenWarning = () => {
     setOpen(!open);
+  }
+
+  const onIosClick = () => {
+    setIosMessage(true);
+  }
+
+  const onIosClose = () => {
+    setIosMessage(false);
   }
 
   const fetchChatRooms = async () => {
@@ -244,9 +252,7 @@ const Chat = () => {
     setOpen(false);
   }
 
-  const IosAlertClose = () => {
-    setIosAlert(false);
-  }
+
 
   const sendMessage = async (message, chatRoomId) => {
     try {
@@ -528,11 +534,17 @@ const Chat = () => {
           <div className="flex-grow mb-4 p-4 lg:p-4 overflow-y-auto scrollbar-hide" ref={messagesContainerRef}>
             {tempChatRoom !== null ? (
             
-              <div className="flex items-center justify-center h-full font-gmarket text-sm sm:text-xl">
-                <p>챗봇에게 궁금한 정보를 물어보세요!
-                *ios사용자이신경우, 설정-개인정보 보호 및 보안- 위치 서비스- Safari 웹 사이트의 위치접근을 허용해주세요
-                </p>
-              </div>
+         <div className="flex flex-col items-center justify-center h-full font-gmarket text-sm sm:text-xl">
+              <p>챗봇에게 궁금한 정보를 물어보세요!</p>
+              
+              <button 
+                onClick={onIosClick} 
+                className="mt-5 w-60 sm:w-80 rounded-md bg-gray-600 px-3 py-3 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              >
+                ios유저이신가요?
+              </button>
+            </div>
+             
             ) : (
               messages.map((message, index) => (
                 <div key={index} className={`mb-6 flex ${message.type === "user" ? "justify-end lg:ml-6 ml-4" : "justify-start lg:mr-10 mr-4"}`}>
@@ -626,6 +638,20 @@ const Chat = () => {
         <DialogActions className="flex justify-center p-4">
           <Button onClick={handleClose} className="text-blue-500 hover:text-blue-700">
             취소
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
+      <Dialog open={IosMessage} onClose={onIosClose}>
+        <DialogTitle>IOS 안내</DialogTitle>
+        <DialogContent>
+          테스트
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={onIosClose} color="primary">
+            닫기
           </Button>
         </DialogActions>
       </Dialog>

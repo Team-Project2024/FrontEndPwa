@@ -73,7 +73,7 @@ const Login = () => {
       const role = obj.role;  // role를 빼와서 변수에 저장
 
       setAuth({ id, password, role, accessToken }); // auth state에 id, 비밀번호, 역할, AccessToken 저장
-      console.log("setAuth:", { id, role, accessToken });
+      
 
       setUser(""); // auth에 담고나서 id state 초기화
       setPwd(""); // 비밀번호 state 초기화

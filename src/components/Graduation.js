@@ -41,7 +41,6 @@ const Graduation = () => {
   const fetchMajors = async () => {
     try {
       const response = await axiosPrivate.get("/admin/major/all");
-      console.log(response.data)
       setMajor(response.data.responseMajorDTOList);
     } catch (error) {
       console.error("전공 받아오기실패:", error);
@@ -106,7 +105,7 @@ const Graduation = () => {
       await axiosPrivate.post("/admin/graduation", { requestGRList: graduationList });
 
       setOpen(!open);
-      console.log("성공");
+     
     
 
       setGraduationList([]);
@@ -116,7 +115,7 @@ const Graduation = () => {
       console.error("Error adding graduation requirements:", error);
      
 
-      console.log(graduationList);
+     
     }
   };
 

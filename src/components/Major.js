@@ -64,9 +64,7 @@ const Major = () => {
   const fetchhMajors = async () => {
     try {
       const response = await axiosPrivate.get(`/admin/major`);
-      console.log(response.data)
-      console.log("테스트")
-     
+    
     } catch (error) {
       console.error("전공 받아오기 실패:", error);
     }
@@ -76,7 +74,6 @@ const Major = () => {
   const fetchMajors = async (page) => {
     try {
       const response = await axiosPrivate.get(`/admin/major?page=${page - 1}`);
-      console.log(response.data)
       setMajors(response.data.content);
       setTotalPages(response.data.totalPages);
     } catch (error) {
