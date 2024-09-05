@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 Chart.register(ChartDataLabels);
 
-const DoughnutChart = ({ data, total, title, maxTotal }) => {
+const DoughnutChartsModal = ({ data, total, title, maxTotal }) => {
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("theme") === "dark"
   );
@@ -98,7 +98,7 @@ const DoughnutCharts = ({ content, graduation }) => {
 
     return (
       <div key={key} className="p-2 sm:p-4">
-        <DoughnutChart
+        <DoughnutChartsModal
           data={[completed, remaining]}
           total={completed}
           maxTotal={required}
@@ -115,7 +115,7 @@ const DoughnutCharts = ({ content, graduation }) => {
     <div className="flex flex-wrap justify-center">
       {charts}
       <div className="p-2 sm:p-4">
-        <DoughnutChart
+        <DoughnutChartsModal
           data={[totalCompletedCredits, totalRemainingCredits]}
           total={totalCompletedCredits}
           maxTotal={graduation.graduationCredits}
@@ -126,4 +126,4 @@ const DoughnutCharts = ({ content, graduation }) => {
   );
 };
 
-export default DoughnutCharts;
+export default DoughnutChartsModal;

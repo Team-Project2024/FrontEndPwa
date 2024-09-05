@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
@@ -5,6 +6,8 @@ import AuthContext from "../context/AuthProvider";
 import moment from "moment";
 import { Tooltip } from "react-tooltip";
 import useLogout from "../hooks/useLogout";
+import TTSAnimation from "./TTSAnimation";
+import * as THREE from 'three';
 import {
   FaBars,
   FaTimes,
@@ -36,7 +39,7 @@ const ChatVoice = () => {
   const [open, setOpen] = useState(false);
   const [graduation, setGraduation] = useState([]);
   const [maps, setMaps] = useState([]);
-  
+  const scene = new THREE.Scene();
   
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
@@ -119,18 +122,17 @@ const ChatVoice = () => {
     utterance.rate = 1; // 속도
     utterance.pitch = 1; // 음정
     utterance.onstart = () => {
-      setIsSpeaking(true); // 음성 출력 중 상태로 변경
+      setIsSpeaking(true); // TTS 시작 시 애니메이션 시작
     };
     utterance.onend = () => {
-      setIsSpeaking(false); // 음성 출력 완료 후 상태 변경
+      setIsSpeaking(false); // TTS 끝나면 애니메이션 멈춤
     };
     utterance.onerror = (e) => {
       console.error("음성 출력 중 오류 발생:", e);
-      setIsSpeaking(false); // 오류 발생 시에도 상태를 해제
+      setIsSpeaking(false); // 오류 발생 시에도 애니메이션 멈춤
     };
     speechSynthesis.speak(utterance); // 텍스트를 음성으로 읽음
   };
-
   useEffect(() => {
     getGraduation();
   }, []);
@@ -275,9 +277,10 @@ const ChatVoice = () => {
   return (
     <div
       className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}
+      
     >
       <div
-        className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${
+        className={`flex w-screen h-screen lg:h-auto bg-black rounded-tr-3xl rounded-br-3xl ${
           isDarkMode
             ? "dark:bg-gray-800"
             : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"
@@ -383,9 +386,14 @@ const ChatVoice = () => {
                     ></path>
                   </svg>
                 ) : (
-                  <FaMicrophone className="text-4xl" />
+                  <FaMicrophone className="text-4xl text-white" />
                 )}
               </button>
+              
+              <div>
+        {/* TTS가 실행 중일 때만 애니메이션이 작동 */}
+        <TTSAnimation isSpeaking={isSpeaking} />
+      </div>
 
               {maps.length > 0 && (
                     <MapComponent
@@ -397,6 +405,7 @@ const ChatVoice = () => {
           </div>
         </div>
       </div>
+    
       {showModal && (
         <Dialog onClose={handleCloseModal}>
           <DialogTitle>졸업요건</DialogTitle>
@@ -434,3 +443,6 @@ const ChatVoice = () => {
   );
 };
 export default ChatVoice;
+
+
+
