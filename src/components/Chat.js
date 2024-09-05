@@ -122,7 +122,7 @@ const Chat = () => {
 
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = "ko-KR"; // 한국어 설정
-    utterance.volume = 1; // 볼륨
+    utterance.volume = 3; // 볼륨
     utterance.rate = 1; // 속도
     utterance.pitch = 1; // 음정
 
@@ -298,6 +298,12 @@ const Chat = () => {
         }
       }
       setMessages(combinedMessages);
+      console.log(combinedMessages)
+      const newMessages = combinedMessages
+      const botReply = newMessages.find((message) => message.type === "bot");
+      if (botReply) {
+        handleSpeechOutput(botReply.content.content); // 봇 응답 음성 출력
+      }
     } catch (error) {
       console.error("대화내역 받아오기에러:", error);
     }
@@ -355,6 +361,7 @@ const Chat = () => {
       fetchMessages(newChatRoomId || selectedChatRoomId);
       setLastUserQuestion(null);
       fetchChatRooms();
+
     } catch (error) {
       console.error("메세지 전송 에러:", error);
       setLastUserQuestion(null);
