@@ -17,7 +17,15 @@ import {
 } from "react-icons/fa";
 import chatbotIcon from "../image/chatbot.png";
 import MapComponent from "./MapComponent";
+import DoughnutCharts from "./DoughnutChart";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+
 const ChatVoice = () => {
+  const [showModal, setShowModal] = useState(false);
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const { auth } = useContext(AuthContext);
@@ -28,9 +36,38 @@ const ChatVoice = () => {
   const [open, setOpen] = useState(false);
   const [graduation, setGraduation] = useState([]);
   const [maps, setMaps] = useState([]);
+  
+  
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
+  const [graduationVoice, setGraduationVoice] = useState("");
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+    console.log(showModal);
+  };
+
+  var test = false;
+  const handleOpen = () => {
+    setOpen((check) => !check);
+    console.log(open);
+  };
+  const handleClose = () => setOpen(false);
+
+
+
+  useEffect(() => {
+    if (open) {
+      console.log("Modal is now open");
+      console.log(test);
+    }
+  }, [open]);
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
   const [getTheme, setGetTheme] = useState(false);
   const DetectTheme = () => {
     setTimeout(() => {
@@ -39,8 +76,6 @@ const ChatVoice = () => {
   };
   const messagesEndRef = useRef(null);
   const messagesContainerRef = useRef(null);
-  const [hasShown, setHasShown] = useState(false);
-  const [IosMessage, setIosMessage] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [isListening, setIsListening] = useState(false); // 음성 인식 상태 추가
   const [isRecognizing, setIsRecognizing] = useState(false); // 음성 인식 진행 중 상태
@@ -62,6 +97,7 @@ const ChatVoice = () => {
       speechRecognition.onresult = async (event) => {
         const transcript = event.results[0][0].transcript;
         setInputMessage(transcript); // 음성 인식 결과를 입력창에 설정
+        console.log(transcript);
         // 음성 인식 결과를 바로 전송
         await handleSendMessage(transcript); // 바로 메시지 전송
       };
@@ -94,9 +130,17 @@ const ChatVoice = () => {
     };
     speechSynthesis.speak(utterance); // 텍스트를 음성으로 읽음
   };
+
   useEffect(() => {
     getGraduation();
   }, []);
+
+  useEffect(() => {
+    if (showModal) {
+      console.log("Modal is now open");
+    }
+  }, [showModal]);
+
   useEffect(() => {
     const savedScrollPosition = sessionStorage.getItem("y");
     if (!sessionStorage.getItem("selectedChatRoomId")) {
@@ -105,15 +149,7 @@ const ChatVoice = () => {
       messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition);
     }
   }, [messages]);
-  const handleOpenWarning = () => {
-    setOpen(!open);
-  };
-  const onIosClick = () => {
-    setIosMessage(true);
-  };
-  const onIosClose = () => {
-    setIosMessage(false);
-  };
+
   const getGraduation = async () => {
     try {
       const response = await axiosPrivate.get("/api/graduation");
@@ -122,32 +158,84 @@ const ChatVoice = () => {
       console.error("졸업요건 받아오기에러:", error);
     }
   };
+
   const sendMessage = async (message, chatRoomId) => {
     try {
-      await axiosPrivate.post(
+      const response = await axiosPrivate.post(
         `/api/chat?message=${message}&chatRoomId=${chatRoomId}`
       );
+
+      return response.data;
     } catch (error) {
       console.error("메시지전송에러:", error);
       throw error;
     }
   };
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim()) return;
+
+  const lectureNames = (parsedContent) => {
+    // Extract lecture names and format them with numbering
+    const formattedLectureNames = parsedContent.data
+      .map((lecture, index) => {
+        return `${index + 1}. ${lecture.lectureName}`;
+      })
+      .join(" "); // Join the lectures with a space between them
+
+    return formattedLectureNames;
+  };
+
+  const handleSendMessage = async (a) => {
+    if (!a.trim()) return;
     setIsSending(true);
-    setInputMessage("");
     try {
-      const message = await sendMessage(inputMessage, 101);
+      const message = await sendMessage(a, 101);
+      console.log(message);
       if (message) {
-        await handleSpeechOutput(message.content.content); // 가장 최근의 봇 응답 음성 출력
+        let parsedContent;
+        try {
+          parsedContent = JSON.parse(message.content);
+
+          if (parsedContent.data && typeof parsedContent.data === "string") {
+            parsedContent.data = JSON.parse(parsedContent.data);
+          }
+        } catch (error) {
+          console.error("챗봇메세지 파싱에러:", error);
+          parsedContent = { content: message.content };
+        }
+
+        console.log(parsedContent);
+
+        const chatbotMessage = parsedContent.content;
+        console.log(chatbotMessage);
+        handleSpeechOutput(chatbotMessage);
+
+        if (parsedContent.table == "lecture") {
+          console.log(lectureNames(parsedContent));
+          handleSpeechOutput(lectureNames(parsedContent));
+        }else if (parsedContent.content.includes("인성교양")) {
+          test = true;
+          console.log("test :" + test);
+          handleOpen();
+          setGraduationVoice(parsedContent.content);
+          // 상태 업데이트 후에는 콘솔 로그가 최신 상태를 반영하지 않을 수 있음
+          setTimeout(() => console.log(open), 0); // 상태가 업데이트된 후의 값 확인
+          setTimeout(() => console.log(graduationVoice), 0);
+        }
+        
+         else if (parsedContent.table === "school_location" && parsedContent.data && !parsedContent.content.includes('위치 정보를 찾을 수 없습니다')){
+          console.log(parsedContent.content)
+          handleMapOpen(parsedContent)
+          console.log("하이")
+          
+         }
       }
     } catch (error) {
       console.error("메세지 전송 에러:", error);
-      console.log("메시지를 전송하는과정에서 에러가 발생하였습니다.");
+      console.log("메시지를 전송하는 과정에서 에러가 발생하였습니다.");
     } finally {
       setIsSending(false);
     }
   };
+
   const handleItemClick = (itemType, itemId) => {
     const message = messages.find(
       (msg) =>
@@ -180,10 +268,9 @@ const ChatVoice = () => {
         lng: parseFloat(item.lon),
       }));
       setMaps(coordinates);
-    } catch (error) {}
-  };
-  const handleNavigateAdmin = () => {
-    navigate("/admin");
+    } catch (error) {
+      console.log("에러임")
+    }
   };
   return (
     <div
@@ -245,12 +332,7 @@ const ChatVoice = () => {
                         </button>
                       </div>
                     )} */}
-                  {maps.length > 0 && (
-                    <MapComponent
-                      coordinates={maps}
-                      onClose={() => setMaps([])}
-                    />
-                  )}
+              
                   {message.type === "bot" &&
                     (message.content.table === "lecture" ||
                       message.content.table === "event") &&
@@ -304,10 +386,50 @@ const ChatVoice = () => {
                   <FaMicrophone className="text-4xl" />
                 )}
               </button>
+
+              {maps.length > 0 && (
+                    <MapComponent
+                      coordinates={maps}
+                      onClose={() => setMaps([])}
+                    />
+                  )}
             </div>
           </div>
         </div>
       </div>
+      {showModal && (
+        <Dialog onClose={handleCloseModal}>
+          <DialogTitle>졸업요건</DialogTitle>
+          <DialogContent>
+            <DoughnutCharts
+              content={graduationVoice}
+              graduation={graduation}
+              key={getTheme}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleCloseModal()} color="primary">
+              닫기
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+
+<Dialog open={open} onClose={handleClose}>
+        <DialogTitle>졸업요건</DialogTitle>
+        <DialogContent>
+          <DoughnutCharts
+            content={graduationVoice}
+            graduation={graduation}
+            key={getTheme}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            닫기
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
