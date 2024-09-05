@@ -13,6 +13,8 @@ import {
   FaTrashAlt,
   FaMagic,
   FaComments,
+  FaMicrophone,
+  FaSpinner
  
 } from "react-icons/fa";
 import { GrUserAdmin } from "react-icons/gr";
@@ -71,7 +73,72 @@ const Chat = () => {
 
  
   const [IosMessage, setIosMessage] = useState(false);
+ 
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isListening, setIsListening] = useState(false); // 음성 인식 상태 추가
+  const [isRecognizing, setIsRecognizing] = useState(false); // 음성 인식 진행 중 상태
+  const recognition = useRef(null); // 음성 인식 객체 유지
 
+
+  // 음성 인식 설정
+  useEffect(() => {
+    if ("webkitSpeechRecognition" in window) {
+      const speechRecognition = new window.webkitSpeechRecognition();
+      speechRecognition.continuous = false;
+      speechRecognition.interimResults = false;
+      speechRecognition.lang = "ko-KR"; // 한국어 설정
+      recognition.current = speechRecognition;
+
+      speechRecognition.onstart = () => {
+        setIsListening(true); // 음성 인식 시작 상태 설정
+      };
+
+      speechRecognition.onend = () => {
+        setIsListening(false); // 음성 인식 끝 상태 설정
+      };
+
+      speechRecognition.onresult = async (event) => {
+        const transcript = event.results[0][0].transcript;
+        setInputMessage(transcript); // 음성 인식 결과를 입력창에 설정
+
+        // 음성 인식 결과를 바로 전송
+        await handleSendMessage(transcript); // 바로 메시지 전송
+      };
+    }
+  }, []);
+
+  // 음성 인식 시작 함수
+  const handleSpeechInput = () => {
+    if (recognition.current) {
+      recognition.current.start(); // 음성 인식 시작
+    }
+  };
+ 
+  const handleSpeechOutput = (text) => {
+    if (isSpeaking) {
+     
+      speechSynthesis.cancel();
+    }
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "ko-KR"; // 한국어 설정
+    utterance.volume = 1; // 볼륨
+    utterance.rate = 1; // 속도
+    utterance.pitch = 1; // 음정
+
+    utterance.onstart = () => {
+      setIsSpeaking(true); // 음성 출력 중 상태로 변경
+    };
+    utterance.onend = () => {
+      setIsSpeaking(false); // 음성 출력 완료 후 상태 변경
+    };
+    utterance.onerror = (e) => {
+      console.error("음성 출력 중 오류 발생:", e);
+      setIsSpeaking(false); // 오류 발생 시에도 상태를 해제
+    };
+
+    speechSynthesis.speak(utterance); // 텍스트를 음성으로 읽음
+  };
   useEffect(() => {
     getGraduation();
   }, []);
@@ -624,6 +691,18 @@ const Chat = () => {
                 <FaMagic />
               )}
             </button>
+              {/* 음성인식버튼  */}
+              <button onClick={handleSpeechInput} disabled={isListening}>
+          {isListening ? (
+            <svg className="animate-spin h-6 w-6 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"></path>
+            </svg>
+          ) : (
+            <FaMicrophone className="text-4xl" />
+          )}
+        </button>
+       
           </div>
         </div>
       </div>
