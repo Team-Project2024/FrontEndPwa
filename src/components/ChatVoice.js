@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
@@ -7,6 +6,7 @@ import moment from "moment";
 import { Tooltip } from "react-tooltip";
 import useLogout from "../hooks/useLogout";
 import TTSAnimation from "./TTSAnimation";
+import { CSSTransition } from "react-transition-group"; // Import CSSTransition from react-transition-group
 import * as THREE from 'three';
 import {
   FaBars,
@@ -26,6 +26,12 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
+import Slide from "@mui/material/Slide";  
+
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
 
 const ChatVoice = () => {
   const [showModal, setShowModal] = useState(false);
@@ -39,12 +45,40 @@ const ChatVoice = () => {
   const [open, setOpen] = useState(false);
   const [graduation, setGraduation] = useState([]);
   const [maps, setMaps] = useState([]);
-  const scene = new THREE.Scene();
+  const [isContentShifted, setIsContentShifted] = useState(false);
+  const [shiftValue, setShiftValue] = useState(calculateShift());
+ 
   
   const [isDarkMode, setIsDarkMode] = useState(
     () => localStorage.getItem("darkMode") === "true"
   );
   const [graduationVoice, setGraduationVoice] = useState("");
+
+
+  const calculateShift = () => {
+    const width = window.innerWidth;
+    if (width <= 640) {
+      return "100%"; // For mobile screens
+    } else if (width <= 1024) {
+      return "50%"; // For tablets and small laptops
+    } else {
+      return "30%"; // For large screens and desktops
+    }
+  };
+
+
+  useEffect(() => {
+    // Recalculate shift value on window resize
+    const handleResize = () => {
+      setShiftValue(calculateShift());
+    };
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
 
   const handleOpenModal = () => {
     setShowModal(true);
@@ -54,6 +88,7 @@ const ChatVoice = () => {
   var test = false;
   const handleOpen = () => {
     setOpen((check) => !check);
+    setIsContentShifted(true); 
     console.log(open);
   };
   const handleClose = () => setOpen(false);
@@ -69,6 +104,7 @@ const ChatVoice = () => {
 
   const handleCloseModal = () => {
     setShowModal(false);
+    setIsContentShifted(false); 
   };
 
   const [getTheme, setGetTheme] = useState(false);
@@ -275,163 +311,71 @@ const ChatVoice = () => {
     }
   };
   return (
-    <div
-      className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}
+   
       
-    >
-      <div
-        className={`flex w-screen h-screen lg:h-auto bg-black rounded-tr-3xl rounded-br-3xl ${
-          isDarkMode
-            ? "dark:bg-gray-800"
-            : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"
-        }`}
-      >
-        {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
-        <div
-          className={`flex-grow p-4 flex flex-col lg:rounded-tr-3xl lg:rounded-br-3xl dark:bg-gray-900 dark:text-gray-200`}
-        >
-          <div
-            className="flex-grow mb-4 p-4 lg:p-4 overflow-y-auto scrollbar-hide"
-            ref={messagesContainerRef}
-          >
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`mb-6 flex ${
-                  message.type === "user"
-                    ? "justify-end lg:ml-6 ml-4"
-                    : "justify-start lg:mr-10 mr-4"
-                }`}
-              >
-                {message.type === "bot" && (
-                  <img
-                    src={chatbotIcon}
-                    alt="Chatbot Icon"
-                    className="w-10 h-10 mr-4 self-start"
-                  />
-                )}
-                <div
-                  className={`inline-block py-2 px-4 rounded-lg max-w-xs md:max-w-md lg:max-w-4xl ${
-                    message.type === "user"
-                      ? "bg-gray-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-600 dark:text-gray-300 font-gmarket"
-                      : "bg-blue-100 text-gray-800 break-words whitespace-pre-wrap dark:bg-gray-800 dark:text-white font-gmarket"
-                  }`}
-                >
-                  {typeof message.content === "string"
-                    ? message.content
-                    : message.content.content}
-                  {/* {message.type === "bot" && message.content.content.includes('인성교양') && (
-                      <DoughnutCharts content={message.content.content} graduation={graduation}  key={getTheme} />
-                    )}
-                    {message.type === "bot" && message.content.table === "school_location" && message.content.data && !message.content.content.includes('위치 정보를 찾을 수 없습니다') && (
-                      <div className="flex justify-center">
-                        <button
-                          className="relative max-w-50 py-2.5 px-5 me-2 ml-2 text-md text-gray-900 focus:outline-none bg-white rounded-full border
-                                    border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-4 focus:ring-gray-100
-                                    dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-white dark:border-gray-600
-                                    dark:hover:text-white dark:hover:bg-gray-700 font-gmarket font-bold text-center"
-                          onClick={() => handleMapOpen(message.content)}>
-                          지도 열기
-                        </button>
-                      </div>
-                    )} */}
-              
-                  {message.type === "bot" &&
-                    (message.content.table === "lecture" ||
-                      message.content.table === "event") &&
-                    message.content.data && (
-                      <ul>
-                        {message.content.data.map((item, idx) => (
-                          <li
-                            key={idx}
-                            onClick={() => {
-                              handleItemClick(
-                                message.content.table,
-                                item[`${message.content.table}Id`]
-                              );
-                            }}
-                          >
-                            <span className="font-bold cursor-pointer">
-                              {idx + 1}.{item[`${message.content.table}Name`]}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                </div>
-              </div>
-            ))}
-            <div className="flex items-center w-full">
-              {/* 음성인식버튼  */}
-              <button onClick={handleSpeechInput} disabled={isListening}>
-                {isListening ? (
-                  <svg
-                    className="animate-spin h-6 w-6 text-black dark:text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"
-                    ></path>
-                  </svg>
-                ) : (
-                  <FaMicrophone className="text-4xl text-white" />
-                )}
-              </button>
-              
-              <div>
-        {/* TTS가 실행 중일 때만 애니메이션이 작동 */}
-        <TTSAnimation isSpeaking={isSpeaking} />
-      </div>
+    <div className="flex items-center justify-center min-h-screen bg-black">
+   
+      <div className="flex flex-col items-center justify-center w-full h-full space-y-20">
+  
+        <div className="flex justify-center items-center w-full">
+          <TTSAnimation isSpeaking={isSpeaking} />
+        </div>
 
-              {maps.length > 0 && (
+     
+        <div className="flex justify-center items-center">
+          <button
+            onClick={handleSpeechInput}
+            disabled={isListening}
+            className={`relative rounded-full border-2 p-6 ${
+              isListening ? "border-transparent animate-ping" : "border-white"
+            }`}
+          >
+         
+            <span
+              className={`absolute inset-0 rounded-full border-4 ${
+                isListening ? "border-white" : "border-transparent"
+              }`}
+            ></span>
+
+           
+            <FaMicrophone className="text-2xl lg:text-4xl text-white relative z-20" />
+          </button>
+        </div>
+        {maps.length > 0 && (
                     <MapComponent
                       coordinates={maps}
                       onClose={() => setMaps([])}
                     />
                   )}
-            </div>
-          </div>
-        </div>
       </div>
-    
+      
+
+   
+      {/* Modal with Slide Transition */}
       {showModal && (
-        <Dialog onClose={handleCloseModal}>
+        <Dialog
+          open={showModal}
+          TransitionComponent={Transition} // Use the Slide transition
+          keepMounted
+          onClose={handleCloseModal}
+        >
           <DialogTitle>졸업요건</DialogTitle>
           <DialogContent>
-            <DoughnutCharts
-              content={graduationVoice}
-              graduation={graduation}
-              key={getTheme}
-            />
+            <DoughnutCharts content={graduationVoice} graduation={graduation} key={getTheme} />
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleCloseModal()} color="primary">
+            <Button onClick={handleCloseModal} color="primary">
               닫기
             </Button>
           </DialogActions>
         </Dialog>
       )}
 
-<Dialog open={open} onClose={handleClose}>
+      {/* Modal for secondary dialog */}
+      <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
         <DialogTitle>졸업요건</DialogTitle>
         <DialogContent>
-          <DoughnutCharts
-            content={graduationVoice}
-            graduation={graduation}
-            key={getTheme}
-          />
+          <DoughnutCharts content={graduationVoice} graduation={graduation} key={getTheme} />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary">
@@ -439,10 +383,9 @@ const ChatVoice = () => {
           </Button>
         </DialogActions>
       </Dialog>
+    
     </div>
   );
 };
+
 export default ChatVoice;
-
-
-

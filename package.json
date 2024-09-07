@@ -38,6 +38,7 @@
     "react-text-transition": "^3.1.0",
     "react-toggle-dark-mode": "^1.1.1",
     "react-tooltip": "^5.26.4",
+    "react-transition-group": "^4.4.5",
     "react-type-animation": "^3.2.0",
     "react-wavify": "^1.11.1",
     "tailwind-scrollbar-hide": "^1.1.7",

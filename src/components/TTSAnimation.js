@@ -1,6 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
-import * as THREE from 'three';
-
+import React, { useRef, useEffect ,useState } from "react";
+import * as THREE from "three";
 const TTSAnimation = ({ isSpeaking }) => {
   const mountRef = useRef(null);
   const [scene, setScene] = useState(null);
@@ -9,51 +8,63 @@ const TTSAnimation = ({ isSpeaking }) => {
   const [mesh, setMesh] = useState(null);
   const [wireframe, setWireframe] = useState(null);
   const animationIdRef = useRef(null);
-
+  const idleSpeedRef = useRef(0.001); // idle motion speed
+  let speedDirection = 1; // Controls speed increase or decrease
   useEffect(() => {
-    // Three.js 초기 설정
+    // Initial Three.js setup
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(
+      60,
+      1,
+      0.1,
+      1000
+    );
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setClearColor(0x000000, 0); // 배경 투명 설정
+    const canvasSize = 400; // Increase canvas size to 400x400
+    renderer.setSize(canvasSize, canvasSize);
+    renderer.setClearColor(0x000000, 0); // Set transparent background
     mountRef.current.appendChild(renderer.domElement);
-
-    // 기본 기하학 및 메쉬
-    const geometry = new THREE.IcosahedronGeometry(16, 5);
+    // Mesh and wireframe setup
+    const geometry = new THREE.IcosahedronGeometry(20, 5);
+    const positionAttribute = geometry.attributes.position;
+    const vertex = new THREE.Vector3();
+    for (let i = 0; i < positionAttribute.count; i++) {
+      vertex.fromBufferAttribute(positionAttribute, i);
+      const offset = 0.2; // 구부러진 정도를 조절하는 값
+      vertex.x += (Math.random() - 0.5) * offset;
+      vertex.y += (Math.random() - 0.5) * offset;
+      vertex.z += (Math.random() - 0.5) * offset;
+      positionAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
+    }
+    positionAttribute.needsUpdate = true; // 업데이트가 필요함을 알림
     const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
     const mesh = new THREE.Mesh(geometry, material);
-
-    // 와이어프레임 설정 (EdgeGeometry + LineBasicMaterial 사용)
     const wireframeGeometry = new THREE.EdgesGeometry(geometry);
     const wireframeMaterial = new THREE.LineBasicMaterial({
       color: 0xffffff,
-      linewidth: 2,
+      linewidth: 32,
     });
-    const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-
+    const wireframe = new THREE.LineSegments(
+      wireframeGeometry,
+      wireframeMaterial
+    );
     scene.add(mesh);
     scene.add(wireframe);
-
     camera.position.z = 50;
-
     setScene(scene);
     setCamera(camera);
     setRenderer(renderer);
     setMesh(mesh);
     setWireframe(wireframe);
-
-    // 창 크기 변경 시 Three.js 설정을 업데이트
+    // Update Three.js settings on window resize
     const handleResize = () => {
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     };
-
-    window.addEventListener('resize', handleResize);
-
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
@@ -62,42 +73,43 @@ const TTSAnimation = ({ isSpeaking }) => {
       }
     };
   }, []);
-
   useEffect(() => {
-    // 애니메이션을 시작/중지
-    let scaleDirection = 1; // 확장 및 축소 방향
-    let scaleSpeed = 0.01; // 크기 변화 속도
-    let time = 0; // 시간 경과에 따른 크기 변화를 위한 변수
-
-    if (isSpeaking && mesh && camera && renderer) {
-      const animate = () => {
-        // 메쉬 회전
-        mesh.rotation.x += 0.02;
-        mesh.rotation.y += 0.02;
-        wireframe.rotation.x += 0.02;
-        wireframe.rotation.y += 0.02;
-
-        // 크기 조정
-        time += 0.007; // 시간 증가
-        const scaleValue = Math.abs(Math.sin(time)) + 0.3; // sin 함수로 0.5 ~ 1.5 범위에서 크기 변환
-        mesh.scale.set(scaleValue, scaleValue, scaleValue); // x, y, z 축에 동일하게 크기 변환
-        wireframe.scale.set(scaleValue, scaleValue, scaleValue); // 와이어프레임도 동일하게 변환
-
-        // 렌더링
+    let speed = idleSpeedRef.current; // Start with idle speed
+    const animate = () => {
+      if (mesh && wireframe && renderer && scene && camera) {
+        if (isSpeaking) {
+          // Rotation speed control based on speaking state
+          speed += speedDirection * 0.001; // Adjust speed
+          // Speed limits for increase and decrease
+          if (speed > 0.1) speedDirection = -1; // Reverse when reaching max speed
+          if (speed < 0.02) speedDirection = 1; // Reverse when reaching min speed
+        } else {
+          // Idle motion with slow constant rotation
+          speed = idleSpeedRef.current; // Slow rotation
+        }
+        // Apply rotation to mesh and wireframe
+        mesh.rotation.x += speed;
+        mesh.rotation.y += speed;
+        wireframe.rotation.x += speed;
+        wireframe.rotation.y += speed;
+        // Render the scene
         renderer.render(scene, camera);
-        animationIdRef.current = requestAnimationFrame(animate); // 애니메이션 ID를 ref로 저장
-      };
-      animate();
-    } else {
-      // TTS가 멈추면 애니메이션 중지
+      }
+      // Request the next frame for smooth animation
+      animationIdRef.current = requestAnimationFrame(animate);
+    };
+    animate();
+    return () => {
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
-        animationIdRef.current = null; // 애니메이션 ID 초기화
       }
-    }
+    };
   }, [isSpeaking, mesh, wireframe, camera, renderer, scene]);
-
-  return <div ref={mountRef} className="w-full h-64" />;
+  return (
+    <div className="animate-pulse flex items-center justify-center max-w-xs max-h-xs  ">
+      <div ref={mountRef} className="h-96 w-96" />{" "}
+      {/* Increased to 96x96 for larger display */}
+    </div>
+  );
 };
-
 export default TTSAnimation;
