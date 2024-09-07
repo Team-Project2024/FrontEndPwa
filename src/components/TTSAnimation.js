@@ -57,14 +57,9 @@ const TTSAnimation = ({ isSpeaking }) => {
     setMesh(mesh);
     setWireframe(wireframe);
     // Update Three.js settings on window resize
-    const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    };
-    window.addEventListener("resize", handleResize);
+  
     return () => {
-      window.removeEventListener("resize", handleResize);
+    
       if (animationIdRef.current) {
         cancelAnimationFrame(animationIdRef.current);
       }
@@ -107,7 +102,7 @@ const TTSAnimation = ({ isSpeaking }) => {
   }, [isSpeaking, mesh, wireframe, camera, renderer, scene]);
   return (
     <div className="animate-pulse flex items-center justify-center max-w-xs max-h-xs  ">
-      <div ref={mountRef} className="h-96 w-96" />{" "}
+      <div ref={mountRef} className="h-50 w-50" />{" "}
       {/* Increased to 96x96 for larger display */}
     </div>
   );

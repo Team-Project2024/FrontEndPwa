@@ -27,6 +27,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Slide from "@mui/material/Slide";  
+import axios from "axios";
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -46,7 +47,7 @@ const ChatVoice = () => {
   const [graduation, setGraduation] = useState([]);
   const [maps, setMaps] = useState([]);
   const [isContentShifted, setIsContentShifted] = useState(false);
-  const [shiftValue, setShiftValue] = useState(calculateShift());
+ 
  
   
   const [isDarkMode, setIsDarkMode] = useState(
@@ -55,29 +56,9 @@ const ChatVoice = () => {
   const [graduationVoice, setGraduationVoice] = useState("");
 
 
-  const calculateShift = () => {
-    const width = window.innerWidth;
-    if (width <= 640) {
-      return "100%"; // For mobile screens
-    } else if (width <= 1024) {
-      return "50%"; // For tablets and small laptops
-    } else {
-      return "30%"; // For large screens and desktops
-    }
-  };
 
 
-  useEffect(() => {
-    // Recalculate shift value on window resize
-    const handleResize = () => {
-      setShiftValue(calculateShift());
-    };
-    window.addEventListener("resize", handleResize);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
 
 
   const handleOpenModal = () => {
@@ -148,27 +129,50 @@ const ChatVoice = () => {
       recognition.current.start(); // 음성 인식 시작
     }
   };
-  const handleSpeechOutput = (text) => {
-    if (isSpeaking) {
-      speechSynthesis.cancel();
-    }
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ko-KR"; // 한국어 설정
-    utterance.volume = 3; // 볼륨
-    utterance.rate = 1; // 속도
-    utterance.pitch = 1; // 음정
-    utterance.onstart = () => {
-      setIsSpeaking(true); // TTS 시작 시 애니메이션 시작
+  const handleSpeechOutput = async (text) => {
+    const apiKey = process.env.REACT_APP_GOOGLE_TTS_APIKEY; 
+    const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
+  
+    const requestBody = {
+      input: { text: text },
+      voice: {
+        languageCode: "ko-KR", 
+        ssmlGender: "NEUTRAL", 
+      },
+      audioConfig: {
+        audioEncoding: "MP3", 
+        speakingRate: 0.8 // 말하는 속도
+      },
     };
-    utterance.onend = () => {
-      setIsSpeaking(false); // TTS 끝나면 애니메이션 멈춤
-    };
-    utterance.onerror = (e) => {
-      console.error("음성 출력 중 오류 발생:", e);
-      setIsSpeaking(false); // 오류 발생 시에도 애니메이션 멈춤
-    };
-    speechSynthesis.speak(utterance); // 텍스트를 음성으로 읽음
+  
+    return new Promise(async (resolve, reject) => {
+      try {
+        const response = await axios.post(url, requestBody);
+        const audioContent = response.data.audioContent;
+  
+        const audio = new Audio(`data:audio/mp3;base64,${audioContent}`);
+        audio.play();
+  
+        setIsSpeaking(true); 
+  
+        audio.onended = () => {
+          setIsSpeaking(false); 
+          resolve(); 
+        };
+  
+        audio.onerror = (error) => {
+          console.error("Error during Google TTS request:", error);
+          setIsSpeaking(false);
+          reject(error); 
+        };
+      } catch (error) {
+        console.error("Error during Google TTS request:", error);
+        setIsSpeaking(false);
+        reject(error); 
+      }
+    });
   };
+  
   useEffect(() => {
     getGraduation();
   }, []);
@@ -211,12 +215,12 @@ const ChatVoice = () => {
   };
 
   const lectureNames = (parsedContent) => {
-    // Extract lecture names and format them with numbering
+   
     const formattedLectureNames = parsedContent.data
       .map((lecture, index) => {
         return `${index + 1}. ${lecture.lectureName}`;
       })
-      .join(" "); // Join the lectures with a space between them
+      .join(" "); 
 
     return formattedLectureNames;
   };
@@ -231,7 +235,7 @@ const ChatVoice = () => {
         let parsedContent;
         try {
           parsedContent = JSON.parse(message.content);
-
+  
           if (parsedContent.data && typeof parsedContent.data === "string") {
             parsedContent.data = JSON.parse(parsedContent.data);
           }
@@ -239,32 +243,32 @@ const ChatVoice = () => {
           console.error("챗봇메세지 파싱에러:", error);
           parsedContent = { content: message.content };
         }
-
+  
         console.log(parsedContent);
-
+  
         const chatbotMessage = parsedContent.content;
         console.log(chatbotMessage);
-        handleSpeechOutput(chatbotMessage);
-
-        if (parsedContent.table == "lecture") {
+        
+      
+        await handleSpeechOutput(chatbotMessage);
+  
+       
+        if (parsedContent.table === "lecture") {
           console.log(lectureNames(parsedContent));
-          handleSpeechOutput(lectureNames(parsedContent));
-        }else if (parsedContent.content.includes("인성교양")) {
+          await handleSpeechOutput(lectureNames(parsedContent)); 
+        } else if (parsedContent.content.includes("인성교양")) {
           test = true;
           console.log("test :" + test);
           handleOpen();
           setGraduationVoice(parsedContent.content);
-          // 상태 업데이트 후에는 콘솔 로그가 최신 상태를 반영하지 않을 수 있음
-          setTimeout(() => console.log(open), 0); // 상태가 업데이트된 후의 값 확인
+         
+          setTimeout(() => console.log(open), 0); 
           setTimeout(() => console.log(graduationVoice), 0);
+        } else if (parsedContent.table === "school_location" && parsedContent.data && !parsedContent.content.includes('위치 정보를 찾을 수 없습니다')) {
+          console.log(parsedContent.content);
+          handleMapOpen(parsedContent);
+          console.log("하이");
         }
-        
-         else if (parsedContent.table === "school_location" && parsedContent.data && !parsedContent.content.includes('위치 정보를 찾을 수 없습니다')){
-          console.log(parsedContent.content)
-          handleMapOpen(parsedContent)
-          console.log("하이")
-          
-         }
       }
     } catch (error) {
       console.error("메세지 전송 에러:", error);
@@ -273,7 +277,6 @@ const ChatVoice = () => {
       setIsSending(false);
     }
   };
-
   const handleItemClick = (itemType, itemId) => {
     const message = messages.find(
       (msg) =>
@@ -351,11 +354,11 @@ const ChatVoice = () => {
       
 
    
-      {/* Modal with Slide Transition */}
+ 
       {showModal && (
         <Dialog
           open={showModal}
-          TransitionComponent={Transition} // Use the Slide transition
+          TransitionComponent={Transition}
           keepMounted
           onClose={handleCloseModal}
         >
@@ -371,7 +374,7 @@ const ChatVoice = () => {
         </Dialog>
       )}
 
-      {/* Modal for secondary dialog */}
+    
       <Dialog open={open} onClose={handleClose} TransitionComponent={Transition}>
         <DialogTitle>졸업요건</DialogTitle>
         <DialogContent>
