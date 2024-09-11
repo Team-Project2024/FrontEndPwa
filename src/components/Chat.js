@@ -720,16 +720,7 @@ const handleCloseMap = () => {
               )}
             </button>
               {/* 음성인식버튼  */}
-              <button onClick={handleSpeechInput} disabled={isListening}>
-          {isListening ? (
-            <svg className="animate-spin h-6 w-6 text-black dark:text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291l1.417-1.417A5.958 5.958 0 016 12H2c0 1.828.775 3.47 2.025 4.646L6 17.291z"></path>
-            </svg>
-          ) : (
-            <FaMicrophone className="text-4xl" />
-          )}
-        </button>
+          
        
           </div>
         </div>
