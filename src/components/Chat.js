@@ -365,6 +365,8 @@ const Chat = () => {
     setLastUserQuestion(inputMessage);
     try {
       let newChatRoomId = null;
+
+      
       if (isNewChatRoom) {
         newChatRoomId = await createNewChatRoom(inputMessage);
         setIsNewChatRoom(false);

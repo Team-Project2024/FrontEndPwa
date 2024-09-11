@@ -87,7 +87,7 @@ function MapComponent({ coordinates, onClose }) {
           new window.kakao.maps.Marker({
             map: map,
             position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
-            title: 'Current Location'
+            title: '현재위치'
           });
 
           new window.kakao.maps.CustomOverlay({

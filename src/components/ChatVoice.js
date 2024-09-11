@@ -134,7 +134,10 @@ const ChatVoice = () => {
 
   const handleSpeechOutput = async (text) => {
     const apiKey = 'AIzaSyCyzM95YoS2IJ4G-_92uzRuU5p62q_jhwE'; 
-    const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
+    const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${process.env.REACT_APP_GOOGLE_TTS_APIKEY}`;
+
+    console.log(apiKey);
+    console.log(process.env.REACT_APP_GOOGLE_TTS_APIKEY)
   
     const requestBody = {
       input: { text: text },
@@ -285,6 +288,8 @@ const ChatVoice = () => {
           
           handleSpeechOutput(parsedContent.content); 
           handleMapOpen(parsedContent);
+        }else {
+          handleSpeechOutput(parsedContent.content); 
         }
   
         // Only call handleSpeechOutput(chatbotMessage) once
