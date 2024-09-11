@@ -129,8 +129,11 @@ const ChatVoice = () => {
       recognition.current.start(); // 음성 인식 시작
     }
   };
+
+
+
   const handleSpeechOutput = async (text) => {
-    const apiKey = process.env.REACT_APP_GOOGLE_TTS_APIKEY; 
+    const apiKey = 'AIzaSyCyzM95YoS2IJ4G-_92uzRuU5p62q_jhwE'; 
     const url = `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`;
   
     const requestBody = {
@@ -141,7 +144,7 @@ const ChatVoice = () => {
       },
       audioConfig: {
         audioEncoding: "MP3", 
-        speakingRate: 0.8 // 말하는 속도
+        speakingRate: 1.0 // 말하는 속도
       },
     };
   
@@ -228,55 +231,76 @@ const ChatVoice = () => {
   const handleSendMessage = async (a) => {
     if (!a.trim()) return;
     setIsSending(true);
+  
     try {
       const message = await sendMessage(a, 101);
       console.log(message);
+  
       if (message) {
         let parsedContent;
+  
         try {
+          // Parse the chatbot message
           parsedContent = JSON.parse(message.content);
   
           if (parsedContent.data && typeof parsedContent.data === "string") {
             parsedContent.data = JSON.parse(parsedContent.data);
           }
         } catch (error) {
-          console.error("챗봇메세지 파싱에러:", error);
+          console.error("Error parsing chatbot message:", error);
           parsedContent = { content: message.content };
         }
   
         console.log(parsedContent);
   
         const chatbotMessage = parsedContent.content;
-        console.log(chatbotMessage);
-        
-      
-        await handleSpeechOutput(chatbotMessage);
+        console.log("Chatbot message:", chatbotMessage);
   
-       
+        // Handle lecture case where lecture names should be spoken in order
         if (parsedContent.table === "lecture") {
-          console.log(lectureNames(parsedContent));
-          await handleSpeechOutput(lectureNames(parsedContent)); 
+          // First, speak the chatbot message
+          await handleSpeechOutput(chatbotMessage);
+  
+          // Then, speak the lecture names in order
+          const lectureText = lectureNames(parsedContent);
+          console.log(lectureText);
+          await handleSpeechOutput(lectureText); // Ensure lecture names are spoken after the chatbot message
+  
         } else if (parsedContent.content.includes("인성교양")) {
-          test = true;
-          console.log("test :" + test);
+          // Open graduation modal first, then speak the message simultaneously
+          console.log("Opening graduation modal");
           handleOpen();
           setGraduationVoice(parsedContent.content);
-         
-          setTimeout(() => console.log(open), 0); 
-          setTimeout(() => console.log(graduationVoice), 0);
+  
+          // Log state asynchronously
+          setTimeout(() => console.log("Modal open state:", open), 0);
+          setTimeout(() => console.log("Graduation voice state:", graduationVoice), 0);
+  
+          // Speak the message simultaneously (modal opens immediately)
+          handleSpeechOutput(parsedContent.content); // No await here, TTS starts but modal opens immediately
+  
         } else if (parsedContent.table === "school_location" && parsedContent.data && !parsedContent.content.includes('위치 정보를 찾을 수 없습니다')) {
-          console.log(parsedContent.content);
+          // Handle school location map after chatbot message
+          console.log("School location data:", parsedContent.content);
+          
+          handleSpeechOutput(parsedContent.content); 
           handleMapOpen(parsedContent);
-          console.log("하이");
         }
+  
+        // Only call handleSpeechOutput(chatbotMessage) once
       }
     } catch (error) {
-      console.error("메세지 전송 에러:", error);
-      console.log("메시지를 전송하는 과정에서 에러가 발생하였습니다.");
+      console.error("Error sending message:", error);
+      console.log("An error occurred while sending the message.");
     } finally {
-      setIsSending(false);
+      setIsSending(false); // Indicate that sending is complete
     }
   };
+  
+  
+  
+  
+  
   const handleItemClick = (itemType, itemId) => {
     const message = messages.find(
       (msg) =>
@@ -316,7 +340,7 @@ const ChatVoice = () => {
   return (
    
       
-    <div className="flex items-center justify-center min-h-screen bg-black">
+    <div className="flex items-center justify-center min-h-screen bg-white">
    
       <div className="flex flex-col items-center justify-center w-full h-full space-y-20">
   
@@ -329,19 +353,19 @@ const ChatVoice = () => {
           <button
             onClick={handleSpeechInput}
             disabled={isListening}
-            className={`relative rounded-full border-2 p-6 ${
-              isListening ? "border-transparent animate-ping" : "border-white"
+            className={`relative rounded-full border-4 p-6 ${
+              isListening ? "border-transparent animate-ping" : "border-black"
             }`}
           >
          
             <span
               className={`absolute inset-0 rounded-full border-4 ${
-                isListening ? "border-white" : "border-transparent"
+                isListening ? "border-black" : "border-transparent"
               }`}
             ></span>
 
            
-            <FaMicrophone className="text-2xl lg:text-4xl text-white relative z-20" />
+            <FaMicrophone className="text-3xl lg:text-6xl text-black relative z-20" />
           </button>
         </div>
         {maps.length > 0 && (

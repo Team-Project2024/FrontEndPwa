@@ -26,7 +26,7 @@ const DetailPage = () => {
 
   useEffect(() => {
     const dataString = sessionStorage.getItem("contentData");
-    console.log(dataString)
+  
     if (dataString) {
       try {
         const data = JSON.parse(dataString);

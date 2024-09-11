@@ -20,7 +20,7 @@ const TTSAnimation = ({ isSpeaking }) => {
       1000
     );
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    const canvasSize = 400; // Increase canvas size to 400x400
+    const canvasSize = 600; // Increase canvas size to 400x400
     renderer.setSize(canvasSize, canvasSize);
     renderer.setClearColor(0x000000, 0); // Set transparent background
     mountRef.current.appendChild(renderer.domElement);
@@ -37,7 +37,7 @@ const TTSAnimation = ({ isSpeaking }) => {
       positionAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
     }
     positionAttribute.needsUpdate = true; // 업데이트가 필요함을 알림
-    const material = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const material = new THREE.MeshBasicMaterial({ color: 0x808080 });
     const mesh = new THREE.Mesh(geometry, material);
     const wireframeGeometry = new THREE.EdgesGeometry(geometry);
     const wireframeMaterial = new THREE.LineBasicMaterial({
@@ -69,6 +69,7 @@ const TTSAnimation = ({ isSpeaking }) => {
     };
   }, []);
   useEffect(() => {
+   
     let speed = idleSpeedRef.current; // Start with idle speed
     const animate = () => {
       if (mesh && wireframe && renderer && scene && camera) {
@@ -101,7 +102,7 @@ const TTSAnimation = ({ isSpeaking }) => {
     };
   }, [isSpeaking, mesh, wireframe, camera, renderer, scene]);
   return (
-    <div className="animate-pulse flex items-center justify-center max-w-xs max-h-xs  ">
+    <div className="animate-bounce flex items-center justify-center max-w-xs max-h-xs  ">
       <div ref={mountRef} className="h-50 w-50" />{" "}
       {/* Increased to 96x96 for larger display */}
     </div>

@@ -36,6 +36,7 @@ const Chat = () => {
   const { auth } = useContext(AuthContext);
   const logout = useLogout();
 
+  const [isNewMessage, setIsNewMessage] = useState(false); 
   const [chatRooms, setChatRooms] = useState([]);
   const [selectedChatRoomId, setSelectedChatRoomId] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -75,9 +76,9 @@ const Chat = () => {
   const [IosMessage, setIosMessage] = useState(false);
  
   const [isSpeaking, setIsSpeaking] = useState(false);
-  const [isListening, setIsListening] = useState(false); // 음성 인식 상태 추가
-  const [isRecognizing, setIsRecognizing] = useState(false); // 음성 인식 진행 중 상태
-  const recognition = useRef(null); // 음성 인식 객체 유지
+  const [isListening, setIsListening] = useState(false); 
+  const [isRecognizing, setIsRecognizing] = useState(false); 
+  const recognition = useRef(null); 
 
 
   // 음성 인식 설정
@@ -114,31 +115,7 @@ const Chat = () => {
     }
   };
  
-  const handleSpeechOutput = (text) => {
-    if (isSpeaking) {
-     
-      speechSynthesis.cancel();
-    }
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "ko-KR"; // 한국어 설정
-    utterance.volume = 3; // 볼륨
-    utterance.rate = 1; // 속도
-    utterance.pitch = 1; // 음정
-
-    utterance.onstart = () => {
-      setIsSpeaking(true); // 음성 출력 중 상태로 변경
-    };
-    utterance.onend = () => {
-      setIsSpeaking(false); // 음성 출력 완료 후 상태 변경
-    };
-    utterance.onerror = (e) => {
-      console.error("음성 출력 중 오류 발생:", e);
-      setIsSpeaking(false); // 오류 발생 시에도 상태를 해제
-    };
-
-    speechSynthesis.speak(utterance); // 텍스트를 음성으로 읽음
-  };
+ 
   useEffect(() => {
     getGraduation();
   }, []);
@@ -153,6 +130,8 @@ const Chat = () => {
     }
   }, []);
 
+  const previousMessageCount = useRef(messages.length);
+
   useEffect(() => {
     const savedScrollPosition = sessionStorage.getItem("y");
     if (!sessionStorage.getItem("selectedChatRoomId")) {
@@ -161,6 +140,49 @@ const Chat = () => {
       messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition);
     }
   }, [messages]);
+
+
+  useEffect(() => {
+    if (isNewMessage && messages.length > previousMessageCount.current) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100); 
+    }
+
+   
+    previousMessageCount.current = messages.length;
+  }, [messages, isNewMessage]);
+
+  // detail 페이지로 갔다가 돌아왔을 때 스크롤 위치 복원
+  useEffect(() => {
+    const savedScrollPosition = sessionStorage.getItem("scrollY");
+    if (savedScrollPosition && messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition, 10);
+    }
+  }, []);
+
+
+
+ 
+
+  // detail 페이지로 이동할 때 스크롤 위치 저장
+  const handleItemClick = (itemType, itemId) => {
+    const scrollPosition = messagesContainerRef.current.scrollTop;
+    sessionStorage.setItem("scrollY", scrollPosition); // 스크롤 위치 저장
+    const message = messages.find(
+      (msg) =>
+        msg.type === "bot" &&
+        msg.content.table === itemType &&
+        msg.content.data.some((item) => item[`${itemType}Id`] === itemId)
+    );
+    if (message) {
+      sessionStorage.setItem("contentData", JSON.stringify(message.content));
+      navigate(`/detail/${itemType}/${itemId}`);
+    }
+  };
+
+
+  
 
   const handleOpenWarning = () => {
     setOpen(!open);
@@ -299,11 +321,8 @@ const Chat = () => {
       }
       setMessages(combinedMessages);
       console.log(combinedMessages)
-      const newMessages = combinedMessages
-      const botReply = newMessages.find((message) => message.type === "bot");
-      if (botReply) {
-        handleSpeechOutput(botReply.content.content); // 봇 응답 음성 출력
-      }
+     
+    
     } catch (error) {
       console.error("대화내역 받아오기에러:", error);
     }
@@ -342,6 +361,7 @@ const Chat = () => {
     if (!inputMessage.trim()) return;
     setIsSending(true);
     setInputMessage("");
+    setIsNewMessage(true); // 새로운 질문/응답이 발생하면 true로 설정
     setLastUserQuestion(inputMessage);
     try {
       let newChatRoomId = null;
@@ -361,7 +381,7 @@ const Chat = () => {
       fetchMessages(newChatRoomId || selectedChatRoomId);
       setLastUserQuestion(null);
       fetchChatRooms();
-
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     } catch (error) {
       console.error("메세지 전송 에러:", error);
       setLastUserQuestion(null);
@@ -407,19 +427,9 @@ const Chat = () => {
     }
   };
 
-  const handleItemClick = (itemType, itemId) => {
-    const message = messages.find(
-      (msg) =>
-        msg.type === "bot" &&
-        msg.content.table === itemType &&
-        msg.content.data.some((item) => item[`${itemType}Id`] === itemId)
-    );
-    if (message) {
-      sessionStorage.setItem("contentData", JSON.stringify(message.content));
-      navigate(`/detail/${itemType}/${itemId}`);
-    }
-  };
+  
 
+ 
   const activeEnter = (e) => {
     if (e.key === "Enter") {
       handleSendMessage();
@@ -448,42 +458,48 @@ const Chat = () => {
 
   const groupedChatRooms = groupChatRoomsByDate(chatRooms);
 
-  const handleMapOpen = (data) => {
-    try {
-      
-      const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-     
-      
-      
-      const cleanedData = typeof parsedData.data === 'string' 
-        ? parsedData.data.replace(/\\/g, '') 
-        : JSON.stringify(parsedData.data);
-      
-      
-     
-      const validData = `[${cleanedData.substring(1, cleanedData.length - 1)}]`;
-     
-      
-     
-      const locations = JSON.parse(validData);
-    
+  const [scrollPosition, setScrollPosition] = useState(0);
 
-      
-      const coordinates = locations.map(item => ({
-        name: item.locationName,
-        lat: parseFloat(item.lat),
-        lng: parseFloat(item.lon)
-      }));
-      
-     
-      
-      setMaps(coordinates); 
-      
-    } catch (error) {
-     
-    }
-  };
+ // 스크롤 위치 저장용 함수 (로컬 스토리지)
+const saveScrollPositionToLocalStorage = () => {
+  if (messagesContainerRef.current) {
+    const scrollPosition = messagesContainerRef.current.scrollTop;
+    // 스크롤 위치를 문자열로 저장
+    localStorage.setItem("scrollPosition", JSON.stringify(scrollPosition)); // 스크롤 위치 저장
+  }
+};
 
+// 스크롤 위치 복원용 함수 (로컬 스토리지)
+const restoreScrollPositionFromLocalStorage = () => {
+  const savedScrollPosition = localStorage.getItem("scrollPosition");
+  
+  // 저장된 값이 존재하는지 확인하고, 숫자로 변환
+  if (savedScrollPosition && messagesContainerRef.current) {
+    messagesContainerRef.current.scrollTop = parseInt(savedScrollPosition, 10); // 저장된 스크롤 위치 복원
+  }
+};
+
+// MapComponent를 열 때 스크롤 위치 저장
+const handleMapOpen = (data) => {
+  saveScrollPositionToLocalStorage(); // 지도 열기 전에 스크롤 위치 저장
+
+  // MapComponent 열기 로직 (지도 데이터 처리)
+  const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+  const locations = parsedData.data.map(item => ({
+    name: item.locationName,
+    lat: parseFloat(item.lat),
+    lng: parseFloat(item.lon)
+  }));
+  setMaps(locations); // 지도 열기 상태
+};
+
+// MapComponent를 닫을 때 스크롤 위치 복원
+const handleCloseMap = () => {
+  setMaps([]); // MapComponent 닫기
+  setTimeout(() => {
+    restoreScrollPositionFromLocalStorage(); // 스크롤 위치 복원
+  }, 20); // 약간의 지연을 추가하여 컴포넌트가 완전히 렌더링된 후 스크롤 복원
+};
   const handleNavigateAdmin = () => {
     navigate('/admin');
 
@@ -494,6 +510,11 @@ const Chat = () => {
   return (
     <div className={`flex lg:h-screen h-auto lg:pr-32 pr-0 lg:bg-gray-600 bg-transparent lg:py-6 py-0`}>
       <div className={`flex w-screen h-screen lg:h-auto bg-white rounded-tr-3xl rounded-br-3xl ${isDarkMode ? "dark:bg-gray-800" : "dark:bg-transparent rounded-tr-3xl rounded-br-3xl"}`}>
+         
+          {maps.length > 0 ? (
+         <MapComponent coordinates={maps} onClose={() => {handleCloseMap()}} />
+        ) : (
+          <>
         {/* 큰 화면에서는 버튼이 보이지 않도록 설정 */}
         <div className="lg:hidden block p-4 absolute top-2 left-4 z-10">
           <FaBars onClick={toggleChatRoomList} className="text-2xl text-black dark:text-white cursor-pointer" />
@@ -712,28 +733,15 @@ const Chat = () => {
        
           </div>
         </div>
+        </>  
+
+)}
       </div>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle className="text-xl font-semibold">정말로 모든 대화방을 삭제하시겠습니까?</DialogTitle>
-        <DialogContent className="items-center justify-center flex flex-col space-y-4 p-6">
-          <p className="text-gray-600">이 작업은 되돌릴 수 없습니다.</p>
-          <Button className="border border-gray-400 rounded-md bg-red-500 text-white px-4 py-2 hover:bg-red-600" onClick={handleDeleteAllChatRooms}>
-            삭제하기
-          </Button>
-        </DialogContent>
-        <DialogActions className="flex justify-center p-4">
-          <Button onClick={handleClose} className="text-blue-500 hover:text-blue-700">
-            취소
-          </Button>
-        </DialogActions>
-      </Dialog>
-
-
-
+     
       <Dialog open={IosMessage} onClose={onIosClose}>
         <DialogTitle>IOS 안내</DialogTitle>
         <DialogContent>
-          테스트
+          설정-개인정보 보호 및 보안-위치 서비스-LUMOS앱에서 위치정보허용을 해주세요
         </DialogContent>
         <DialogActions>
           <Button onClick={onIosClose} color="primary">
