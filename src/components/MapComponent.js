@@ -93,7 +93,7 @@ function MapComponent({ coordinates, onClose }) {
           new window.kakao.maps.CustomOverlay({
             map: map,
             position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
-            content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">Current Location</div>',
+            content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">현재위치</div>',
             xAnchor: 0.46,
             yAnchor: 2.7
           });
