@@ -582,6 +582,7 @@ const handleCloseMap = () => {
                       .sort(
                         (a, b) => new Date(b.lastChatDate) - new Date(a.lastChatDate)
                       )
+                      .filter((chatRoom) => chatRoom.chatRoomId !== 1000) 
                       .map((chatRoom) => (
                         <li
                           key={chatRoom.chatRoomId}
