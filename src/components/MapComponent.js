@@ -116,7 +116,7 @@ function MapComponent({ coordinates, onClose }) {
   new window.kakao.maps.Marker({
     map: map,
     position: new window.kakao.maps.LatLng(fixedPos.lat, fixedPos.lng),
-    title: '고정된 현재위치'
+    title: '현재위치'
   });
 
   // 고정된 위치에 커스텀 오버레이 추가
