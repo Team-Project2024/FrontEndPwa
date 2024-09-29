@@ -236,7 +236,7 @@ const ChatVoice = () => {
     setIsSending(true);
   
     try {
-      const message = await sendMessage(a, 101);
+      const message = await sendMessage(a, 1000);
       console.log(message);
   
       if (message) {
