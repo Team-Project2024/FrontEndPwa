@@ -147,7 +147,7 @@ const ChatVoice = () => {
       },
       audioConfig: {
         audioEncoding: "MP3", 
-        speakingRate: 1.0 // 말하는 속도
+        speakingRate: 1.1 // 말하는 속도
       },
     };
   
@@ -243,7 +243,7 @@ const ChatVoice = () => {
         let parsedContent;
   
         try {
-          // Parse the chatbot message
+         
           parsedContent = JSON.parse(message.content);
   
           if (parsedContent.data && typeof parsedContent.data === "string") {
@@ -259,31 +259,31 @@ const ChatVoice = () => {
         const chatbotMessage = parsedContent.content;
         console.log("Chatbot message:", chatbotMessage);
   
-        // Handle lecture case where lecture names should be spoken in order
+     
         if (parsedContent.table === "lecture") {
-          // First, speak the chatbot message
+       
           await handleSpeechOutput(chatbotMessage);
   
-          // Then, speak the lecture names in order
+        
           const lectureText = lectureNames(parsedContent);
           console.log(lectureText);
-          await handleSpeechOutput(lectureText); // Ensure lecture names are spoken after the chatbot message
+          await handleSpeechOutput(lectureText);
   
         } else if (parsedContent.content.includes("인성교양")) {
-          // Open graduation modal first, then speak the message simultaneously
+         
           console.log("Opening graduation modal");
           handleOpen();
           setGraduationVoice(parsedContent.content);
   
-          // Log state asynchronously
+         
           setTimeout(() => console.log("Modal open state:", open), 0);
           setTimeout(() => console.log("Graduation voice state:", graduationVoice), 0);
   
-          // Speak the message simultaneously (modal opens immediately)
-          handleSpeechOutput(parsedContent.content); // No await here, TTS starts but modal opens immediately
+        
+          handleSpeechOutput(parsedContent.content); 
   
         } else if (parsedContent.table === "school_location" && parsedContent.data && !parsedContent.content.includes('위치 정보를 찾을 수 없습니다')) {
-          // Handle school location map after chatbot message
+        
           console.log("School location data:", parsedContent.content);
           
           handleSpeechOutput(parsedContent.content); 
@@ -292,13 +292,12 @@ const ChatVoice = () => {
           handleSpeechOutput(parsedContent.content); 
         }
   
-        // Only call handleSpeechOutput(chatbotMessage) once
       }
     } catch (error) {
       console.error("Error sending message:", error);
       console.log("An error occurred while sending the message.");
     } finally {
-      setIsSending(false); // Indicate that sending is complete
+      setIsSending(false); 
     }
   };
   
@@ -346,15 +345,19 @@ const ChatVoice = () => {
    
       
     <div className="flex items-center justify-center min-h-screen bg-white">
+    
    
       <div className="flex flex-col items-center justify-center w-full h-full space-y-20">
-  
+     
         <div className="flex justify-center items-center w-full">
+
+          
           <TTSAnimation isSpeaking={isSpeaking} />
         </div>
 
      
         <div className="flex justify-center items-center">
+      
           <button
             onClick={handleSpeechInput}
             disabled={isListening}
@@ -372,6 +375,7 @@ const ChatVoice = () => {
            
             <FaMicrophone className="text-3xl lg:text-6xl text-black relative z-20" />
           </button>
+          
         </div>
         {maps.length > 0 && (
                     <MapComponent

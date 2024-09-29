@@ -492,15 +492,15 @@ const handleMapOpen = (data) => {
     lat: parseFloat(item.lat),
     lng: parseFloat(item.lon)
   }));
-  setMaps(locations); // 지도 열기 상태
+  setMaps(locations); // 지도 열기 
 };
 
-// MapComponent를 닫을 때 스크롤 위치 복원
+// 지도 닫을 때 스크롤 위치 복원
 const handleCloseMap = () => {
-  setMaps([]); // MapComponent 닫기
+  setMaps([]); // 지도 닫기
   setTimeout(() => {
     restoreScrollPositionFromLocalStorage(); // 스크롤 위치 복원
-  }, 20); // 약간의 지연을 추가하여 컴포넌트가 완전히 렌더링된 후 스크롤 복원
+  }, 20); 
 };
   const handleNavigateAdmin = () => {
     navigate('/admin');
@@ -734,7 +734,10 @@ const handleCloseMap = () => {
       <Dialog open={IosMessage} onClose={onIosClose}>
         <DialogTitle>IOS 안내</DialogTitle>
         <DialogContent>
+          <div className="font-gmarket font-bold">
           설정-개인정보 보호 및 보안-위치 서비스-LUMOS앱에서 위치정보허용을 해주세요
+          </div>
+         
         </DialogContent>
         <DialogActions>
           <Button onClick={onIosClose} color="primary">

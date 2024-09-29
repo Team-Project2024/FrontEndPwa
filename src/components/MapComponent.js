@@ -76,36 +76,60 @@ function MapComponent({ coordinates, onClose }) {
     const map = new window.kakao.maps.Map(mapContainer, mapOption);
     mapRef.current = map;
 
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const pos = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
+  //   if (navigator.geolocation) {
+  //     navigator.geolocation.getCurrentPosition(
+  //       (position) => {
+  //         const pos = {
+  //           lat: position.coords.latitude,
+  //           lng: position.coords.longitude,
+  //         };
 
-          new window.kakao.maps.Marker({
-            map: map,
-            position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
-            title: '현재위치'
-          });
+  //         new window.kakao.maps.Marker({
+  //           map: map,
+  //           position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
+  //           title: '현재위치'
+  //         });
 
-          new window.kakao.maps.CustomOverlay({
-            map: map,
-            position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
-            content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">현재위치</div>',
-            xAnchor: 0.46,
-            yAnchor: 2.7
-          });
+  //         new window.kakao.maps.CustomOverlay({
+  //           map: map,
+  //           position: new window.kakao.maps.LatLng(pos.lat, pos.lng),
+  //           content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;">현재위치</div>',
+  //           xAnchor: 0.46,
+  //           yAnchor: 2.7
+  //         });
 
-          renderMarkers(map, pos);  
-        },
-        () => {
-          console.error("Geolocation error");
-        }
-      );
-    }
-  }, [coordinates]);
+  //         renderMarkers(map, pos);  
+  //       },
+  //       () => {
+  //         console.error("Geolocation error");
+  //       }
+  //     );
+  //   }
+  // }, [coordinates]);
+
+  const fixedPos = {
+    lat: 36.737304792263394,
+    lng: 127.0760018064489
+  };
+
+  // 고정된 위치에 마커 추가
+  new window.kakao.maps.Marker({
+    map: map,
+    position: new window.kakao.maps.LatLng(fixedPos.lat, fixedPos.lng),
+    title: '고정된 현재위치'
+  });
+
+  // 고정된 위치에 커스텀 오버레이 추가
+  new window.kakao.maps.CustomOverlay({
+    map: map,
+    position: new window.kakao.maps.LatLng(fixedPos.lat, fixedPos.lng),
+    content: '<div style="padding:5px; background:#50627F; border-radius:4px; color:white; text-align:center;"> 현재위치</div>',
+    xAnchor: 0.46,
+    yAnchor: 2.7
+  });
+
+  renderMarkers(map, fixedPos); // 고정된 위치에서 마커 렌더링
+}, [coordinates]);
 
 
   const renderMarkers = useCallback((map, pos) => {
@@ -193,8 +217,8 @@ function MapComponent({ coordinates, onClose }) {
 
   return (
     <Dialog open={true} onClose={onClose} maxWidth="lg" fullWidth>
-      <DialogTitle>
-        <div className='font-gmarket font-bold'>
+      <DialogTitle className='dark:bg-gray-800'>
+        <div className='font-gmarket font-bold dark:text-white '>
           마커클릭시 경로안내
         </div>
       </DialogTitle>
