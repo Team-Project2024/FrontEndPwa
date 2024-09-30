@@ -20,6 +20,7 @@ const TTSAnimation = ({ isSpeaking }) => {
       1000
     );
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
     const canvasSize = 400; 
     renderer.setSize(canvasSize, canvasSize);
     renderer.setClearColor(0x000000, 0); 
@@ -102,7 +103,7 @@ const TTSAnimation = ({ isSpeaking }) => {
     };
   }, [isSpeaking, mesh, wireframe, camera, renderer, scene]);
   return (
-    <div className="animate-bounce flex items-center justify-center max-w-xs max-h-xs  ">
+    <div className=" flex items-center justify-center max-w-xs max-h-xs  ">
       <div ref={mountRef} className="h-50 w-50" />{" "}
     
     </div>
