@@ -529,7 +529,7 @@ const handleCloseMap = () => {
           {/* 위에 고정시키고자 하는 부분 */}
           <div className="sticky top-0 bg-white dark:bg-gray-800 z-10 p-4">
             <div className="">
-              <div className="text-xl mb-4 dark:text-gray-200 font-gmarket">
+              <div  onClick={navigate('/chatvoice')}className="text-xl mb-4 dark:text-gray-200 font-gmarket">
                 LUMOS
               </div>
               <div className="mt-2 flex justify-between">
