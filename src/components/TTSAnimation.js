@@ -20,7 +20,7 @@ const TTSAnimation = ({ isSpeaking }) => {
       1000
     );
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-    const canvasSize = 600; 
+    const canvasSize = 400; 
     renderer.setSize(canvasSize, canvasSize);
     renderer.setClearColor(0x000000, 0); 
     mountRef.current.appendChild(renderer.domElement);
