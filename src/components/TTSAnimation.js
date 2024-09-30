@@ -24,7 +24,7 @@ const TTSAnimation = ({ isSpeaking }) => {
     mountRef.current.appendChild(renderer.domElement);
 
     // 2. 단순한 도형 (Icosahedron에서 Sphere로 변경, 분할을 5로 줄임)
-    const geometry = new THREE.SphereGeometry(15, 8, 8); // 분할 수를 줄임
+    const geometry = new THREE.IcosahedronGeometry(20, 2, 2); // 분할 수를 줄임
 
     // 3. 재질 적용
     const material = new THREE.MeshBasicMaterial({ color: 0x808080 });
